@@ -1,0 +1,82 @@
+class MyCalendar {
+    
+    // Interval Tree
+    class IntervalTreeNode{
+        public int start,end;
+        public int min_range,max_range;
+        public IntervalTreeNode left,right;
+        public IntervalTreeNode(int s, int e) {
+            start = s;
+            end = e;
+            min_range = s;
+            max_range = e;
+            left = right = null;
+        }
+    }
+    
+    public IntervalTreeNode root;
+    private IntervalTreeNode buildIntervalTree(int s, int e){
+        return new IntervalTreeNode(s,e);
+    }
+    
+    // time complexity: O(logN),  N : size of total intervals. 
+    private boolean isIntersected(IntervalTreeNode curr, int s, int e) {
+        if (root == null) return false;
+        if (s < curr.end && e > curr.start) return true;   // intersected
+        if (e <= curr.start) {
+            if (curr.left != null && curr.left.max_range > s) return isIntersected(curr.left,s,e);
+            else return false;
+        }
+        else if (s >= curr.end) {
+            if (curr.right != null && curr.right.min_range < e) {
+                return isIntersected(curr.right,s,e);
+            }
+            else return false;
+        }
+        return false;
+    }
+    
+    // time complexity: O(logN),  N : size of total intervals
+    private IntervalTreeNode insert(IntervalTreeNode curr, int s, int e) {
+        if (curr == null) return new IntervalTreeNode(s,e);
+        if (s < curr.start) curr.left = insert(curr.left,s,e);
+        else curr.right = insert(curr.right,s,e);
+        
+        if (curr.left != null) {
+            curr.min_range = curr.left.min_range;
+            curr.max_range = Math.max(curr.max_range,curr.left.max_range); 
+            // could omit, as curr.left.max_range must be less than curr.start
+        }
+        if (curr.right != null) {
+            curr.max_range = Math.max(curr.max_range,curr.right.max_range);
+        }
+        
+        return curr;
+    }
+    
+    
+
+    public MyCalendar() {
+        root = null;
+    }
+    
+    public boolean book(int start, int end) {
+        if (root == null) {
+            root = buildIntervalTree(start,end);
+            return true;
+        }
+        else {
+            if (isIntersected(root, start,end)) return false;
+            else {
+                insert(root, start,end);
+                return true;
+            }
+        }
+    }
+}
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar obj = new MyCalendar();
+ * boolean param_1 = obj.book(start,end);
+ */
