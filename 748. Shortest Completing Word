@@ -1,0 +1,42 @@
+class Solution {
+    public String shortestCompletingWord(String licensePlate, String[] words) {
+        Map<Character,Integer> map = new HashMap<Character,Integer>();
+        int L = licensePlate.length();
+        String plate_lowercase = licensePlate.toLowerCase();
+        System.out.println("lowcase plate: "+ plate_lowercase);
+        int cnt = 0;
+        for (int i = 0; i < L; i++) {
+            char c = plate_lowercase.charAt(i);
+            if (c >= 'a' && c <= 'z') {
+                if (!map.containsKey(c)) {
+                    map.put(c,0);
+                    cnt++;
+                }
+                int v = map.get(c);
+                map.put(c,v+1);
+            }
+            
+        }
+        
+        L = words.length;
+        int id = -1;
+        for (int i = 0; i < L; i++) {
+            int total = cnt;
+            Map<Character,Integer> tmp = new HashMap<Character,Integer>();
+            for (int j = 0; j < words[i].length(); j++) {
+                char c = words[i].charAt(j);
+                if (map.containsKey(c)) {
+                    if (!tmp.containsKey(c)) tmp.put(c,0);
+                    int v = tmp.get(c)+1;
+                    tmp.put(c,v);
+                    if (v == map.get(c)) total--; 
+                }
+            }
+            if (total == 0) {
+                id = id == -1 ? i : (words[i].length() < words[id].length() ? i : id);
+            }
+        }
+        return words[id];
+        
+    }
+}
