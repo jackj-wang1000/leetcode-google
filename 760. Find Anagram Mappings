@@ -1,5 +1,6 @@
 class Solution {
     public int[] anagramMappings(int[] A, int[] B) {
+        // HashMap + stack
         // time complexity:  O(n_A + n_B)
         // space complexity: O(n_B), n_B is size of array B
         int L = A.length;
