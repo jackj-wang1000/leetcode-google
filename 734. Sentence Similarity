@@ -1,0 +1,30 @@
+    class soulution{
+        public boolean sentenceSimilarity(String[] words1, String[] words2, String[][] pairs) {
+            // HashMap + HashSet
+            // time complexity: O(N1+N2),  N1:  words1 or words2 array size,  N2 : pairs array size
+            // space : O(N2) , N2 represents total pairs
+            int L1 = words1.length;
+            int L2 = words2.length;
+            if (L1 != L2) return false;
+            Map<String,Set<String>> map = new HashMap<String, Set<String>>();
+            int id = 0;
+            int L = pairs.length;
+            for (int i = 0; i  < L; i++) {
+                if (!map.containsKey(pairs[i][0]))   map.put(pairs[i][0], new HashSet<String>());
+                if (!map.containsKey(pairs[i][1]))   map.put(pairs[i][0],  new HashSet<String>());
+                map.get(pairs[i][0]).add(pairs[i][1]);
+                map.get(pairs[i][1]).add(pairs[i][0]);   // O(1)
+            }
+            
+            for (int i = 0; i < L1; i++) {
+                if (!map.containsKey(words1[i]) || !map.containsKey(words2[i])) return false;
+                else {
+                    Set<String> st = map.get(words1[i]);
+                    if (!st.contains(words2[i]))  return false;
+                }
+            }
+            return true;
+            
+        }
+        
+    }
