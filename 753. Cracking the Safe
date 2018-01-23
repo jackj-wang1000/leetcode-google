@@ -1,0 +1,35 @@
+class Solution {
+    public String crackSafe(int n, int k) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            str.append("0");
+        }
+        Set<String> set = new HashSet<String>();
+        set.add(str.toString());
+        return helper(str, set, n, k);
+    }
+    
+
+    
+    
+    
+    private String helper(StringBuilder str, Set<String> set, int n, int k) {
+        if (str.length() == (int) Math.pow(k,n) + n -1) return str.toString();
+        
+        int L = str.length();
+        String s = str.substring(L-n+1,L);
+        for (int i = 0; i < k; i++) {
+            String tmp = s + Integer.toString(i);
+            if (!set.contains(tmp)) {
+                str.append(Integer.toString(i));
+                set.add(tmp);
+                String res = helper(str,set,n,k);
+                if (res != null) return res;        // must return here, otherwise dfs will continue to search
+                set.remove(tmp);
+                str.deleteCharAt(L);
+            }
+        }
+        return null;
+        
+    }
+}
