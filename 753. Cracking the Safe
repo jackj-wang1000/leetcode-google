@@ -1,5 +1,6 @@
 class Solution {
     public String crackSafe(int n, int k) {
+        // DFS
         // time complexity: worst case: O(k^n),  each step might try k different time,  (imagine the tree)
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < n; i++) {
