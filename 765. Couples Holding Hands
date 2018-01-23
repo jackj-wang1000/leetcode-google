@@ -1,5 +1,6 @@
 class Solution {
     public int minSwapsCouples(int[] row) {
+        // HashMap + swap
         // use hashmap to store index for each value, then iterate each pair in sequence;
         // make a swap if each pair is not the same index;
         // time complexity:  O(n), at most make  n-1 swap;
