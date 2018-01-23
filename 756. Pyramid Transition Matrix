@@ -1,0 +1,51 @@
+class Solution {
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+        int L = bottom.length();
+        int sz = allowed.size();
+        Map<String,List<Character>> map = new HashMap<String,List<Character>>();
+        for (int i = 0; i < sz; i++) {
+            String str = allowed.get(i).substring(0,2);
+            if (!map.containsKey(str)) map.put(str,new ArrayList<Character>());
+            List<Character> list = map.get(str);
+            list.add(allowed.get(i).charAt(2));
+        }
+        StringBuilder str = new StringBuilder();
+        return helper(bottom, map,str);
+        
+        
+    }
+    
+    private boolean helper(String bottom, Map<String,List<Character>> map, StringBuilder str) {
+        if (bottom.length() == 2) {
+            return map.containsKey(bottom);
+        }
+        List<String> list = new ArrayList<String>();
+        generateString(bottom,0,map,str, list);    // first need to generate all possible strings using dfs
+        for (String s : list) {
+            if (helper(s,map,str)) return true;
+        }
+        return false;
+    }
+    
+    private void generateString(String bottom, int start, Map<String, List<Character>> map, StringBuilder str, List<String> res) {
+        if (start == bottom.length()-1)  { 
+            res.add(new String(str));
+            return;
+        }
+        
+        String s = bottom.substring(start,start+2);
+        if (map.containsKey(s)) {
+            List<Character> list = map.get(s);
+            int strL = str.length();
+            for (char c : list) {
+                str.append(c);
+                generateString(bottom,start+1,map, str, res);
+                str.deleteCharAt(strL); 
+            }
+        }
+        
+        
+    }
+    
+    
+}
