@@ -1,5 +1,7 @@
 class Solution {
     public String shortestCompletingWord(String licensePlate, String[] words) {
+        // time complexity: O(n*L+ m), n: words array length,  L: each words string length,  m: licensePlate string length
+        // space complexity: O(m)
         Map<Character,Integer> map = new HashMap<Character,Integer>();
         int L = licensePlate.length();
         String plate_lowercase = licensePlate.toLowerCase();
@@ -22,7 +24,7 @@ class Solution {
         int id = -1;
         for (int i = 0; i < L; i++) {
             int total = cnt;
-            Map<Character,Integer> tmp = new HashMap<Character,Integer>();
+            Map<Character,Integer> tmp = new HashMap<Character,Integer>();   // need to initialize a new HashMap each loop
             for (int j = 0; j < words[i].length(); j++) {
                 char c = words[i].charAt(j);
                 if (map.containsKey(c)) {
