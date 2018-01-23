@@ -1,5 +1,7 @@
 class Solution {
     public boolean pyramidTransition(String bottom, List<String> allowed) {
+        // time complexity :  generateString => O(k^n * k^(n-1) * ... k^1), n is length of string bottom,  k is time 
+        // space complexity: O(n), size of allowed list (each character need to be stored)
         int L = bottom.length();
         int sz = allowed.size();
         Map<String,List<Character>> map = new HashMap<String,List<Character>>();
@@ -11,25 +13,28 @@ class Solution {
         }
         StringBuilder str = new StringBuilder();
         return helper(bottom, map,str);
-        
-        
     }
     
     private boolean helper(String bottom, Map<String,List<Character>> map, StringBuilder str) {
         if (bottom.length() == 2) {
             return map.containsKey(bottom);
         }
+        int L = bottom.length();
+        for (int i = 0; i < L-1; i++) {            // if found one which does not match, return false directly
+            if (!map.containsKey(bottom.substring(i,i+2))) return false;
+        }
         List<String> list = new ArrayList<String>();
-        generateString(bottom,0,map,str, list);    // first need to generate all possible strings using dfs
+        generateString(bottom,0,map,str, list);    // first step:  generate all possible strings using dfs
         for (String s : list) {
             if (helper(s,map,str)) return true;
         }
         return false;
     }
     
+    // time complexity: k^n,  k represents map size, n represent bottom length
     private void generateString(String bottom, int start, Map<String, List<Character>> map, StringBuilder str, List<String> res) {
         if (start == bottom.length()-1)  { 
-            res.add(new String(str));
+            res.add(str.toString());
             return;
         }
         
@@ -43,7 +48,6 @@ class Solution {
                 str.deleteCharAt(strL); 
             }
         }
-        
         
     }
     
