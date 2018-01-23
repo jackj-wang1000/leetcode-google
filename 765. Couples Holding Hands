@@ -1,0 +1,29 @@
+class Solution {
+    public int minSwapsCouples(int[] row) {
+        // use hashmap to store index for each value, then iterate each pair in sequence;
+        // make a swap if each pair is not the same index;
+        // time complexity:  O(n), at most make  n-1 swap;
+        // space complexity: O(n)
+        int L = row.length;
+        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+        for (int i = 0; i < L; i++) {
+            map.put(row[i],i/2);
+        }
+        int res = 0;
+        for(int i = 0; i < L; i += 2) {
+            int id1 = map.get(i);
+            int id2 = map.get(i+1);
+            if (id1 != id2) {
+                map.put(i+1,id1);
+                int id1_other = row[id1*2] == i ? id1*2+1: id1*2;
+                map.put(row[id1_other],id2);
+                int id2_real = row[id2*2] == i+1 ? id2*2 : id2*2+1;
+                row[id2_real] = row[id1_other];
+                row[id1_other] = i+1;
+                
+                res++;
+            }
+        }
+        return res;
+    }
+}
