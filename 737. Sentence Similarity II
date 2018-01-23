@@ -1,18 +1,47 @@
-Given two sentences words1, words2 (each represented as an array of strings), and a list of similar word pairs pairs, determine if two sentences are similar.
-
-For example, words1 = ["great", "acting", "skills"] and words2 = ["fine", "drama", "talent"] are similar, if the similar word pairs are pairs = [["great", "good"], ["fine", "good"], ["acting","drama"], ["skills","talent"]].
-
-Note that the similarity relation is transitive. For example, if "great" and "good" are similar, and "fine" and "good" are similar, then "great" and "fine" are similar.
-
-Similarity is also symmetric. For example, "great" and "fine" being similar is the same as "fine" and "great" being similar.
-
-Also, a word is always similar with itself. For example, the sentences words1 = ["great"], words2 = ["great"], pairs = [] are similar, even though there are no specified similar word pairs.
-
-Finally, sentences can only be similar if they have the same number of words. So a sentence like words1 = ["great"] can never be similar to words2 = ["doubleplus","good"].
-
-Note:
-
-    The length of words1 and words2 will not exceed 1000.
-    The length of pairs will not exceed 2000.
-    The length of each pairs[i] will be 2.
-    The length of each words[i] and pairs[i][j] will be in the range [1, 20].
+class Solution {
+    public boolean sentenceSimilarity(String[] words1, String[] words2, String[][] pairs) {
+        // HashMap + Unionfind
+        // time complexity: O(N1*logN2 + N2 + N2*logN2),  N1: words1 or words2 array size,  N2: pairs array size
+        // space : O(2*N), N: pairs array size, including HashMap and root array
+        int L1= words1.length;
+        int L2 = words2.length;
+        if (L1 != L2) return false;
+        Map<String,Integer> map = HashMap<String,Integer>();
+        int id = 0;
+        int L =pairs.length;
+        int[] root = new int[L*2];
+        // any sequence of M union and find operations on N objects takes  O(N + M*logN) time.
+        for (int i =0; i < L; i++) {
+            if (!map.containsKey(pairs[i][0])) { map.put(pairs[i][0],id); root[id] = id; id++;}
+            if (!map.containsKey(pairs[i][1])) { map.put(pairs[i][1],id); root[id] = id; id++;}
+            int id1 = map.get(pairs[i][0]);
+            int id2 = map.get(pairs[i][1]);
+            int root1 = findRoot(id1);  // O(logN2)
+            int root2 = findRoot(id2);  // O(logN2)
+            unite(root,root1,root2);   // O(1)
+        }
+        
+        for(int i = 0; i < L1; i++) {
+            int id1 = map.get(words1[i]);
+            int id2 = map.get(words2[i]);
+            if (findRoot(root,id1) != findRoot(root,id2)) return false;
+        }
+        return true;
+        
+    }
+    
+    private int findRoot(int[] root, int id) {
+        int i;
+        while (id != root[id]) {
+            i = root[id];
+            root[id] = root[i];
+            id = root[id];
+        }
+        return id;
+    }
+    
+    private void unite(int[] root, int id1, int id2) {
+        root[id1] = id2;
+    }
+    
+}
