@@ -1,5 +1,6 @@
 class Solution {
     public boolean pyramidTransition(String bottom, List<String> allowed) {
+        //  HashMap + DFS(one dfs for generating string, one for recursively finding the pyramid valid)
         // time complexity :  generateString => O(k^n * k^(n-1) * ... k^1), n is length of string bottom,  k is time 
         // space complexity: O(n), size of allowed list (each character need to be stored)
         int L = bottom.length();
