@@ -1,5 +1,6 @@
 class Solution {
     public String shortestCompletingWord(String licensePlate, String[] words) {
+        //  HashMap + counter
         // time complexity: O(n*L+ m), n: words array length,  L: each words string length,  m: licensePlate string length
         // space complexity: O(m)
         Map<Character,Integer> map = new HashMap<Character,Integer>();
@@ -31,7 +32,7 @@ class Solution {
                     if (!tmp.containsKey(c)) tmp.put(c,0);
                     int v = tmp.get(c)+1;
                     tmp.put(c,v);
-                    if (v == map.get(c)) total--; 
+                    if (v == map.get(c)) total--;    // must be equal
                 }
             }
             if (total == 0) {
