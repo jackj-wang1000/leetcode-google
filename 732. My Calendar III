@@ -1,0 +1,32 @@
+class MyCalendarThree {
+    
+    public TreeMap<Integer,Integer> freq;
+    public int max_booking;
+
+    public MyCalendarThree() {
+        freq = new TreeMap<Integer,Integer>();
+        max_booking = 0;
+    }
+    
+    public int book(int start, int end) {
+        if (!freq.containsKey(start)) freq.put(start,0);   // O(logN)
+        if (!freq.containsKey(end)) freq.put(end,0);
+        int v = freq.get(start);
+        freq.put(start,v+1);
+        v = freq.get(end);
+        freq.put(end,v-1);
+        int cnt = 0;
+        for (int k : freq.keySet()) {
+            cnt += freq.get(k);
+            max_booking = Math.max(max_booking,cnt);
+        }
+        
+        return max_booking;
+    }
+}
+
+/**
+ * Your MyCalendarThree object will be instantiated and called as such:
+ * MyCalendarThree obj = new MyCalendarThree();
+ * int param_1 = obj.book(start,end);
+ */
