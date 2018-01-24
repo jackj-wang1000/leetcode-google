@@ -1,0 +1,111 @@
+class MyCalendarTwo {
+    
+    class IntervalTreeNode{
+        public int start,end;
+        public int lower_bound,upper_bound;
+        public IntervalTreeNode left,right;
+        
+        public IntervalTreeNode(int s, int e) {
+            start = s;
+            end = e;
+            lower_bound = s;
+            upper_bound = e;
+            left = right = null;
+        }
+    }
+    
+    
+    private IntervalTreeNode root;
+    private IntervalTreeNode intersectedTree;  //interval overlap tree (double booking tree);
+    
+    
+    // state st represent two kind of findIntersection, true means insertion and finding intersection,
+    //   false means just to find intersection, no insertion.
+    // worst case time complexity: O(N1 * logN2), N1 denotes all intervals size,  N2 denotes interval-overlapping tree size.
+    private IntervalTreeNode findIntersection(IntervalTreeNode root, int s, int e,  boolean st) {
+        if (root == null)  return st ?  new IntervalTreeNode(s,e) : null;   // create new node
+        if (root.start < e && root.end > s)   intersectedTree = insert(intersectedTree,Math.max(root.start,s),Math.min(root.end,e));
+        
+        if (s < root.start) {
+            root.left = findIntersection(root.left,s,e,st);
+            // process root.right intersection
+            if (root.right != null && root.right.lower_bound < e) findIntersection(root.right,s,e,false);
+        }
+        else {
+            root.right = findIntersection(root.right,s,e,st);
+            // process root.left intersection
+            if(root.left != null && root.left.upper_bound > s) findIntersection(root.left,s,e,false);
+        }
+        
+        if (st && root.left != null) { 
+            root.lower_bound = root.left.lower_bound;
+            root.upper_bound = Math.max(root.upper_bound,root.left.upper_bound);
+        }
+        if (st && root.right != null) {
+            root.upper_bound = Math.max(root.upper_bound,root.right.upper_bound);
+        }
+        
+        return root;
+    }
+    
+    
+    // time complexity:  O(logN),  N denotes overlap interval tree size
+    private boolean isIntersected(IntervalTreeNode curr, int s, int e) {
+        if (curr == null) return false;
+        if (curr.start < e && s < curr.end) return true;
+        if (curr.start >= e) {
+            if (curr.left != null && s >= curr.left.upper_bound) return false;
+            else return isIntersected(curr.left,s,e);
+        }
+        else if (curr.end <= s) {
+            if (curr.right != null && e <= curr.right.lower_bound) return false;
+            else return isIntersected(curr.right,s,e);
+        }
+        return false;
+    }
+    
+    // time complexity:  O(logN), 
+    private IntervalTreeNode insert(IntervalTreeNode curr, int s, int e) {
+        if (curr == null) return new IntervalTreeNode(s,e);
+        if(curr.start > s) curr.left = insert(curr.left,s,e);
+        else curr.right = insert(curr.right,s,e);
+        
+        if (curr.left != null) {
+            curr.lower_bound = curr.left.lower_bound;
+            //curr.upper_bound = Math.max(curr.upper_bound,curr.left.upper_bound);
+        }
+        if (curr.right != null) {
+            curr.upper_bound = Math.max(curr.upper_bound,curr.right.upper_bound);
+        }
+        
+        return curr;
+    }
+    
+    // build two interval tree, one is to store overlapped interval(double booking interval), root : intersectedTree
+    // the other one is to store all valid interval, root:  root.
+    public MyCalendarTwo() {
+        root = null;
+        intersectedTree = null;
+    }
+    
+    public boolean book(int start, int end) {
+        if (root == null) {
+            root = new IntervalTreeNode(start,end);
+            return true;
+        }
+        else{
+            if (isIntersected(intersectedTree,start,end)) return false;
+            else {
+                findIntersection(root,start,end, true);
+                return true;
+            }
+        }
+    }
+    
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(start,end);
+ */
