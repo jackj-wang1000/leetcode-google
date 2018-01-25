@@ -3,7 +3,7 @@ class solution {
         
         //time complexity:  M*N,  M is the String S length,  N is String T length
         //space : O(N)
-        int Ls = s.length();
+        int Ls = S.length();
         int Lt = T.length();
         if (Ls < Lt) return "";
         
@@ -22,7 +22,7 @@ class solution {
             if (!tab.containsKey(c)) tab.put(c,new ArrayList<Integer>());
             tab.get(c).add(i);
         }
-        int max_lengh = Integer.MAX_VALUE;
+        int max_length = Integer.MAX_VALUE;
         String res = "";
             
         for (int i = 0; i < Ls; i++) {
