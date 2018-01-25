@@ -1,0 +1,50 @@
+class solution {
+    public String minimumWidowSeq(String S, String T) {
+        
+        //time complexity:  M*N,  M is the String S length,  N is String T length
+        //space : O(N)
+        int Ls = s.length();
+        int Lt = T.length();
+        if (Ls < Lt) return "";
+        
+        // Hash + DFA (Deterministic Finite Automaton)
+        int[] st = new int[Lt+1];         // store starting postion in String S
+        Map<Character, List<Integer>> tab = new HashMap<Character, List<Integer>>();
+        // initialize state to -1
+        for (int i = Lt; i >= 0; i--) {
+            st[i] = -1;
+        }
+        //    a        b       c        d        e         f        
+        // 0 -----> 1-----> 2 ----> 3 -----> 4 --- --> 5 -----> 6  
+        for (int i = Lt-1; i >= 0; i--) { 
+            // must built in reverse order, so update from state closest to final state
+            char c = T.charAt(i);  
+            if (!tab.containsKey(c)) tab.put(c,new ArrayList<Integer>());
+            tab.get(c).add(i);
+        }
+        int max_lengh = Integer.MAX_VALUE;
+        String res = "";
+            
+        for (int i = 0; i < Ls; i++) {
+            char c = S.charAt(i);
+            if (tab.containsKey(c)) {
+                for (int k : tab.get(c)) {
+                    if(st[k] != -1) {    // valid state to update
+                        int pos = st[k];
+                        st[k+1] = pos;
+                            st[k] = -1;
+                            if (k+1 == Lt && max_length > i+1-pos) {
+                                max_length = i+1-pos; res = S.substring(pos,i+1);}
+                    }
+                }
+                if (c == T.charAt(0)) {
+                    st[1] = i;
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+    
+}
