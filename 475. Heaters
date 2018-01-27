@@ -1,0 +1,117 @@
+class Solution {
+
+        public int findRadius(int[] houses, int[] heaters) {
+         // sort + binary search
+         // time complexity:  (M+N)*logN   
+         // space : O(1)
+        int houses_L = houses.length;
+        int heaters_L = heaters.length;
+        //Arrays.sort(houses);
+        Arrays.sort(heaters);   // N*logN
+        
+        // find first index i in heaters array  which houses[j] <= heaters[i]
+        int res = Integer.MIN_VALUE;
+        for (int j = 0; j < houses_L; j++) { // M * logN
+            int id = -1;
+            if (houses[j] > heaters[heaters_L-1]) res = Math.max(res,houses[j] - heaters[heaters_L-1]);
+            else {
+                id = find(heaters, houses[j]);   // logN
+                if (id > 0)  res = Math.max(res,Math.min(heaters[id] - houses[j], houses[j] - heaters[id-1]));
+                else res = Math.max(res, heaters[0] - houses[j]);
+            }
+        }  
+        return res;    
+    }
+
+    
+    
+    
+    /*
+    public int findRadius(int[] houses, int[] heaters) {
+        // sort + binary search + merge sort
+        // time complexity:  O(M*logM + N*logN + M + N) ~ O(M*logM + N*logN)
+        // space : O(1)
+        int houses_L = houses.length;      // M size of houses size
+        int heaters_L = heaters.length;    // N size of heaters size
+        Arrays.sort(houses);                      // M*logM
+        Arrays.sort(heaters);                     // N*logN
+        
+        // find first index i in heaters array  which houses[j] <= heaters[i]
+        int res = Integer.MIN_VALUE;
+        if (houses[0] >= heaters[heaters_L-1]) return houses[houses_L-1] - heaters[heaters_L-1];       
+        int i = 0;
+        int j = find(heaters,houses[0]);          // logN
+        while (i < houses_L && j < heaters_L) {   // O(M+N) worse case
+            if (houses[i] <= heaters[j]) {
+                if (j == 0) res = Math.max(res,heaters[j]-houses[i]);
+                else   res = Math.max(res,Math.min(heaters[j]-houses[i],houses[i]-heaters[j-1]));
+                i++;
+            }
+            else {
+                j++;
+            }
+        }
+        if(i < houses_L) res = Math.max(res,houses[houses_L-1]-heaters[heaters_L-1]);        
+        return res;
+        
+    }
+    */
+    
+    
+    // find the first element index in s , which v is less or equal to
+    private int find(int[] s, int v) {
+        int left = 0;
+        int right = s.length-1;
+        int mid;
+        while (left < right) {
+            mid = left + (right-left)/2;
+            if (v == s[mid]) return mid;
+            else if (v > s[mid]) left = mid+1;
+            else right = mid;
+        }
+        return right;
+    }
+    
+    
+    private void mySort(int[] s, int l, int h) {
+        if (l >= h) return;
+        int tmp;
+        int curr = l;
+        for (int i = l; i < h; i++) {
+            if (s[i] < s[h]) {
+                tmp = s[i];
+                s[i] = s[curr];
+                s[curr] = tmp;
+                curr++;
+            }
+        }
+        tmp = s[curr];
+        s[curr] = s[h];
+        s[h] = tmp;
+        
+        mySort(s,l,curr-1);
+        mySort(s,curr+1,h);
+    }
+    // =============== 3-way quick sort     ===================================
+    private void mySort1(int[] s, int lo, int hi) {
+        if (lo >= hi) return;
+        int lt = lo, gt = hi;    // less than v for in [0...lt-1],  greater than v for in[gt+1, ... hi];
+        int i = lo;
+        int v = s[hi];  // could also be s[lo], it is the same for 3-way quick sort
+        while (i <= gt) {
+            if (s[i] < v)        swap(s,i++,lt++);
+            else if (s[i] > v)   swap(s,i,gt--);   // i must not be i--
+            else i++;
+        }
+        mySort(s,lo,lt-1);
+        mySort(s,gt+1,hi);
+    }
+    
+    private void swap(int[] s, int i, int j) {
+        int tmp = s[i];
+        s[i] = s[j];
+        s[j] = tmp;
+    }
+    // =============== end 3-way quick sort     ===================================
+    
+}
