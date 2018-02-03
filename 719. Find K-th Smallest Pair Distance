@@ -1,0 +1,46 @@
+class Solution {
+    public int smallestDistancePair(int[] nums, int k) {
+        // binary search
+        // time complexity: O(log(max_v - min_v)*N + N*logN)
+        // space: O(1)
+        int res = Integer.MAX_VALUE;
+        int L = nums.length;
+        Arrays.sort(nums);   // O(N*logN)
+        int min_v = nums[1]-nums[0];
+        int max_v = nums[L-1] - nums[0];
+        for (int i = 0; i < L-1; i++) min_v = Math.min(min_v,nums[i+1]-nums[i]);
+        int mid = (max_v - min_v)/2;
+        while (min_v < max_v) {
+            mid = (max_v + min_v)/2;
+            int cnt = smallerThanV(nums,mid);
+            if (k <= cnt)  max_v = mid;     // when k == cnt, there might be total of k pairs less than mid  
+            else if (k > cnt) min_v = mid+1;
+        }
+        return max_v;
+        
+    }
+    
+    private int smallerThanV(int[] nums, int v){   // time complexity : O(N), each index are processed at most twice.(imagine as queue)
+        int L = nums.length;
+        int pre_end = 0;
+        int start = 0;
+        int end = 1;
+        int cnt = 0;
+        while (end < L) {
+            while(start < end && nums[end] - nums[start] > v) start++;
+            if (start == end){
+                end++;
+            }
+            else{
+                while(end < L && nums[end] - nums[start] <= v) end++;
+                cnt += (end-1-start)*(end-start)/2;
+                if (start < pre_end) cnt -= (pre_end-start)*(pre_end-start+1)/2;
+                pre_end = end-1;
+                start++;
+            }
+        }
+        
+        return cnt;
+    }
+    
+}
