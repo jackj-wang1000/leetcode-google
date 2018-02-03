@@ -1,0 +1,66 @@
+class Solution {
+    public String countOfAtoms(String formula) {
+        // HashMap + DFS
+        // worst case time complexity: O(n^2)
+        // space : O(n)
+        int L = formula.length();
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        helper(formula,0,L,map, 1);
+        int sz = map.size();
+        String[] str = new String[sz];
+        int i = 0;
+        for(String st : map.keySet()) {
+            str[i++] = new String(st);
+        }
+        Arrays.sort(str);  
+        StringBuilder strb = new StringBuilder();
+        for(i = 0; i < sz; i++) {
+            strb.append(str[i]);
+            int t = map.get(str[i]);
+            if (t > 1) strb.append(String.valueOf(t));
+        }
+        return strb.toString();
+    }
+    private int mult(String s, int start, int end) {
+        int i = start;
+        while(i < end && s.charAt(i) <= '9' && s.charAt(i) >= '0') i++;
+        return i-start;
+    }
+    // cnt : outter layer multiplier
+    private void helper(String s, int start, int end, Map<String,Integer> map, int cnt) {
+
+        int left = 0;       // number of left parenthesis 
+        int id = -1;
+        for (int i = start; i < end; i++) {
+            if (left != 0) {     // process inside the parenthesis (inner layer)
+                if (s.charAt(i) == '(') left++;
+                else if (s.charAt(i) == ')') left--;
+                if (left == 0) {
+                    int t = 1;
+                    int l = mult(s,i+1,end);
+                    if (l > 0) t = Integer.parseInt(s.substring(i+1,i+1+l));
+                    helper(s,id,i,map,cnt*t);
+                    i = i+l;    // not i+l+1
+                }
+            }
+            else {   /// process outside of parenthesis(current layer)
+                if (s.charAt(i) == '(') {id = i+1; left++;}
+                else{
+                    int k = 0;
+                    int b = i++; k++;
+                    while(i < end && s.charAt(i) >= 'a' && s.charAt(i) <= 'z') { i++; k++;}
+                    String element = s.substring(b,i);
+                    int t = 1; 
+                    int l = mult(s,i,end);
+                    if (l > 0) t = Integer.parseInt(s.substring(i,i+l));
+                    if (!map.containsKey(element)) map.put(element,0);
+                    map.put(element,map.get(element)+cnt*t);
+                    i = b+k+l-1;
+                }
+            }
+        }
+
+        
+        
+    }
+}
