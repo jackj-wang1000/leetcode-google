@@ -1,0 +1,21 @@
+class Solution {
+    public boolean checkPossibility(int[] nums) {
+        // time complexity: O(N)
+        // space: O(1)
+        int L = nums.length;
+        int cnt = 0;
+        int j  = -1;
+        for (int i = 0; i < L-1; i++) {
+            if (nums[i] > nums[i+1]) {
+                cnt++;     
+                j = i;         // locate decreasing
+            }
+        }
+        if (cnt == 0) return true;
+        else if (cnt >= 2) return false;
+        else {
+            if(j + 2 >= L || nums[j] <= nums[j+2] || j-1 < 0 || nums[j+1] >= nums[j-1]) return true;
+            else return false;
+        }
+    }
+}
