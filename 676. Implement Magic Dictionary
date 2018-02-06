@@ -1,4 +1,48 @@
 class MagicDictionary {
+    // time complexity: O(L), L is length of search word
+    // space: O(1)
+    
+    private Set<String> dic;
+
+    /** Initialize your data structure here. */
+    public MagicDictionary() {
+        dic = new HashSet<String>();
+    }
+    
+    /** Build a dictionary through a list of words */
+    public void buildDict(String[] dict) {
+        int L = dict.length;
+        for (int i = 0; i < L; i++) {
+            dic.add(dict[i]);
+        }
+    }
+    
+    /** Returns if there is any word in the trie that equals to the given word after modifying exactly one character */
+    public boolean search(String word) {
+        int L = word.length();
+        //StringBuilder str = new StringBuilder();
+        String str ="";
+        for (int i = 0; i < L; i++) {
+            char c = word.charAt(i);
+            for (char x = 'a'; x <= 'z'; x++) {
+                if (x != c) str = word.substring(0,i) + x + word.substring(i+1,L);
+                if (dic.contains(str)) return true;
+            }
+        }
+        return false;
+    }
+}
+
+/**
+ * Your MagicDictionary object will be instantiated and called as such:
+ * MagicDictionary obj = new MagicDictionary();
+ * obj.buildDict(dict);
+ * boolean param_2 = obj.search(word);
+ */
+
+
+
+class MagicDictionary {
     // dfs + trie
     // time complexity: O(M*L), M is length of search word, L is size of dic
     // space: O(N),  N is total number of characters in dic
