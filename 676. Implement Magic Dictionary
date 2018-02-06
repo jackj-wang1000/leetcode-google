@@ -1,0 +1,77 @@
+class MagicDictionary {
+    // dfs + trie
+    // time complexity: O(M*L), M is length of search word, L is size of dic
+    // space: O(N),  N is total number of characters in dic
+    
+    class TrieNode{
+        public TrieNode[] children;
+        public boolean isKey;
+        public TrieNode() {
+            children = new TrieNode[26];
+            isKey = false;
+        }
+    }
+    
+    class Trie{
+        private TrieNode root;
+        public Trie() {
+            root = new TrieNode();
+        }
+        public void put(String str) {
+            insert(str,0,root);
+        }
+        private TrieNode insert(String str, int i, TrieNode curr){
+            
+            if (curr == null)  curr = new TrieNode();
+            if (i == str.length()) {curr.isKey = true; return curr;}
+            int c = str.charAt(i) - 'a';
+            curr.children[c] = insert(str,i+1,curr.children[c]);
+            return curr;
+        }
+        
+        public boolean find(String str){
+            return search(str,0,1,root);
+        }
+        
+        private boolean search(String str, int i, int cnt, TrieNode curr) {
+            if (curr == null) return false;
+            if (i == str.length()) return curr.isKey && cnt == 0;  //  end recursive when i == str.length()
+            int c = str.charAt(i) - 'a';
+            if(cnt > 0) {
+                for(int j = 0; j < 26; j++) {
+                    if (j != c && search(str,i+1,cnt-1,curr.children[j])) return true;
+                }
+            }
+            if (search(str,i+1,cnt,curr.children[c])) return true;    // not in else condition, in all condition
+            else return false;
+        }
+        
+    }
+    
+    private Trie tr;
+
+    /** Initialize your data structure here. */
+    public MagicDictionary() {
+        tr = new Trie();
+    }
+    
+    /** Build a dictionary through a list of words */
+    public void buildDict(String[] dict) {
+        int L = dict.length;
+        for(int i = 0; i < L; i++) {
+            tr.put(dict[i]);
+        }
+    }
+    
+    /** Returns if there is any word in the trie that equals to the given word after modifying exactly one character */
+    public boolean search(String word) {
+        return tr.find(word);
+    }
+}
+
+/**
+ * Your MagicDictionary object will be instantiated and called as such:
+ * MagicDictionary obj = new MagicDictionary();
+ * obj.buildDict(dict);
+ * boolean param_2 = obj.search(word);
+ */
