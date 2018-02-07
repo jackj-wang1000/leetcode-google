@@ -1,0 +1,32 @@
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        // binary search
+        // time complexity: log(N)
+        // space: O(1)
+        //  arr[m-1], arr[m] ... x ... arr[m+k-1],arr[m+k], 
+        // if m is the starting index, then 
+        //     1.  x - arr[m-1] > arr[m+k-1] - x   (not starting at m-1)
+        //     2.  arr[m+k] - x >= x - arr[m]      (not starting at m+1)
+        // binary search condition:  arr[m+k-1] + arr[m-1] < 2*x <= arr[m] + arr[m+k]
+        // which means to find the first index m, where arr[m] + arr[m+k] >= 2*x
+        int L = arr.length;
+        List<Integer> res = new ArrayList<Integer>();
+        int low = 0;
+        int high = L-k-1;
+        int mid = (low + high)/2;
+        if (L == k || arr[L-k-1] + arr[L-1] < 2 *x) {     // k is equal to arr size or No index exist
+            for (int i = 0; i < k; i++)  res.add(arr[L-k+i]);
+            return res;
+        }
+        while (low < high) {
+            mid = low + (high-low)/2;
+            int sum = arr[mid] + arr[mid+k];
+            if (sum >= 2 * x) high = mid;
+            else low = mid+1;
+        }
+        for (int i = 0; i < k; i++) {
+            res.add(arr[high+i]);
+        }
+        return res;
+    }
+}
