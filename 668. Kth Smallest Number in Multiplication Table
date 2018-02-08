@@ -1,0 +1,27 @@
+class Solution {
+    public int findKthNumber(int m, int n, int k) {
+        // time complexity: O(min(m,n)*log(m*n))
+        // space: O(1)
+        int low = 1;
+        int high = m*n;
+        int mid = low + (high - low)/2;
+        while(low < high) {
+            mid = low + (high - low)/2;
+            int total = findLessThanV(m,n,mid);
+            // there might be value less than mid which make the condition justified
+            if (total >= k) high = mid;   
+            else low = mid+1;
+        }
+        return high;
+    }
+    
+    private int findLessThanV(int m, int n, int v) {
+        if (m > n) return findLessThanV(n,m,v);
+        int res = 0;
+        for (int i = 1; i <= Math.min(m,v); i++) {
+            res += Math.min(v/i,n);
+        }
+        return res;
+    }
+       
+}
