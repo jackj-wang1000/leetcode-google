@@ -9,7 +9,7 @@ class Solution {
         while(low < high) {
             mid = low + (high - low)/2;
             int total = findLessThanV(m,n,mid);
-            // there might be value less than mid which make the condition justified
+            // there might be value less than mid which make the condition justified when total == k
             if (total >= k) high = mid;   
             else low = mid+1;
         }
