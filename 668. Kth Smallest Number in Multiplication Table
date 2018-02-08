@@ -1,5 +1,6 @@
 class Solution {
     public int findKthNumber(int m, int n, int k) {
+        // binary search
         // time complexity: O(min(m,n)*log(m*n))
         // space: O(1)
         int low = 1;
