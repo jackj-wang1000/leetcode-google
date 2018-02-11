@@ -10,7 +10,7 @@
  */
 class Solution {
     public List<Point> outerTrees(Point[] points) {
-        // convex hull problem
+        // convex hull problem (Graham scan algorithm)
         // Time complexity:  O(N*logN) 
         // space : O(1)
         // find the lowest point and evaluate polar angle
