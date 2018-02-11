@@ -1,0 +1,83 @@
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+class Solution {
+    public List<Point> outerTrees(Point[] points) {
+        // convex hull problem
+        // Time complexity:  O(N*logN) 
+        // space : O(1)
+        // find the lowest point and evaluate polar angle
+        Point lowestP = new Point(points[0].x, points[0].y);
+        int ind = 0;
+        int L = points.length;
+        List<Point> res = new ArrayList<Point>();
+        if (L <= 3) {
+            for (int i = 0; i < L; i++) {
+                res.add(points[i]);
+            }
+            return res;
+        }
+        for (int i = 1; i < L; i++) {
+            if ( (points[i].y < lowestP.y) || (points[i].y == lowestP.y && points[i].x < lowestP.x))
+            {ind = i; lowestP.x = points[i].x; lowestP.y = points[i].y;}
+        }
+        
+        Comparator<Point> cmp = new Comparator<Point>(){
+            @Override
+            public int compare(Point a, Point b) {
+                // i x i = 0,  i x j = k,  j x i = -k
+                // (a*i + b*j) x (c*i + d*j) = (a*d - b*c)*K   
+               // a.x-lowestP.x, a.y-lowestP.y     
+               // b.x-lowestP.x, b.y-lowestP.y
+                int c = (a.x-lowestP.x)*(b.y-lowestP.y) - (a.y-lowestP.y)*(b.x-lowestP.x);
+                // corner case:  some points lie in the vertical or horizontal line of  lowest Point
+                return c == 0 ? (b.y == a.y ? b.x - a.x : b.y -a.y): c;    
+            }
+        };
+        Arrays.sort(points,cmp);  // sort : O(N*logN)
+        res.add(lowestP);  // lowestP == points[L-1]
+        res.add(points[0]);
+        int sz = 2;
+        int i = 1;
+        // process when first several points (most left side) lie on the line through lowest point and points[0])
+        // case like: [[3,0],[4,0],[5,0],[6,1],[7,2],[7,3],[7,4],[6,5],[5,5],[4,5],[3,5],[2,5],[1,4],[1,3],[1,2],[2,1],[4,2],[0,3]]
+        if (isOnline(lowestP, points[0],points[1])) {
+            res.remove(--sz);   // remove points[0] from res
+            while (isOnline(lowestP, points[0],points[i])) {
+                res.add(points[i]);
+                sz++;
+                i++;
+            }
+            res.add(points[0]);  // add points[0] here
+            sz++;
+        }
+        for (; i < L; i++) {
+            while (!isClockWise(points[i],res.get(sz-1),res.get(sz-2))) {res.remove(sz-1); sz--;}
+            res.add(points[i]);
+            sz++;
+        }
+        res.remove(sz-1);
+        return res;
+        
+    }
+    
+    // cross product
+    private boolean isOnline(Point a, Point b, Point c) {
+        return (a.x-b.x)*(b.y-c.y) == (b.x-c.x)*(a.y-b.y);
+    }
+    
+    // cross product 
+    private boolean isClockWise(Point a, Point b, Point c) {
+        // a.x, a.y
+        // b.x, b.y
+        // c.x, c.y 
+        return (a.x-b.x)*(b.y-c.y) -  (b.x-c.x)*(a.y-b.y) >= 0;
+    }
+    
+}
