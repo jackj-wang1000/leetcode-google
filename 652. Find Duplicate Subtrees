@@ -1,0 +1,23 @@
+class Solution {
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        // bottom-up recursive
+        // time complexity: O(N)
+        // space: O(N),  stack used in recursion is log(N)
+        
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        List<TreeNode> res = new ArrayList<TreeNode>();
+        helper(map,root,res);
+        return res;
+    }
+    
+    private String helper(Map<String,Integer> map, TreeNode curr, List<TreeNode> res) {
+        if (curr == null) return "#";
+        
+        String str = Integer.toString(curr.val)+helper(map,curr.left,res)+helper(map,curr.right,res);
+        if (!map.containsKey(str)) map.put(str,0);
+        if (map.get(str) == 1) res.add(curr);
+        map.put(str,map.get(str)+1);
+        return str;
+    }
+    
+}
