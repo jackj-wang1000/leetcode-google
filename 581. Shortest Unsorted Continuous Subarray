@@ -1,0 +1,28 @@
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        // Monotonous stack
+        // time complexity: O(N)
+        // space: O(N) worse case
+        Stack<Integer> stInc = new Stack<Integer>();
+        int L = nums.length;
+        int left = L;
+        stInc.push(0);
+        for (int i = 1; i < L; i++) {
+            while(!stInc.isEmpty() && nums[i] < nums[stInc.peek()]) {left = Math.min(left,stInc.pop());}
+            stInc.push(i);
+        }
+        if (left == L) return 0;
+        
+
+        int right = 0;
+        Stack<Integer> stDec = new Stack<Integer>();
+        stDec.push(L-1);
+        for (int i = L-2; i >=0; i--) {
+            while(!stDec.isEmpty() && nums[i] > nums[stDec.peek()]) {right = Math.max(right, stDec.pop());}
+            stDec.push(i);
+        }
+        return right-left+1;
+    }
+        
+    
+}
