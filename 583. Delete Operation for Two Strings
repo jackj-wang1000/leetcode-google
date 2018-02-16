@@ -1,0 +1,18 @@
+class Solution {
+    public int minDistance(String word1, String word2) {
+        // time complexity: O(N1*N2)
+        // space: O(N1*N2) => could be O(min(N1,N2))
+        // longest common sequence
+        int L1 = word1.length();
+        int L2 = word2.length();
+        int[][] dp = new int[L1+1][L2+1];
+        for (int i = 1; i <= L1; i++) {
+            for (int j = 1; j <= L2; j++) {
+                dp[i][j] = Math.max(dp[i-1][j],dp[i][j-1]);
+                if (word1.charAt(i-1) == word2.charAt(j-1)) dp[i][j] = Math.max(dp[i][j],dp[i-1][j-1]+1);
+            }
+        }
+        
+        return L1+L2-2*dp[L1][L2];
+    }
+}
