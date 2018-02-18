@@ -1,5 +1,59 @@
 class Solution {
     public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        // Memorized dfs
+        int L = price.size();
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        return helper(price,special,needs,map);
+    }
+    
+    private int helper(List<Integer> price, List<List<Integer>> special, List<Integer> needs, Map<String,Integer> map) {
+        String str = serializeNeeds(needs);
+        if (map.containsKey(str)) return map.get(str);
+        int L = price.size();
+        int res = 0;
+        for (int i = 0; i < L; i++) {
+            res += price.get(i)*needs.get(i);
+        }
+        for (List<Integer> lst: special) {
+            boolean isValid = true;
+            for (int i = 0; i < L; i++) {
+                if (lst.get(i) > needs.get(i)) isValid = false;
+                needs.set(i,needs.get(i)-lst.get(i));
+            }
+            if (isValid) {
+                res = Math.min(res,helper(price,special,needs,map)+lst.get(L));
+            }
+            for (int i = 0; i < L; i++) {
+                needs.set(i,needs.get(i)+lst.get(i));
+            }
+        }
+        map.put(str,res);
+        return res;
+    }
+    
+    private String serializeNeeds(List<Integer> needs){
+        StringBuilder str = new StringBuilder();
+        for (Integer i : needs) {
+            str.append(Integer.toString(i)+"#");
+        }
+        return str.toString();
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+//  ///////////////////////
+
+
+class Solution {
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
         // dfs
         int L = price.size();
         int res = 0;
