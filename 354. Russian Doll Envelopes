@@ -1,0 +1,58 @@
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        // sort + BIT
+        // time complexity: O(N*log(N))
+        // space: O(N)
+
+        int res = 1;
+        int L = envelopes.length;
+        if (L < 1) return 0;
+        // get rid of duplicate, sort by height, build BIT
+        Comparator<int[]> cmp1 = new Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                return a[1] - b[1];
+            }
+        };
+        Arrays.sort(envelopes,cmp1);
+        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+        sz = 1;
+        for(int i = 0; i < L; i++) {
+            if (!map.containsKey(envelopes[i][1])) { map.put(envelopes[i][1],sz); sz++;}
+        }
+        BIT = new int[sz];   // actual total height is sz-1;
+
+        
+        // sort by width ascending, then height descending
+        Comparator<int[]> cmp = new Comparator<int[]>() {
+            public int compare(int[] a, int[] b){
+                return a[0] != b[0] ? a[0] - b[0] : b[1]-a[1];
+            }
+        };
+        Arrays.sort(envelopes,cmp);
+        for(int i = 0; i < L; i++){
+            int ind = map.get(envelopes[i][1]);
+            int max_env = getMax(ind-1)+1;   // log(N), find max envelopes below current height
+            res = Math.max(res,max_env);
+            update(ind,max_env);   // log(N), update envelopes with larger height
+        }
+        return res;
+    }
+    
+    private int[] BIT;
+    private int sz;
+    private void update(int ind,int v){
+        while (ind < sz) {
+            BIT[ind] = Math.max(BIT[ind],v);
+            ind += ind & (-ind);
+        }
+    }
+    private int getMax(int ind) {
+        int res = 0;
+        while (ind > 0) {
+            res = Math.max(res,BIT[ind]);
+            ind -= ind & (-ind);
+        }
+        return res;
+    }
+    
+}
