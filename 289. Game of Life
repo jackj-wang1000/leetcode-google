@@ -1,0 +1,47 @@
+class Solution {
+    public void gameOfLife(int[][] board) {
+        // using state change instead,
+        // time complexity: O(N)
+        // space: O(1)
+        // 00 -> 00 dead to dead,  01 -> 01 live to live, 00 -> 11 dead to live, 01 -> 10 live to dead;
+        int row = board.length;
+        if (row == 0) return;
+        int col = board[0].length;
+        for(int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int cnt = neighborLiveCells(board,i,j);
+                if (board[i][j] == 1) {
+                    if (cnt < 2 || cnt > 3) board[i][j] = 2;
+                }
+                else {
+                    if (cnt == 3) board[i][j] = 3;
+                }
+            }
+        }
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                board[i][j] = board[i][j] & 1;
+            }
+        }
+        
+    }
+    
+    private int neighborLiveCells(int[][] board, int x, int y) {
+        int res = 0;
+        int[] dx = new int[]{0,0,1,-1,-1,-1,1,1};
+        int[] dy = new int[]{1,-1,0,0,1,-1,1,-1};
+        for (int i = 0; i < 8; i++) {
+            int x_next = x + dx[i];
+            int y_next = y + dy[i];
+            if (x_next >= 0 && x_next < board.length && y_next >= 0 && y_next <board[0].length) {
+                if (board[x_next][y_next] > 1) {
+                    res += (board[x_next][y_next] ^ 3) & 1;
+                }
+                else {
+                    res += board[x_next][y_next] & 1;
+                }
+            }
+        }
+        return res;
+    }
+}
