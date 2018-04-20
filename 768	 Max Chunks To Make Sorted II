@@ -1,0 +1,45 @@
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        // time complexity:  O(n*log(n))
+        // space complexiyt: O(n)
+        int res = 0;
+        int n = arr.length;
+        Integer[] index_arr = new Integer[n];  // comparator type is Integer
+        for (int i = 0; i < n; i++) {
+            index_arr[i] = i;
+        }
+        Comparator<Integer> cmp = new Comparator<Integer>(){
+            @Override
+            public int compare(Integer i, Integer j){
+                return arr[i] == arr[j] ? i - j : arr[i] - arr[j];
+            }
+        };
+        Arrays.sort(index_arr,cmp);  // n*log(n), sort arr by index;
+
+        
+        int[] map_arr = new int[n];  // arr[i] -> index,  mapping from value to index after sorted
+        for (int i = 0; i < n; i++) {
+            map_arr[index_arr[i]] = i;
+        }
+        int pre = Math.max(index_arr[0], map_arr[0]); // represent largest index of current group, value from 0 to n-1
+        int curr = 0;     // represent current position in sorted arr, value from 0 to n-1
+        for (int i = 0; i < n; i++) {
+            if (curr == map_arr[i]) {  // move current pointer when find curr 
+                while (curr < pre) {
+                    if (index_arr[curr] <= pre) curr++;
+                    //else break;
+                    else { pre =index_arr[curr]; break;}   // arr[index_arr[curr]] must contain in current group;
+                }
+                if (curr == pre) {
+                    res++;
+                    curr++;
+                    pre = curr < n ? index_arr[curr] : -1;
+                }
+            }
+            else {
+                pre = Math.max(pre,map_arr[i]);   // arr[i] must contain in current group
+            }
+        }
+        return res;
+    }
+}
