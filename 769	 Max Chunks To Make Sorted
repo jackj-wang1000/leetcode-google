@@ -1,0 +1,33 @@
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        // time complexity:  O(n), two pointer, each one moves at most n;
+        // space complexity: O(n)
+        int res = 0;
+        int curr = 0;
+        int pre = 0;
+        int n = arr.length;
+        boolean[] st = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            st[arr[i]] = true;
+            if (curr == arr[i]) {
+                while(curr < pre) {
+                    if (st[curr]) curr++;
+                    else {
+                        break;
+                    }
+                }
+                if(curr == pre) {
+                    res++;
+                    curr++;
+                    pre++;
+                }
+            }
+            else {
+                pre = Math.max(pre,arr[i]);   // current group must contain till arr[i];
+            }
+           // System.out.println("curr="+curr+" pre="+pre+" i="+i+" res="+res);
+        }
+       return res; 
+        
+    }   
+}
