@@ -29,3 +29,37 @@ class Solution {
         return res;
     }
 }
+
+
+========================================================================================================================
+http://bookshadow.com/weblog/2018/03/04/leetcode-number-of-matching-subsequences/
+class Solution {
+    public int numMatchingSubseq(String S, String[] words) {
+        // time complexity:  O(M*26 + K), K is total number of character in words array
+        // space complexity:  O(M*26)
+        int sLen = S.length();
+        int[][] dp = new int[sLen+1][26];  // dp[idx][c]  represent the index first time c show up in String S after idx (inclusive)
+        int[] last = new int[26];
+        for (int i = 0; i < sLen; i++) {    // O(M*26)
+            int x = S.charAt(i) - 'a';
+            for (int j = last[x]; j <= i; j++) {
+                dp[j][x] = i+1;
+            }
+            last[x] = i+1;
+        }
+        int res = 0;
+        for (int i = 0; i < words.length; i++) {  // O(words.length * words[i].length())  total number of characters in words.
+            res += check(dp,words[i]);
+        }
+        return res;
+    }
+    
+    private int check(int[][] dp, String s) {
+        int next = 0;
+        for (int i = 0; i < s.length(); i++) {
+            next = dp[next][s.charAt(i)-'a'];
+            if (next == 0) return 0;
+        }
+        return 1;
+    }
+}
