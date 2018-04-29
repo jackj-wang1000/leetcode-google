@@ -1,0 +1,118 @@
+class Solution {
+    public int networkDelayTime(int[][] times, int N, int K) {
+        // time complexity: O(N^2*logN)
+        // space: O(N)
+        //dp + heap
+        // build a adjacent list
+        int n = times.length;
+        //ArrayList<Integer>[] graph = new ArrayList[N];
+        //HashSet<Integer>[] g = new HashSet[N];
+        List<Map<Integer,Integer>> graph= new ArrayList<Map<Integer,Integer>>();
+        for (int i = 0; i < N; i++) {
+            graph.add(new HashMap<Integer,Integer>());
+        }
+        for (int i = 0; i < n; i++) {
+            graph.get(times[i][0]-1).put(times[i][1]-1,times[i][2]);
+        }
+        int[] dp = new int[N];
+        for (int i = 0; i < N; i++) {
+            dp[i] = -1;
+        }
+        dp[K-1] = 0;
+        
+        class MyHeap{
+            int[] arr;
+            int size;
+            int[] w;
+            int[] pos;
+            public MyHeap(int[] dp, int n){
+                arr = new int[n];
+                pos = new int[n];
+                size = 0;
+                w = dp;
+            }
+            
+            private void swap(int i, int j) {
+                pos[arr[i]] = j;
+                pos[arr[j]] = i;
+                int tmp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = tmp;
+            }
+            
+            public void offer(int i) {
+                pos[i] = size;
+                arr[size] = i;
+                int curr = size;
+                while (curr > 0) {
+                    if(w[i] < w[arr[(curr-1)/2]]) {
+                        swap(curr,(curr-1)/2);
+                        curr = (curr-1)/2;
+                    }
+                    else break;
+                }
+                size++;
+            }
+            
+            public int poll() {
+                int res = arr[0];
+                swap(0,size-1);
+                size--;
+                int curr = 0;
+                while (curr*2+1 < size){
+                    int ind = curr*2+1;
+                    if (ind+1 < size && w[arr[ind]] > w[arr[ind+1]]) ind++;
+                    if (w[arr[curr]] > w[arr[ind]]) {swap(curr,ind); curr = ind;}
+                    else break;
+                }
+                return res;
+            }
+            
+            public void floatup(int i) {
+                int curr = pos[i];
+                while (curr > 0) {
+                    int ind = (curr-1)/2;
+                    if (w[i] < w[arr[ind]]) {
+                        swap(curr,ind);
+                        curr = ind;
+                    }
+                    else break;
+                }
+            }
+            
+            public boolean isEmpty() {
+                return size == 0;
+            }
+        }
+        
+        MyHeap pq = new MyHeap(dp,N);
+        pq.offer(K-1);
+        while (! pq.isEmpty()) {
+            int curr = pq.poll();
+            //System.out.println("curr:" +curr+" dp[curr]:"+dp[curr]);
+            Map<Integer,Integer> neighbor = graph.get(curr);
+            for (int i : neighbor.keySet()) {
+                int tmp = dp[curr] + neighbor.get(i);
+                if (dp[i] < 0) {    // new node, insert into heap
+                    dp[i] = tmp; 
+                    pq.offer(i);
+                   // System.out.println("offer curr neighbor:" + i + "dp["+i+"]= "+dp[i]);
+                }
+                else if (dp[i] > tmp) {  // already in heap, adjust position
+                    dp[i] = tmp; 
+                    pq.floatup(i);
+                   // System.out.println("float curr neighbor:" + i + "dp["+i+"]= "+dp[i]);
+                }
+            }
+            //System.out.println("=====");
+        }
+        int res = dp[0];
+        for (int i = 0; i < N; i++) {
+            if (dp[i] < 0) return -1;
+            res = Math.max(res,dp[i]);
+        }
+        return res;
+        
+    }
+
+}
