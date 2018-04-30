@@ -1,0 +1,45 @@
+class Solution {
+    public int monotoneIncreasingDigits(int N) {
+        // time complexity: O(1)
+        // space complexity: O(1)
+        if(N < 10) return N; 
+        int[] dig = new int[10];
+        int res = N;
+        int cnt = 0;
+        while (N > 0) {
+            dig[cnt] = N % 10;
+            N = N / 10;
+            cnt++;
+        } 
+        /*
+        for (int j = 0; j < cnt; j++) {
+            System.out.println("digit: "+ dig[j]);
+        }
+        System.out.println("cnt: "+cnt);
+        */
+        int i = cnt-1;
+        for (; i > 0; i--) {
+            if(dig[i] > dig[i-1]) break;
+        }
+        if (i == 0) return res;
+        int d = dig[i];
+        while (i < cnt) {
+            if (dig[i] == d) i++;
+            else break;
+        }
+        i--;
+        dig[i] = dig[i] - 1;
+        i--;
+        while (i >= 0) {
+            dig[i] = 9;
+            i--;
+        }
+        res = 0;
+        for (i = cnt-1; i >= 0; i--) {
+            res = res*10 + dig[i];
+        }
+        return res;
+    }
+}
+
+
