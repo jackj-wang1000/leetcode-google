@@ -1,0 +1,35 @@
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        // time complexity: O(N)
+        // space complexity: O(N)
+        // stack + scanning
+        Stack<Integer> st = new Stack<Integer>();
+        int n = asteroids.length;
+        for (int i = 0; i < n; i++) {
+            if(asteroids[i] > 0) {
+                st.push(asteroids[i]);
+            }
+            else {
+                if (st.isEmpty() || st.peek() < 0) st.push(asteroids[i]);
+                else {
+                    int state = 0;
+                    while (!st.isEmpty() && st.peek() > 0) {
+                        int top  = st.peek();
+                        if (top + asteroids[i] > 0) {state = 1; break;}
+                        else if (top + asteroids[i] < 0) st.pop();
+                        else {st.pop(); state = 1; break;}
+                    }
+                    if (state == 0) {
+                        st.push(asteroids[i]);
+                    }
+                }
+            }
+        }
+        n = st.size();
+        int[] res = new int[n];
+        for (int i = n-1; i >= 0; i--) {
+            res[i] = st.pop();
+        }
+        return res;
+    }
+}
