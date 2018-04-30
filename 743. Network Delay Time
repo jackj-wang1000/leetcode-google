@@ -1,7 +1,7 @@
 class Solution {
     public int networkDelayTime(int[][] times, int N, int K) {
-        // time complexity: O(N^2*logN)
-        // space: O(N)
+        // time complexity: O(V*E*logV),  vertex #: V,  Edge #: E
+        // space: O(V)
         //dp + heap
         // build a adjacent list
         int n = times.length;
