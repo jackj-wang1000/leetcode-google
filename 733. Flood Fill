@@ -1,0 +1,34 @@
+class Solution {
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        // time complexiyt: O(M*N), each element get into queue and out of queue only once.
+        // space complexity: O(M*N)
+        // bfs (breadth first search)
+        int row = image.length;
+        int col = image[0].length;
+        int rp = image[sr][sc];
+        if (rp == newColor) return image;
+        Set<Integer> set = new HashSet<Integer>();
+        image[sr][sc] = newColor;
+        set.add(sr*col+sc);
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.offer(sr*col+sc);
+        int[] delta_x = new int[]{1,-1,0,0};
+        int[] delta_y = new int[]{0,0,1,-1};
+        while(!q.isEmpty()) {
+            int curr = q.poll();
+            int r = curr/col;
+            int c = curr%col;
+            for (int i = 0; i < 4; i++) {
+                int r_next = r + delta_x[i];
+                int c_next = c + delta_y[i];
+                if (r_next >= 0 && r_next < row && c_next >= 0 && c_next < col && image[r_next][c_next] == rp &&  !set.contains(r_next*col+c_next)) {
+                    set.add(r_next*col + c_next);
+                    image[r_next][c_next] = newColor;
+                    q.offer(r_next*col+c_next);
+                }
+            }
+        }
+
+        return image;
+    }
+}
