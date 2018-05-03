@@ -1,0 +1,32 @@
+    class MaxStack {
+       private Stack<Integer> st;
+       private Stack<Integer> st_max;
+       
+       public void push(x) {
+           if (!st_max.isEmpty() && st_max.peek() <= x) {
+                 st_max.push(x);
+           }
+           st.push(x);
+       }
+       
+       public int pop() {
+           if(st.peek() == st_max.peek())  st_max.pop();
+           return st.pop();
+       }
+       public int top() {
+           return st.peek();
+       }
+       
+       public int peekMax() {
+           return st_max.peek();
+       }
+
+       public int popMax(){
+            Stack<Integer> tmp = new Stack<Integer>();
+            while(st.peek() != st_max.peek()) tmp.push(st.pop());
+            st.pop();
+           // while(!tmp.isEmpty()) st.push(tmp.pop());   //should update st_max;
+           while(!tmp.isEmpty()) push(tmp.pop());
+            return st_max.pop();
+       }
+     }
