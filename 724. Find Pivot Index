@@ -1,0 +1,34 @@
+class Solution {
+    /*
+    public int pivotIndex(int[] nums) {
+        // time complexity: O(N)
+        // space complexity: O(N)  => O(1)
+        int n = nums.length;
+        int[] left = new int[n+1];
+        int[] right = new int[n+1];
+        for (int i = 0; i < n; i++) {
+            left[i+1] = left[i] + nums[i];
+            right[n-1-i] = right[n-i] + nums[n-1-i]; 
+        }
+        for (int i = 0; i < n; i++) {
+            if (left[i] == right[i+1]) return i;
+        }
+        return -1;
+    }
+    */
+    public int pivotIndex(int[] nums) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        int sum = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            sum = sum + nums[i];
+        }
+        int cumulate_sum  = 0;
+        for (int i = 0; i < n; i++) {
+            if (sum - nums[i] == 2 * cumulate_sum) return i;
+            cumulate_sum += nums[i];
+        }
+        return -1;
+    }
+}
