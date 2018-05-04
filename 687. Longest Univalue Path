@@ -1,0 +1,26 @@
+class Solution {
+    // time complexity: O(N)
+    // space complexity: using stack, which is the hight of tree;
+    private int res;
+    public int longestUnivaluePath(TreeNode root) {
+        res = 0;
+        helper(root);
+        return res;
+    }
+    
+    // helper function return maximum length of path starting from root
+    private int helper(TreeNode root) {   
+        if (root == null) return 0;
+        int maxLen = 0;    // if not equal to left child or right child, should return 0
+        int left = helper(root.left);
+        int right = helper(root.right);
+        if (root.left != null && root.left.val == root.val) { left++; maxLen = left; }
+        if (root.right != null && root.right.val == root.val) { right++;  maxLen = Math.max(maxLen,right);}
+        if ( root.left != null && root.left.val == root.val && root.right != null && root.right.val == root.val) {
+            res = Math.max(res,left+right);
+        }
+        res = Math.max(res,maxLen);
+        return maxLen;
+            
+    }
+}
