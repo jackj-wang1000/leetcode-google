@@ -1,0 +1,38 @@
+class Solution {
+    public boolean checkValidString(String s) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // two scan, left scan and right scan
+        int n = s.length();
+        int star = 0;
+        int left = 0;
+        int right = 0;
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            if (c == '(') left++;
+            else if (c == '*') star++;
+            else {
+                if (left == 0 && star == 0) return false;
+                if (left > 0) left--;
+                else star--;
+            }
+        }
+        if (left > star) return false;
+        
+        star = 0;
+        left = 0;
+        right = 0;
+        for (int i = n-1; i >= 0; i--) {
+            char c = s.charAt(i);
+            if (c == ')') right++;
+            else if (c == '*') star++;
+            else {
+                if (right == 0 && star == 0) return false;
+                else if (right > 0) right--;
+                else star--;
+            }
+        }
+        if (right > star) return false;
+        return true;
+    }
+}
