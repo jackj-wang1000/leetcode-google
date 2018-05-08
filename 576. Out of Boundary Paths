@@ -1,0 +1,58 @@
+class Solution {
+    public int findPaths(int m, int n, int N, int i, int j) {
+        // time complexity: O(m*n*N)
+        // sapce complexity: O(m*n)
+        // dynamic programming
+        int res = 0;
+        if (N == 0) return 0;
+        int[][] dp = new int[m][n];
+        int[] dx = new int[]{0,0,-1,1};
+        int[] dy = new int[]{1,-1,0,0};
+        int[] pre = new int[n];
+        int rem = 1000000007;
+        int x_n, y_n,tmp;
+        for (int x = 0; x < m; x++) {
+            dp[x][0]++;             // should not initialize as dp[x][0] = 1,  dp[x][n-1] = 1 in case of corner case
+            dp[x][n-1]++;
+        }
+        for (int y = 0; y < n; y++) {
+            dp[0][y]++;
+            dp[m-1][y]++;
+        }
+        res = dp[i][j];
+        for(int k = 2; k <= N; k++) {
+            for (int x = 0; x < m; x++) {
+                tmp = 0;
+                for (int y = 0; y < n; y++) {
+                    int total = 0;
+                    x_n = x;
+                    y_n = y - 1;
+                    if (y_n >= 0) {
+                        total = (total + tmp)%rem;
+                    }
+                    x_n = x;
+                    y_n = y + 1;
+                    if(y_n < n) {
+                        total = (total + dp[x_n][y_n])%rem;
+                    }
+                    x_n = x - 1;
+                    y_n = y;
+                    if (x_n >= 0) {
+                        total = (total + pre[y_n])%rem;
+                    }
+                    x_n = x + 1;
+                    y_n = y;
+                    if (x_n < m) {
+                        total = (total + dp[x_n][y_n])%rem;
+                    }
+                    pre[y] = dp[x][y];
+                    tmp = dp[x][y];
+                    dp[x][y] = total;
+                }
+            }
+            res = (res + dp[i][j]) % rem;
+        }
+        
+        return res;
+    }
+}
