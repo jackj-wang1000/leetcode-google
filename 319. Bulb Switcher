@@ -1,0 +1,60 @@
+class Solution {
+    /*
+    public int bulbSwitch(int n) {
+        
+        int res = 0;
+        int[] dp = new int[n+1];
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j *i <= n; j++) {
+                dp[i*j]++;
+            }
+        }
+        for (int i = 1; i <=n; i++) {
+            res = dp[i]%2 == 0 ? res+1: res;
+        }
+        return res;
+    }
+    */
+    //   ||
+    //   ||
+    //    V
+    /*
+    public int bulbSwitch(int n) {
+        int res = 0;
+        for (int i = 2; i <= n; i++) {
+            int cnt = 0;
+            for (int j = 2; j < i; j++) {
+                if (i%j == 0) cnt++;
+            }
+            if(cnt%2 == 1) res++;
+        }
+        return res+1;
+        
+    }
+    */
+    //   ||
+    //   ||
+    //    V
+    /*
+    public int bulbSwitch(int n) {
+        int res = 0;
+        for (int i = 2; i <= n; i++) {
+            int i_sqrt = mySqrt(i,1);
+            if (i_sqrt*i_sqrt == i && i_sqrt >= 2) res++; 
+        }
+        return res+1;
+    }
+    */
+    
+    
+    private int mySqrt(int x, int x_sqrt) {
+        if (x_sqrt <= x/x_sqrt && x_sqrt+1 > x/(x_sqrt+1)) return x_sqrt;
+        return mySqrt(x,(x/x_sqrt+x_sqrt)/2);
+    }
+    
+    public int bulbSwitch(int n) {
+        if(n  == 0) return 0;
+        int res = 0;
+        return mySqrt(n,1);
+    }
+}
