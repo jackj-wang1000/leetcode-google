@@ -1,0 +1,32 @@
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        // time complexity: O(N*logN), worst case: O(N^2)
+        // space complexity: O(1)
+        TreeNode res;
+        int n = nums.length;
+        if (n < 1) return null;
+        res = new TreeNode(nums[0]);
+        TreeNode curr,p;
+        for (int i = 1; i < n; i++) {
+            TreeNode node = new TreeNode(nums[i]);
+            p = null;
+            curr = res;
+            while (curr != null && nums[i] < curr.val) {
+                p = curr;
+                curr = curr.right;
+            }
+            if (curr == null) p.right = node;
+            else if (p == null) {    // new node is largest, replace old one as root.
+                node.left = res;
+                res = node;
+            }
+            else {
+                node.left = p.right;
+                p.right = node;
+            }
+        }
+        
+        return res;
+        
+    }
+}
