@@ -1,0 +1,36 @@
+class Solution {
+    public List<List<String>> printTree(TreeNode root) {
+        //time complexity:  O(N) N: total number of treenode
+        // space complexity: O(1)
+        int h = height(root);
+        int w = (1 << h)-1;
+        //System.out.println("h = "+h+" w= "+w);
+        List<List<String>>  res = new ArrayList<List<String>>();
+        for (int i = 0; i < h; i++) {
+            res.add(new ArrayList<String>());
+        }
+        helper(res,root,0,0,w-1);
+        for (int i = 0; i < h; i++) {
+            List<String> curr = res.get(i);
+            int sz = curr.size();
+            while (sz < w) { curr.add(""); sz++;}
+        }
+        return res;
+    }
+    
+    private void helper(List<List<String>> res, TreeNode root, int row, int w_left, int w_right) {
+        if (root == null) return;
+        List<String> currList = res.get(row);
+        int index = (w_left + w_right)/2;
+        int sz = currList.size();
+        while (sz < index) {currList.add(""); sz++;}
+        currList.add(Integer.toString(root.val));
+        helper(res,root.left,row+1,w_left,index-1);
+        helper(res,root.right,row+1,index+1,w_right);
+    }
+    
+    private int height(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(height(root.left),height(root.right))+1;
+    }
+}
