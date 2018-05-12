@@ -1,0 +1,36 @@
+class Solution {
+    public int findNumberOfLIS(int[] nums) {
+        // time complexity: O(N^2)
+        // space complexity: O(N)
+        int n = nums.length;
+        int[] cnt = new int [n];   // cnt[i]: count of max length sequence end with nums[i];
+        int[] len = new int[n];    // len[i]: max sequence length end with nums[i];
+        for (int i = 0; i < n; i++) {
+            cnt[i] = 1;
+            len[i] = 1;
+        }
+        int res = 0;
+        int max_len = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i-1; j >= 0; j--) {
+                if (nums[j] < nums[i]) {
+                    if (len[i] == len[j]+1) cnt[i] += cnt[j];
+                    else if (len[i] < len[j]+1) {
+                        cnt[i] = cnt[j];
+                        len[i] = len[j] + 1;
+                    }
+                }
+            }
+            if (max_len < len[i]) {
+                max_len = len[i];
+                res = cnt[i];
+            }
+            else if (max_len == len[i]){
+                res += cnt[i];
+            }
+        }
+        
+        return res;
+            
+    }   
+}
