@@ -1,6 +1,7 @@
 class Solution {
     public boolean judgeSquareSum(int c) {
-        // time complexity: 
+        // time complexity: O(sqrt(c)*logc)
+        // space complexity: O(1)
         if(c <= 1) return true;
         int low = 0;
         int high = mySqrt(c,c/2);  //take average: log(c)
