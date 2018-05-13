@@ -1,0 +1,40 @@
+class Solution {
+    public boolean judgeSquareSum(int c) {
+        // time complexity: 
+        if(c <= 1) return true;
+        int low = 0;
+        int high = mySqrt(c,c/2);  //take average: log(c)
+        int t;
+        while(low <= high) {
+            t = c - high*high;
+            if (t == low*low) return true;
+            else if (t > low*low)  {     // should use t > low*low, instead of c > high*high + low*low
+                low = mySqrt(t,t/2); 
+                if (low*low +high*high == c)
+                    return true; 
+                else low++;
+            }
+            else {
+                t = c - low*low; 
+                high = mySqrt(t,t/2); 
+            }
+        }
+        return false;
+    }
+    
+
+    private int mySqrt1(int x, int x_q) {
+        if (x_q <= x/x_q && x_q+1 > x/(x_q+1)) return x_q;
+        else return mySqrt(x,((x/x_q)+x_q)/2);
+    }
+
+    private int mySqrt(int x, int x_q) {
+        if (x <= 1) return x;
+        while (!(x_q <= x/x_q && x_q+1 > x/(x_q+1))) {
+            x_q = (x/x_q+x_q)/2;
+        }
+        return x_q;
+    }
+
+
+}
