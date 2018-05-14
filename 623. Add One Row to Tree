@@ -1,0 +1,33 @@
+class Solution {
+    public TreeNode addOneRow(TreeNode root, int v, int d) {
+        // time complexity:  O(2^d)
+        // space complexity: O(1)
+        if (d == 1) {
+            TreeNode res = new TreeNode(v);
+            res.left = root;
+            return res;
+        }
+        else {
+            helper(root,v,d-1);
+            return root;
+        }
+
+    }
+    
+    private void helper(TreeNode root, int v, int d) {
+        if (root == null) return;
+        if (d == 1) {
+            TreeNode l = new TreeNode(v);
+            l.left = root.left;
+            TreeNode r = new TreeNode(v);
+            r.right = root.right;
+            root.left = l;
+            root.right = r;
+        }
+        else {
+            helper(root.left,v,d-1);
+            helper(root.right,v,d-1);
+        }
+    }
+    
+}
