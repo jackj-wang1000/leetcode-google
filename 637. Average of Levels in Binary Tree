@@ -1,0 +1,23 @@
+class Solution {
+    public List<Double> averageOfLevels(TreeNode root) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        List<Double> res = new ArrayList<Double>();
+        Queue<TreeNode> q =  new LinkedList<TreeNode>();
+        if (root == null) return res;
+        q.offer(root);
+        int cnt = 1;
+        while (!q.isEmpty()) {
+            int sz = q.size();
+            double sum = 0;
+            for (int i = 0; i < sz; i++) {
+                TreeNode curr = q.poll();
+                sum += curr.val;
+                if (curr.left != null) q.offer(curr.left);
+                if (curr.right != null) q.offer(curr.right);
+            }
+            res.add(sum/sz);
+        }
+        return res;
+    }
+}
