@@ -1,0 +1,42 @@
+class Solution {
+    public ListNode[] splitListToParts(ListNode root, int k) {
+        // time complexity : O(N)
+        // space complexity: O(1)
+        // two scan
+        ListNode[] res = new ListNode[k];
+        int cnt = 0;
+        ListNode curr = root;
+        while (curr != null) {
+            cnt++;
+            curr = curr.next;
+        }
+        res[0] = root;
+        curr = new ListNode(0);
+        curr.next = root;
+        //System.out.println("list length: " + cnt);
+        for (int i = 1; i < k; i++) {
+            int step = cnt / (k+1-i);
+            if (cnt % (k+1-i) != 0) step++;
+            if (step > 0) {
+                curr = move(curr,step);
+                res[i] = curr.next;
+            }
+            else {
+                res[i] = null;
+            }
+            cnt -= step;
+        }
+        curr.next = null;   // for last part. must set previous ending node pointing to null
+        return res;
+    }
+    
+    private ListNode move(ListNode root, int k) {
+        ListNode curr = root;
+        while(k > 0) {
+            curr = curr.next;
+            k--;
+        }
+        root.next = null;  // set previous ending node pointing to null
+        return curr;
+    }
+}
