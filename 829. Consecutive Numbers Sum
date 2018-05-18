@@ -1,0 +1,28 @@
+class Solution {
+    public int consecutiveNumbersSum(int N) {
+        // let N = sum = x1 + x2 + x3 ... xn
+        // n/2 *(x1+ xn) = sum
+        //      (xn - x1) = n-1
+        // =>  xn = (2*sum/n + n -1)/2;    =>  (2*sum/n + n-1)%2 == 0 
+        // =>  x1 =  (2*sum/n -n +1)/2 >=1;    =>    2*sum/n >= n+1  (*)
+        // thus find # of n, which <1>  n is odd number and sum%n == 0  
+        //    <2> n is even number, and 2*sum/n == odd number (asumme sum = A *B, A = 2^k, B is composed of odd part);  
+        // time complexity: O(N^0.5)
+        // space complexity: O(1)
+        int res = 0;
+        int A = 1; 
+        int curr = N;
+        while (curr % 2 == 0) {
+            curr = curr >> 1;
+            A = A << 1;
+        }
+        for (int i = 1; i+1 <= 2*N/i; i = i+2) {
+            if (curr % i == 0) {
+                res++;
+                int t = A*2*i;     // get the odd part of N;
+                if (t+1 <= 2*N/t) res++;
+            }
+        }
+        return res;
+    }
+}
