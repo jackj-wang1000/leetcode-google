@@ -1,0 +1,47 @@
+class Solution {
+    public int numFriendRequests(int[] ages) {
+        // time complexity: O(N*logN)
+        // space complexity: O(1)
+        Arrays.sort(ages);
+        int n = ages.length;
+        int numberOfRequest = 0;
+        int lowbound, upperbound;
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && ages[i] == ages[i-1]) {
+                res += numberOfRequest;
+            }
+            else {
+                lowbound = ages[i] / 2 + 7;
+                upperbound = ages[i] >= 100 ? ages[i] : Math.min(100,ages[i]);
+                
+                numberOfRequest = upperbound < lowbound ? 0 : request(ages,lowbound,upperbound);
+                if (ages[i] > lowbound && ages[i] <= upperbound) numberOfRequest--;
+                res += numberOfRequest;
+            }
+        }
+        
+        return res;
+    }
+    
+    private int request(int[] ages, int lowbound, int upperbound) {
+        int n = ages.length;
+        if (lowbound >= ages[n-1] || ages[0] > upperbound) return 0; 
+        return findLowbound(ages, upperbound, n) - findLowbound(ages,lowbound,n);
+    }
+    
+    private int findLowbound(int[] ages, int v, int n) {
+        if (ages[n-1] <= v) return n;     // in case of upperbound return n-1;
+        int low = 0;
+        int high = n-1;
+        int mid;
+        while (low < high) {
+            mid = low + (high -low)/2;
+            if (ages[mid] <= v) low = mid + 1;
+            else high = mid;
+        }
+        return high;
+    }
+    
+
+}
