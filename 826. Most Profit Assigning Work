@@ -1,0 +1,89 @@
+class Solution {
+    public int maxProfitAssignment(int[] difficulty, int[] profit, int[] worker) {
+        
+        // time complexity:  O(N*logN)
+        // space complexity: O(N)
+        int n = difficulty.length;
+        int[] max_profit = new int[n];
+        int mp = -1;
+        int res = 0;
+        
+
+        Integer[] index = new Integer[n];  // index of difficulty, sort by difficulty and profit..
+        for (int i = 0; i < n; i++) index[i] = i;  
+        Comparator<Integer> cmp = new Comparator<Integer>() {
+            public int compare(Integer x, Integer y) {
+                return difficulty[x] != difficulty[y] ? difficulty[x] - difficulty[y] : profit[x] - profit[y];
+            }
+        };
+        Arrays.sort(index,cmp);
+        for (int i = 0; i < n; i++) {
+            mp = Math.max(mp, profit[index[i]]);
+            max_profit[i] = mp;
+        }
+
+        /*
+        my3wayQuickSort(difficulty,profit,0,n-1);
+        for (int i = 0; i < n; i++) {
+            mp = Math.max(mp,profit[i]);
+            max_profit[i] = mp;
+        }
+        */
+        
+        Arrays.sort(difficulty);
+        Arrays.sort(worker);
+        int worker_ind = worker.length -1;
+        int difficulty_ind = worker[worker_ind] >= difficulty[n-1] ? n-1: find(difficulty,worker[worker_ind],n-1)-1;
+        if (difficulty_ind < 0) return 0;
+        while(worker_ind >= 0 && difficulty_ind>=0){
+            if(worker[worker_ind] >= difficulty[difficulty_ind]) { res += max_profit[difficulty_ind]; worker_ind--;}
+            else difficulty_ind--;
+        }
+        
+        return res;
+    }
+    
+    private int find(int[] difficult, int v, int high) {
+        int low = 0;
+        int mid;
+        while (low < high) {
+            mid = low + (high-low)/2;
+            if (difficult[mid] <= v) low = mid+1;
+            else high = mid;
+        }
+        return high;
+    }
+    
+    
+    private void my3wayQuickSort(int[] difficulty, int[] profit, int low, int high) {
+        if (low >= high) return;
+        int l = low;
+        int h = high;
+        int v = difficulty[high];
+        int i = low;
+        while (low <= high) {
+            if(difficulty[low] < v) {
+                swap(difficulty, profit, low, i);
+                if (low > i+1) swap(difficulty,profit,low,low-1);
+                i++;
+                low++;}
+            else if (difficulty[low] > v) {swap(difficulty,profit,low,high); high--;}
+            else { 
+                if(low > i && profit[low] < profit[low-1]) swap(difficulty,profit,low,low-1); 
+                low++;
+            }
+        }
+        my3wayQuickSort(difficulty,profit,l,i-1);
+        my3wayQuickSort(difficulty,profit,low,h);
+    }
+    
+    private void swap(int[] difficulty, int[] profit, int i, int j) {
+        int v = difficulty[i];
+        difficulty[i] = difficulty[j];
+        difficulty[j] = v;
+        v = profit[i];
+        profit[i] = profit[j];
+        profit[j] = v;
+    }
+
+}
