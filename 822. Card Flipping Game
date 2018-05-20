@@ -1,0 +1,19 @@
+class Solution {
+    public int flipgame(int[] fronts, int[] backs) {
+        // time complexity : O(N)
+        // space complexity: O(1)
+        // algorithm: 2-way scan
+        int n = fronts.length;
+        Set<Integer> set = new HashSet<Integer>();
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (fronts[i] == backs[i]) set.add(fronts[i]);
+        }
+        
+        for (int i = 0; i < n; i++) {
+            if (!set.contains(fronts[i])) res = Math.min(res,fronts[i]);
+            if (! set.contains(backs[i])) res = Math.min(res,backs[i]);
+        }
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
+}
