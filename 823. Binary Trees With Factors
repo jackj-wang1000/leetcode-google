@@ -17,8 +17,8 @@ class Solution {
                 if (t > A[i]) high--;
                 else if (t < A[i]) low++;
                 else {
-                    Long x = (low == high ? (long)dp[low] *dp[high] : 2L*(long)dp[low]*dp[high]) % 1000000007;
-                    dp[i] = (dp[i] + x.intValue()) % 1000000007;
+                    long x = (low == high ? (long)dp[low] *dp[high] : 2L*(long)dp[low]*dp[high]) % 1000000007;
+                    dp[i] = (dp[i] + (int)x) % 1000000007;
                     low++;
                     high--;
                 }
