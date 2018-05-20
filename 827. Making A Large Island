@@ -1,0 +1,70 @@
+class Solution {
+    public int largestIsland(int[][] grid) {
+        // time complexity:  O(M*N)
+        // space complexity: O(M*N)
+        // algorithm: depth-first search
+        int row = grid.length;
+        int col = grid[0].length;
+        int[] root = new int[row*col];  // tag which island each grid belong to
+        int index = 1;
+        List<Integer> islandSize = new ArrayList<Integer>(); // save each island'size;
+        List<Integer> water = new ArrayList<Integer>();   // save non-island position;
+        int res = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 0) water.add(i*col+j);
+                else if (root[i*col+j] == 0) {
+                    int sz = helper(grid,root,i,j,index);
+                    res = Math.max(res,sz);
+                    islandSize.add(sz);
+                    index++;
+                }
+            }
+        }
+        //System.out.println("water: "+water);
+        //System.out.println("islandsize: "+islandSize);
+        //for (int i = 0; i < row*col; i++) System.out.println("root: "+root[i]);
+        int[] dx = new int[]{1,-1,0,0};
+        int[] dy = new int[]{0,0,1,-1};
+        for (int i : water) {  // only start from water area
+            int x = i/col;
+            int y = i % col;
+            int total = 1;
+            Set<Integer> set = new HashSet<Integer>();  // only count different island; first time didn't consider this;
+            for (int j = 0; j < 4; j++) {
+                int x_next = x + dx[j];
+                int y_next = y + dy[j];
+                if (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col) {
+                    int ind  = x_next*col + y_next;
+                    if(root[ind] > 0) set.add(root[ind]-1);
+                }
+            }
+            //System.out.println("set contains: "+set);
+            for (int j : set) {
+                total += islandSize.get(j);
+            }
+            res = Math.max(res,total);
+        }
+        return res;
+    }
+    
+    
+    
+    private int helper(int[][] grid, int[] root, int i, int j, int ind) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[] dx = new int[]{1,-1,0,0};
+        int[] dy = new int[]{0,0,1,-1};
+        int res = 0;
+        if (i >= 0 && i < grid.length && j >= 0 && j < grid[0].length && grid[i][j] == 1 && root[i*col+j] == 0) {
+            //System.out.println("x = " +i +" y= "+j+" root = "+ind);
+            root[i*col+j] = ind;   //  <= first time written as  root[i] = ind; 
+            res++;
+            for (int k = 0; k < 4; k++) {
+                res += helper(grid,root,i+dx[k],j+dy[k],ind);   // <= first time written as dx[i] dy[j]
+            }
+        }
+        return res;
+    }
+
+}
