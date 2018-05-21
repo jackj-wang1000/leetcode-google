@@ -1,0 +1,23 @@
+class Solution {
+    public int numComponents(ListNode head, int[] G) { 
+        // time complexity:  O(N), N is length of linkedlist
+        // space complexity: O(G), size of array G
+        // algorithm: scan
+        int n = G.length;
+        Set<Integer> set = new HashSet<Integer>();
+        for (int i = 0; i < n; i++) {
+            set.add(G[i]);
+        }
+        int cnt = 0;
+        ListNode pre = head;
+        while (head != null) {
+            if (cnt > 0) {
+                if (set.contains(pre.val) && set.contains(head.val)) n--;
+            }
+            pre = head;
+            head = head.next;
+            cnt++;
+        }
+        return n;
+    }
+}
