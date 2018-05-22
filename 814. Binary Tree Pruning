@@ -1,0 +1,11 @@
+class Solution {
+    public TreeNode pruneTree(TreeNode root) {
+        // time complexity: O(N), N total node of tree
+        // space complexity: O(logN), stack depth
+        if (root == null) return null;
+        root.left = pruneTree(root.left);
+        root.right = pruneTree(root.right);
+        if (root.right == null && root.left == null && root.val == 0) return null;
+        else return root;
+    }
+}
