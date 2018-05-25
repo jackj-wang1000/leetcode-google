@@ -1,0 +1,26 @@
+class Solution {
+    public int maxIncreaseKeepingSkyline(int[][] grid) {
+        // time complexity: O(M*N), M grid row size, N grid column size;
+        // space complexity: O(M+N)
+        // algorithm: two-way scan
+        int row = grid.length;
+        int col = grid[0].length;
+        int[] top = new int[col];
+        int[] left = new int[row];
+        int res = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                top[j] = Math.max(top[j],grid[i][j]);
+                left[i] = Math.max(left[i],grid[i][j]);
+            }
+        }
+        
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                res += Math.max(0,Math.min(top[j],left[i])-grid[i][j]);  // could remove Math.max(0,...), 
+            }
+        }
+        
+        return res;
+    }
+}
