@@ -1,0 +1,33 @@
+class Solution {
+    public List<String> subdomainVisits(String[] cpdomains) {
+        // time complexity: O(N') N' total number of characters.
+        // space complexity: O(N), N cpdomains length
+        List<String> res = new ArrayList<String>();
+        int n = cpdomains.length;
+        Map<String,Integer> map = new HashMap<String,Integer>();
+        for (int i = 0; i < n; i++) {
+            String[] str = cpdomains[i].split("\\s+");
+            /*
+            System.out.println("cpdomains["+i+"]");
+            for (int j = 0; j < str.length; j++) {
+                System.out.println(str[j]);
+            }
+            */
+            int val = Integer.parseInt(str[0]);
+            //String[] subdm = str[1].split("\\.");
+            int l = str[1].length();
+            for (int j = l-1; j >= -1; j--) {
+                if (j == -1 || str[1].charAt(j) == '.') {
+                    if(!map.containsKey(str[1].substring(j+1))) map.put(str[1].substring(j+1),val);
+                    else map.put(str[1].substring(j+1),map.get(str[1].substring(j+1))+val);
+                }
+            }
+        }
+        for (String str : map.keySet()) {
+            String cpstr = Integer.toString(map.get(str)) + " "+ str;
+            res.add(cpstr);
+        }
+        
+        return res;
+    }
+}
