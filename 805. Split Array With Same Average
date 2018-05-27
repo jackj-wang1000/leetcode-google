@@ -1,0 +1,34 @@
+class Solution {
+    public boolean splitArraySameAverage(int[] A) {
+        // time complexity: O(n!)
+        // space complexity: O(1)
+        // algorithm:  depth first search
+        int n = A.length;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += A[i];
+        }
+        //System.out.println("sum= "+sum+" n= "+n);
+        Arrays.sort(A);
+        boolean res =false;
+        for (int i = 1; i < n; i++) {
+            if ((sum*i)%n ==0) res =true;
+        }
+        if (!res) return false;
+        return helper(A,sum,0,0,0);
+    }
+    
+    private boolean helper(int[] A, int sum, int cnt, int accum, int start) {
+        int n = A.length;
+        if (cnt > n/2) return false;
+        else if (cnt > 0 && accum*n == sum*cnt) {
+            return true;
+        }
+        for (int i = start; i < n; i++) {
+            if (i == start || A[i] > A[i-1]) {
+                if (helper(A,sum,cnt+1,accum+A[i],i+1)) return true;
+            }
+        }
+        return false;
+    }
+}
