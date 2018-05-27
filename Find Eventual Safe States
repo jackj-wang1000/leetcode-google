@@ -1,0 +1,71 @@
+/*
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        // time complexity: O(E), E: edge#
+        // space complexity: O(V)  V: vertex#
+        // algorithm: depth first search 
+        List<Integer> res = new ArrayList<Integer>();
+        int n = graph.length;
+        Set<Integer> circle_set = new HashSet<Integer>();
+        Set<Integer> res_set = new HashSet<Integer>();
+        for (int i = 0; i < n; i++) {
+            if (!circle_set.contains(i) && ! res_set.contains(i)) helper(graph,circle_set,i,res_set);
+        }
+        for (int i : res_set) {
+            res.add(i);
+        }
+        Collections.sort(res);
+        return res;
+    }
+    
+    // find a circle
+    private boolean helper(int[][] graph, Set<Integer> circle_set,  int curr, Set<Integer> res_set){
+        if (graph[curr].length == 0 || res_set.contains(curr)) {res_set.add(curr); return true;}
+        else if (circle_set.contains(curr)) return false;
+        circle_set.add(curr);
+        int n = graph[curr].length;
+        boolean res = true;
+        for (int i = 0; i < n; i++) {
+            if (!helper(graph,circle_set,graph[curr][i],res_set)) res = false;
+        }
+        if (res) {res_set.add(curr); circle_set.remove(curr); return true;}
+        else { return false;}
+    }
+}
+*/
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        // time complexity:  O(E)
+        // space complexity: O(V)
+        //algortihm : breadth first search
+        int n = graph.length;
+        int[] outDegree = new int[n];
+        ArrayList<Integer>[] src = new ArrayList[n];
+        List<Integer> res = new ArrayList<Integer>();
+        for (int i = 0; i < n; i++) {
+            src[i] = new ArrayList<Integer>();
+        }
+        for (int u = 0; u < n; u++) {
+            outDegree[u] = graph[u].length;
+            for (int i = 0; i < outDegree[u]; i++) {
+                int v = graph[u][i];
+                src[v].add(u);
+            }
+        }
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < n; i++) {
+            if (outDegree[i] == 0) q.offer(i);
+        }
+        
+        while (!q.isEmpty()) {
+            int v = q.poll();
+            res.add(v);
+            for (int u : src[v]) {
+                outDegree[u]--;
+                if (outDegree[u] == 0) q.offer(u);
+            }
+        }
+        Collections.sort(res);
+        return res;
+    }
+}
