@@ -1,0 +1,19 @@
+class Solution {
+    public int uniqueMorseRepresentations(String[] words) {
+        // time complexity: O(M*N) total number of characters in words
+        // space complexity:  O(N)  length of words array
+        // algorithm:  dictionary + set.
+        int n = words.length;
+        String[] table = new String[]{".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."};
+        Set<String> set = new HashSet<String>();
+        for (int i = 0; i < n; i++) {
+            StringBuilder morsecode = new StringBuilder();
+            for (int j = 0; j < words[i].length(); j++) {
+                morsecode.append(table[words[i].charAt(j)-'a']);
+            }
+            set.add(morsecode.toString());
+        }
+        return set.size();
+        
+    }
+}
