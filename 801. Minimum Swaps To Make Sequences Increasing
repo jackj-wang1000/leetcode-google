@@ -1,0 +1,23 @@
+class Solution {
+    public int minSwap(int[] A, int[] B) {
+        // time complexity: O(N)
+        // space complexity: O(N)  => O(1)
+        // algorithm: dynamic programming
+        int n = A.length;
+        int[] dp_noSwap = new int[n];   // dp_noSwap[i] denotes min# swap needed when i_th element does not swap
+        int[] dp_swap = new int[n];     // dp_swap[i] denotes min# swap needed when swapping i_th element to make it strictly increasing 
+        dp_noSwap[0] = 0;
+        dp_swap[0] = 1;
+        for (int i = 1; i < n; i++) {
+            if (A[i] > A[i-1] && B[i] > B[i-1]) {
+                dp_noSwap[i] = Math.min(A[i],B[i]) > Math.max(A[i-1],B[i-1]) ? Math.min(dp_noSwap[i-1],dp_swap[i-1]) : dp_noSwap[i-1];
+                dp_swap[i] =    Math.min(A[i],B[i]) > Math.max(A[i-1],B[i-1]) ? dp_noSwap[i]+1 : dp_swap[i-1]+1;
+            }
+            else {
+                dp_noSwap[i] = dp_swap[i-1];
+                dp_swap[i] = dp_noSwap[i-1]+1;
+            }
+        }
+        return Math.min(dp_noSwap[n-1],dp_swap[n-1]);
+    }
+}
