@@ -1,0 +1,22 @@
+class Solution {
+    public int[] numberOfLines(int[] widths, String S) {
+        // time complexity: O(N) length of string S
+        // space complexity: O(1)
+        // algorithm: scan
+        int[] res = new int[2];
+        int n = S.length();
+        int line_cnt = 0;
+        int curr_width = 0;
+        for (int i = 0; i < n; i++) {
+            char c = S.charAt(i);
+            if (curr_width + widths[c-'a'] <= 100) curr_width += widths[c-'a'];
+            else {
+                line_cnt++;
+                curr_width = widths[c-'a'];
+            }
+        }
+        res[0] = line_cnt+1; 
+        res[1] = curr_width;
+        return res;
+    }
+}
