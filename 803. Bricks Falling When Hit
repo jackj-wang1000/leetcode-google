@@ -1,0 +1,103 @@
+class Solution {
+    public int[] hitBricks(int[][] grid, int[][] hits) {
+        // time complexity:  initialization: O(M*N + L), each hits cost O(loglog(M*N))
+        // space complexity: O(M*N)
+        //algorithm: union-find
+        int row = grid.length;
+        int col = grid[0].length;
+        int n = hits.length;
+        int[] root = new int[row*col];
+        int[] dx = new int[]{1,-1,0,0};
+        int[] dy = new int[]{0,0,1,-1};
+        int[] res = new int[n];
+        // initialize root
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                root[i*col+j] = grid[i][j] == 1 ? i*col + j : -1;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            int x = hits[i][0];
+            int y = hits[i][1];
+            root[x*col+y] = -1;
+        }
+        // save each group's size
+        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int pos = i*col+j;
+                if (grid[i][j] == 1 &&  root[pos] == pos) {
+                    root[pos] = pos+1;                     // 1. must add this change, in case duplicate visit to same position
+                    map.put(pos,helper(grid,root,i,j,pos));
+                }
+            }
+        }
+        // union-find, by add each hits
+        for (int i = n-1; i >= 0; i--) {
+            int x = hits[i][0];
+            int y = hits[i][1];
+            int pos = x*col+y;
+            res[i] = 0;
+            if (grid[x][y] == 1) {
+                int add = 0;
+                root[pos] = pos;
+                map.put(pos,1);
+                for (int j = 0; j < 4; j++) {
+                    int x_next = x + dx[j];
+                    int y_next = y + dy[j];
+                    int pos1 = x_next*col+y_next;                                  //2. root[pos1] must >= 0
+                    if(x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && root[pos1] >= 0) {
+                        add +=  unionFind(root,pos,pos1, map,col);
+                    }
+                }
+                //3. when pos < col, no need to minus itself.
+                if (findRoot(root,pos) < col)  res[i] = pos >= col ? Math.max(add-1,0) : add;
+            }
+        }
+        return res;
+    }
+    
+    private int unionFind(int[] root, int i, int j, Map<Integer,Integer> map, int col) {
+        int r1 = findRoot(root,i);
+        int r2 = findRoot(root,j);
+        if (r1 == r2) {
+            return 0;
+        }
+        else if (r1 < r2) {
+            root[r2] = r1;
+            map.put(r1,map.get(r1)+map.get(r2));
+            return  r1 < col && r2 >= col ? map.get(r2) : 0;
+        }
+        else {
+            root[r1] = r2;
+            map.put(r2,map.get(r1)+map.get(r2));
+            return r2 < col && r1 >= col ? map.get(r1) : 0;
+        }
+    }
+        
+    private int findRoot(int[] root, int i) {
+        int j = i;
+        while(root[i] != i) {
+            j = root[i];
+            root[i] = root[j];
+            i = root[i];
+        }
+        return i;
+    }
+    
+    private int helper(int[][] grid, int[] root, int x , int y, int v) {
+        int[] dx = new int[]{1,-1,0,0};
+        int[] dy = new int[]{0,0,1,-1};
+        int row = grid.length;
+        int col = grid[0].length;
+        int pos = x*col+y;
+        //if (!(x >= 0 && x < row && y >= 0 && y < col) || (root[pos] <= v && pos != v)) return 0; // avoid using this condition
+        if (!(x >= 0 && x < row && y >= 0 && y < col) || root[pos] <= v) return 0;    //1. in case duplicate visit to same position
+        root[pos] = v;
+        int res = 1;
+        for (int i = 0; i < 4; i++) {
+            res += helper(grid,root,x+dx[i],y+dy[i],v);
+        }
+        return res;
+    }
+}
