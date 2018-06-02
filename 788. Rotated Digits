@@ -1,0 +1,34 @@
+class Solution {
+    public int rotatedDigits(int N) {
+        // time complexity: O(n)  n denotes number of digitals, helper is invoked n times, each cost O(1)
+        // sapce complexity: O(1)
+        // algorithm: recursive
+        if (N <= 1) return 0;
+        int[] digit = new int[]{0,1,2,5,6,8,9};
+        int[] digit1 = new int[]{0,1,8};
+        int cnt = 0;
+        int curr = N;
+        int[] N_arr = new int[5];
+        while(curr > 0) {
+            N_arr[cnt] = curr % 10;
+            cnt++;
+            curr = curr / 10;
+        }
+        return helper(N_arr,cnt-1,digit) - helper(N_arr,cnt-1,digit1);
+    }
+    
+    private int helper(int[] arr, int n, int[] digit){
+        if(n < 0) return 1;
+        int i = digit.length-1;
+        for (; i >= 0; i--) {
+            if (arr[n] >= digit[i]) break;
+        }
+        return arr[n] == digit[i] ? i*myPow(digit.length,n)+helper(arr,n-1,digit) : (i+1)*myPow(digit.length,n);
+    }
+    
+    private int myPow(int x, int n) {
+        if(n == 0) return 1;
+        int y = myPow(x,n/2);
+        return n % 2 == 0 ?  y*y : y*y*x;
+    }
+}
