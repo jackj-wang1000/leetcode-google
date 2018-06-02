@@ -1,0 +1,56 @@
+class Solution {
+    public List<String> letterCasePermutation(String S) {
+        // time complexity: O(2^n)
+        // space complexity: O(1)
+        // algorithm: recursive, brute force
+        List<String> res = new ArrayList<String>();
+        int n = S.length();
+        if(n == 0) {res.add(""); return res;}
+        List<String> list = letterCasePermutation(S.substring(1));
+        char c = S.charAt(0);
+        for (String str : list) {
+            if (Character.isDigit(c)) {
+                res.add(c+str);
+            }
+            else {
+                res.add(Character.toLowerCase(c)+str);
+                res.add(Character.toUpperCase(c)+str);
+            }
+        }
+        return res;
+    }
+}
+
+/*
+class Solution {
+    public List<String> letterCasePermutation(String S) {
+        // time complexity: O(2^n)
+        // space complexity: 
+        // algorithm: recursive, brute force
+        List<String> res = new ArrayList<String>();
+        StringBuilder strb = new StringBuilder();
+        helper(strb,S,res,0);
+        return res;
+    }
+    
+    private void helper(StringBuilder strb, String S, List<String> res, int curr) {
+        int n = S.length();
+        if (curr == n) {res.add(strb.toString()); return;}
+        char c = S.charAt(curr);
+        int len = strb.length();
+        if (Character.isDigit(c)) {
+            strb.append(c);
+            helper(strb,S,res,curr+1);
+            strb.deleteCharAt(len);
+        }
+        else {
+            strb.append(Character.toLowerCase(c));
+            helper(strb,S,res,curr+1);
+            strb.deleteCharAt(len);
+            strb.append(Character.toUpperCase(c));
+            helper(strb,S,res,curr+1);
+            strb.deleteCharAt(len);
+        }
+    }
+}
+*/
