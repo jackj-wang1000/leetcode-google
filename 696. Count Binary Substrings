@@ -1,0 +1,27 @@
+class Solution {
+    public int countBinarySubstrings(String s) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: scan
+        int cnt_0 = 0;
+        int cnt_1 = 0;
+        int n = s.length();
+        int res = 0;
+        if (n == 0) return 0;
+        if (s.charAt(0) == '0') cnt_0++;
+        else cnt_1++;
+        for (int i = 1; i < n; i++) {
+            if (s.charAt(i) != s.charAt(i-1)) {
+                res += Math.min(cnt_0,cnt_1);
+                if (s.charAt(i) == '1') cnt_1 = 1;
+                else cnt_0 = 1;
+            }
+            else {
+               if (s.charAt(i) == '1') cnt_1++;
+                else cnt_0++; 
+            }
+        }
+        res += Math.min(cnt_0,cnt_1);
+        return res;
+    }
+}
