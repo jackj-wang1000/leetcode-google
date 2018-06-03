@@ -1,0 +1,20 @@
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm : sliding window
+        int n = nums.length;
+        int prod = 1;
+        int start = 0;
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            prod = prod * nums[i];
+            while(prod >= k && start <= i) {
+                prod = prod/nums[start];
+                start++;
+            }
+            res += i-start+1;   // add # of subarrays ending with nums[i]
+        }
+        return res;
+    }
+}
