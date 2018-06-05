@@ -1,0 +1,46 @@
+class Solution {
+    public String maskPII(String S) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm:  scan
+        int n = S.length();
+        char c = S.charAt(0);
+        StringBuilder res = new StringBuilder();
+        if (Character.isLowerCase(c) || Character.isUpperCase(c)) {
+            res.append(Character.toLowerCase(c)+"*****");
+            int i = 1;
+            for (; i < n-1; i++) {
+                if (S.charAt(i) == '@') break;
+            }
+            int j = i+1;
+            for (; j < n-1; j++) {
+                if (S.charAt(j) == '.') break;
+            }                                            // 3. should use "@" instead of '@'
+            res.append(Character.toLowerCase(S.charAt(i-1))+"@"+S.substring(i+1,j).toLowerCase()+'.'+S.substring(j+1).toLowerCase());
+        }
+        else {
+            int cnt = 0;
+            int i = n-1;
+            for (; i >= 0; i--) {
+                c = S.charAt(i);
+                if (Character.isDigit(c)) { res.append(c); cnt++;}
+                if (cnt == 4) break;
+            }
+            res.append("-***-***");
+            for (i = i-1; i >= 0; i--) {
+                c = S.charAt(i);
+                if (Character.isDigit(c)) { cnt++;}
+            }
+            if (cnt > 10)  {
+                res.append('-');
+                while (cnt > 10) {
+                    res.append('*');
+                    cnt--;
+                }
+                res.append("+");    // 2. should add +
+            }
+            res.reverse();        // 1. should reverse
+        }
+        return res.toString();
+    }
+}
