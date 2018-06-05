@@ -1,0 +1,23 @@
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        // time complexity:  O(N)
+        // space complexity: O(N) => O(1)
+        // algorithm: dynamic programming
+        int n = prices.length;
+        int[] dp_buy = new int[n];
+        int[] dp_sell = new int[n];
+        dp_buy[0] = -prices[0];
+        dp_sell[0] = 0;
+        int buy_profit = dp_buy[0];
+        int sell_profit = dp_sell[0];
+        //System.out.println("sell profit: "+dp_sell[0]+" buy profit: "+dp_buy[0]);
+        for (int i = 1; i < n; i++) {
+            dp_buy[i] =  -prices[i] + sell_profit;
+            dp_sell[i] = prices[i] + buy_profit - fee;
+            buy_profit = Math.max(buy_profit,dp_buy[i]);
+            sell_profit = Math.max(sell_profit,dp_sell[i]);
+            //System.out.println("sell profit: "+dp_sell[i]+" buy profit: "+dp_buy[i]);
+        }
+        return Math.max(buy_profit,sell_profit);
+    }
+}
