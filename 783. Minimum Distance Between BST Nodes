@@ -1,0 +1,21 @@
+class Solution {
+    int min_diff;
+    public int minDiffInBST(TreeNode root) {
+        // time complexity: O(N) 
+        // space complexity: O(logN)
+        // algorithm: recursive
+        min_diff = Integer.MAX_VALUE;
+        helper(root,Integer.MIN_VALUE,Integer.MAX_VALUE);
+        return min_diff;
+    }
+    
+    private void helper(TreeNode root, int lowerBound, int upperBound) {
+        if (root == null) return;
+        int res  = Integer.MAX_VALUE;
+        if (lowerBound != Integer.MIN_VALUE) res = Math.min(res, root.val-lowerBound);
+        if (upperBound != Integer.MAX_VALUE) res = Math.min(res, upperBound-root.val);
+        min_diff = Math.min(res,min_diff);
+        helper(root.left, lowerBound,root.val);
+        helper(root.right,root.val,upperBound);
+    }
+}
