@@ -1,0 +1,39 @@
+class Solution {
+    public int numMagicSquaresInside(int[][] grid) {
+        // time complexity: O(M*N)
+        // space complexity: O(1)
+        // algorithm: brute force
+        int row = grid.length;
+        int col = grid[0].length;
+        int res = 0;
+        for (int i = 0; i <= row -3; i++) {
+            for (int j = 0; j <= col-3; j++) {
+                if (isMagicSquare(grid,i,j)) res++;
+            }
+        }
+        return res;
+    }
+    
+    private boolean isMagicSquare(int[][] grid, int x, int y) {
+        boolean[] visited = new boolean[9];
+        for (int i = 0; i < 3; i++) {
+            int sum = 0;
+            for (int j = 0; j < 3; j++) {
+                if (!(grid[x+i][y+j] >= 1 && grid[x+i][y+j] <= 9) || visited[grid[x+i][y+j]-1]) {
+                    return false;
+                }
+                visited[grid[x+i][y+j]-1] = true;
+                sum += grid[x+i][y+j];
+            }
+            if (sum != 15) return false;
+        }
+        for (int j = 0; j < 3; j++) {
+            int sum = 0;
+            for (int i = 0; i < 3; i++) {
+                sum += grid[x+i][y+j];
+            }
+            if (sum != 15) return false;
+        }
+        return grid[x][y] + grid[x+1][y+1] + grid[x+2][y+2] == 15 && grid[x][y+2] + grid[x+1][y+1] + grid[x+2][y] == 15;
+    }
+}
