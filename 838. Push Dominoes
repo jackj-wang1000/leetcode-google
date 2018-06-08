@@ -1,0 +1,47 @@
+class Solution {
+    public String pushDominoes(String dominoes) {
+        // time complexity: O(N)
+        // space complexity: O(N)
+        // algorithm: slide window
+        int n = dominoes.length();
+        if (n == 0) return new String();
+        StringBuilder res = new StringBuilder();
+        int pre = -1;
+        char position = 'L';
+        for (int i = 0; i < n; i++) {
+            char c = dominoes.charAt(i);
+            if (c != '.') {
+                myAppend(res,pre,i,position,c);
+                pre = i;
+                position = c;
+            }
+        }
+        myAppend(res,pre,n,position,'R');
+        res.deleteCharAt(n);
+        return res.toString();
+    }
+    
+    private void myAppend(StringBuilder strg, int i, int j, char left, char right) {
+        int n = j - i;
+        int mid = i + (j-i)/2;
+        if (left == 'L' && right == 'R') {
+            for (int k = 0; k < n-1; k++)
+                strg.append('.');
+            strg.append('R');              // 1. must append 'R'
+        }
+        else if (left == 'R' && right == 'L') {
+            for (int k = 0; k < (n+1)/2-1; k++) {
+                strg.append('R');
+            }
+            if (n%2 == 0) strg.append('.');
+            for (int k = 0; k < (n+1)/2;k++) {
+                strg.append('L');
+            }
+        }
+        else {
+            for (int k = 0; k < n; k++)
+                strg.append(left);
+        }
+    }
+    
+}
