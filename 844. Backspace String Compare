@@ -1,0 +1,33 @@
+class Solution {
+    public boolean backspaceCompare(String S, String T) {
+        // time compelxity: O(L1+L2)
+        // space complexity: O(1)
+        // algorithm: double pointer
+        int S_len = S.length();
+        int T_len = T.length();
+        int i = S_len-1;
+        int j = T_len-1;
+        while (i >= 0 && j >= 0) {
+            i = move_pointer(S,i);                          // 1. should not place if ( i < 0) condition after i
+            j = move_pointer(T,j);
+            if (i < 0 || j < 0) break;
+            if (S.charAt(i) != T.charAt(j)) return false;
+            i--;
+            j--;
+        }
+        // 2. additional judgement
+        i = move_pointer(S,i);                         
+        j = move_pointer(T,j);
+       return i == -1 && j == -1;   
+    }
+    
+    private int move_pointer(String S, int i) {
+        int cnt = 0;
+        while (i >= 0 && (S.charAt(i) == '#' || cnt > 0)) {
+            if (S.charAt(i) == '#') cnt++;
+            else cnt--;
+            i--;
+        }
+        return i;
+    }
+}
