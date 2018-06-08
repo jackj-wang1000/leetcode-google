@@ -1,0 +1,32 @@
+class Solution {
+    public int largestOverlap(int[][] A, int[][] B) {
+        // time complexity:  O(N^2*K)
+        // space complexity: O(K), # of 1 element in B
+        // algorithm:  brute force
+        int res = 0;
+        int n = A.length;
+        Set<Integer> set = new HashSet<Integer>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                if (B[i][j] == 1) set.add(i*n+j);
+        }
+        for (int x = 0; x < n; x++) {
+            for (int y = 0; y < n; y++) {
+                res = Math.max(res,compare(A,set,x,y));
+                res = Math.max(res,compare(A,set,-x,-y));
+            }
+        }
+        return res;
+    }
+    
+    private int compare(int[][] A, Set<Integer> set, int x, int y) {
+        int n = A.length;
+        int res = 0;
+        for (int pos : set) {
+            int row = pos/n + x;
+            int col = pos%n + y;
+            if (row >= 0 && row < n && col >= 0 && col < n && A[row][col] == 1) res++;
+        }
+        return res;
+    }
+}
