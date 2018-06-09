@@ -1,0 +1,20 @@
+class Solution {
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        // time complexity: O(N*M) N: room #,  M: key# in each room
+        // space complexity: O(N)
+        // algorithm: breadth-first search
+        int n = rooms.size();
+        boolean isVisited[] = new boolean[n];
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        bfs.offer(0);
+        int cnt = 1;
+        isVisited[0] = true;   // 1. must tag element before adding to queue
+        while (!bfs.isEmpty()) {
+            int curr = bfs.poll();
+            for(int i : rooms.get(curr)) {
+                if (!isVisited[i]) { bfs.offer(i); isVisited[i] = true; cnt++;}  // 1. must tag element before adding into queue
+            }
+        }
+        return cnt == n;
+    }
+}
