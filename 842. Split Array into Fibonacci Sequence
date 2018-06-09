@@ -1,0 +1,47 @@
+class Solution {
+    public List<Integer> splitIntoFibonacci(String S) {
+        // time complexity: O(N)
+        // space complexity: O(N)
+        // algorithm: brute force
+        int n = S.length();
+        List<Integer> res = new ArrayList<Integer>();
+        //System.out.println("n= "+n);
+        for (int i = 1; i <= Math.min(n/2,10); i++) {
+            String s1 = S.substring(0,i);
+            if (i == 10 && s1.compareTo("2147483647") > 0) break;
+            int f1 = Integer.parseInt(s1);
+            for (int j = 1; Math.max(i,j) <= n -i-j && j <= 10; j++) {
+                String s2 = S.substring(i,i+j);
+                if (j == 10 && s2.compareTo("2147483647") > 0) break;
+                int f2 = Integer.parseInt(s2);
+                //System.out.println("s1 "+ s1 + " s2 "+s2+ " f1 "+f1+" f2 "+f2);
+                List<Integer> list = new ArrayList<Integer>();
+                list.add(f1);
+                list.add(f2);
+                if (isFibonacci(S,f1,f2,i+j,list)) return list;
+                if (S.charAt(i) == '0') break;
+            }
+            if (S.charAt(0) == '0') break;
+        }
+        return res;
+    }
+    
+    
+    
+    private boolean isFibonacci(String S, int f1, int f2, int start, List<Integer> list) {
+        int n = S.length();
+        int v = 0;
+        for (int i = start; i < n; i++) {
+            if (v == 0 && S.charAt(i) == '0' && f1 + f2 !=0 ) return false;   // 1. in case of first '0' element; 
+            v = v*10 + S.charAt(i) - '0';
+            if (v == f1 + f2) {
+                list.add(v);
+                f1 = f2;
+                f2 = v;
+                v = 0;
+            }
+            else if (v > f1 + f2)  return false;
+        }
+        return v == 0; 
+    }
+}
