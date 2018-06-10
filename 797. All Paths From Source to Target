@@ -1,0 +1,27 @@
+class Solution {
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        // time complexity: O(E)
+        // space complexity: O(V), No loop, max depth is the # of vertex
+        // algorithm: depth-first search
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        helper(res,graph,0,list);
+        return res;
+    }
+    
+    private void helper(List<List<Integer>> res, int[][] graph, int curr, List<Integer> list) {
+        int n = graph.length;
+        int l = list.size();
+        list.add(curr);
+        if (curr == n-1) {
+            res.add(new ArrayList<Integer>(list));
+        }
+        else {
+            for (int i = 0; i < graph[curr].length; i++) {
+                int next = graph[curr][i];
+                helper(res,graph,next,list);
+            }
+        }
+        list.remove(l);
+    }
+}
