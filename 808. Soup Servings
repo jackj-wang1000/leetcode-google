@@ -1,0 +1,42 @@
+class Solution {
+    public double soupServings(int N) {
+        Map<Integer,Map<Integer,Double>> map = new HashMap<Integer,Map<Integer,Double>>();
+        if (N >= 5000) return 1.0;
+        return helper(N,N,map);
+        //return helper1(N,N);
+    }
+    
+    private double helper(int A, int B,Map<Integer,Map<Integer,Double>> map) {
+        double[] x = new double[4];
+        int[] da = new int[]{100,75,50,25};
+        int[] db = new int[]{0,25,50,75};
+        double res = 0;
+        if (A > 0 && B > 0) {
+            for (int i = 0; i < 4; i++) {
+                if(A-da[i] > 0 && B-db[i] > 0 && map.containsKey(A-da[i]) && map.get(A-da[i]).containsKey(B-db[i])) {
+                    x[i] = map.get(A-da[i]).get(B-db[i]);
+                }
+                else x[i] = helper(A-da[i],B-db[i],map);
+            }
+            res = (x[0] + x[1] + x[2] + x[3])/4;
+        }
+        else if (A <= 0 && B <= 0){
+            res = 0.5;
+        }
+        else if (A <= 0 && B > 0) res = 1.0;
+        
+        if (A > 0 && B > 0) {
+            if (!map.containsKey(A))  map.put(A,new HashMap<Integer,Double>());
+            map.get(A).put(B,res);
+        }
+        return res;
+    }
+    
+    private double helper1(int A, int B) {
+        double res = 0;
+        if (A > 0 && B > 0) res = (helper1(A-100,B) + helper1(A-75,B-25) + helper1(A-50,B-50) + helper1(A-25,B-75))/4;
+        else if (A <= 0 && B <= 0) res = 0.5;
+        else if (A <= 0 && B > 0)  res = 1;
+        return res;
+    }
+}
