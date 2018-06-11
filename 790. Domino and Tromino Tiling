@@ -1,0 +1,19 @@
+class Solution {
+    public int numTilings(int N) {
+        // time complexity: O(N^2)
+        //space complexity: O(N)
+        //algorithm : dynamic programming
+        if (N <= 2) return N;
+        int[] dp = new int[N+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 1 + dp[1];
+        for (int i = 3; i <= N; i++) {
+            dp[i] = (dp[i-1] + dp[i-2]) % 1000000007;   // ending with type: |  and =
+            for (int j = 3; j <= i; j++) {
+                dp[i] = (dp[i] + (2*dp[i-j]) % 1000000007) % 1000000007;   // ending with type  _ _| and ``|
+            }
+        }
+        return dp[N];
+    }
+}
