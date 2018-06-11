@@ -5,13 +5,14 @@ class Solution {
         //algorithm : dynamic programming
         if (N <= 2) return N;
         int[] dp = new int[N+1];
+        int MOD = 1000000007;
         dp[0] = 1;
         dp[1] = 1;
         dp[2] = 1 + dp[1];
         for (int i = 3; i <= N; i++) {
-            dp[i] = (dp[i-1] + dp[i-2]) % 1000000007;   // ending with type: |  and =
+            dp[i] = (dp[i-1] + dp[i-2]) % MOD;   // ending with type: |  and =
             for (int j = 3; j <= i; j++) {
-                dp[i] = (dp[i] + (2*dp[i-j]) % 1000000007) % 1000000007;   // ending with type  _ _| and ``|
+                dp[i] = (dp[i] + (2*dp[i-j]) % MOD) % MOD; // ending with type  _ _| and `|, like |_`| (3), |`_`|,(4) , |_`_`|(5)
             }
         }
         return dp[N];
