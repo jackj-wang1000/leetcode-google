@@ -1,0 +1,77 @@
+class Solution {
+    public String customSortString(String S, String T) {
+        // time complexity: O(N), length of String T
+        // space complexity: O(1)
+        // algorithm: counting sort
+        StringBuilder res = new StringBuilder();
+        int[] tb = new int[26];
+        int Slen = S.length();
+        int Tlen = T.length();
+        for(int i = 0; i < Tlen; i++) {
+            tb[T.charAt(i)-'a']++;
+        }
+        for(int i = 0; i < Slen; i++) {
+            char c = S.charAt(i);
+            if(tb[c-'a'] > 0) myAppend(res,tb[c-'a'],c);
+            tb[c-'a'] = 0;
+        }
+        for (char c = 'a'; c <= 'z'; c++) {
+            if(tb[c-'a'] > 0) myAppend(res,tb[c-'a'],c);
+        }
+        return res.toString();
+    }
+    
+    private void myAppend(StringBuilder strg, int cnt, char c) {
+        for (int i = 0; i < cnt; i++) {
+            strg.append(c);
+        }
+    }
+}
+/*
+class Solution {
+    public String customSortString(String S, String T) {
+        // time complexity: O(NlogN)
+        // space complexity : O(1)
+        // algorithm: quick sort
+        int[] tb = new int[26];
+        int Slen = S.length();
+        for (int i = 0; i < Slen; i++) {
+            tb[S.charAt(i)-'a'] = i+1;
+        }
+
+        char[] arr = T.toCharArray();
+        mySort(arr,0,T.length()-1,tb);
+        return String.valueOf(arr);
+    }
+    
+    private void mySort(char[] arr, int low, int high, int[] tb) {
+        if (low >= high) return;
+        int c = tb[arr[high] - 'a'];
+        int i = low;
+        int j = high;
+        int curr = low;
+        while (curr <= j) {
+            if (tb[arr[curr] - 'a'] > c) {
+                swap(arr,curr,j);
+                j--;
+            }
+            else if (tb[arr[curr] - 'a'] < c){
+                swap(arr,curr,i);
+                i++;
+                curr++;
+            }
+            else{
+                curr++;
+            }
+        }
+        mySort(arr,low,i-1,tb);
+        mySort(arr,j,high,tb);
+    }
+    
+    private void swap(char[] arr, int i, int j) {
+        char tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+}
+*/
