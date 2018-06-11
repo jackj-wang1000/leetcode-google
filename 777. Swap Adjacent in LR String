@@ -1,0 +1,29 @@
+class Solution {
+    public boolean canTransform(String start, String end) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: double pointer
+        int n = start.length();
+        if (end.length() != n) return false;
+        int i = 0; 
+        int j = 0;
+        while (i < n && j < n) {
+            while (i < n && start.charAt(i) == 'X') i++;
+            while (j < n && end.charAt(j) == 'X') j++;
+            if ((i < n) ^ (j < n)) {
+                return false;
+            }
+            else if (i < n && j < n){
+                if (start.charAt(i) == end.charAt(j) && 
+                    ((i >= j && start.charAt(i) == 'L') ||  (i <= j && start.charAt(i) == 'R'))) {
+                    i++;
+                    j++;
+                }
+                else return false;
+            }
+        }
+        while(i < n && start.charAt(i) == 'X') i++;
+        while (j < n && end.charAt(j) == 'X') j++;
+        return i == n && j == n;  //1. "XXXXXLXXXX" => "LXXXXXXXXX"
+    }
+}
