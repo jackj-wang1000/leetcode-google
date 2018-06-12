@@ -1,0 +1,35 @@
+class Solution {
+    public int thirdMax(int[] nums) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: scan
+        int[] res = new int[3];
+        int cnt = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            int j = 0;
+            while (j < cnt) {
+                if (nums[i] >= res[j]) break;
+                j++;
+            }
+            if (j == cnt) {
+                if (cnt < 3) {
+                    res[j] = nums[i];
+                    cnt++;
+                }
+            }
+            else if (nums[i] > res[j]) {
+                int tmp = nums[i];
+                while (j < cnt) {   
+                    int t = tmp;    // swap
+                    tmp = res[j];
+                    res[j] = t;
+                    j++;
+                }
+                if (j < 3) {res[j] = tmp; cnt++;}   //1. append one element in the end
+            }
+        }
+        return cnt == 3 ? res[2] : res[0];
+        
+    }
+}
