@@ -1,0 +1,31 @@
+class Solution {
+    public int countPrimeSetBits(int L, int R) {
+        // time complexity:  O(R-L)
+        // space complexity: O(1)
+        // algorithm: count of bit
+        // 2, 3, 5, 7, 11, 13, 17, 19,
+        Set<Integer> set = new HashSet<Integer>();
+        set.add(2);
+        set.add(3);
+        set.add(5);
+        set.add(7);
+        set.add(11);
+        set.add(13);
+        set.add(17);
+        set.add(19);
+        int res = 0;
+        for (int i = L; i <= R; i++) {
+            if (set.contains(countBit(i))) res++;
+        }
+        return res;
+    }
+    
+    private int countBit(int i) {
+        int res = 0;
+        while (i != 0) {
+            i -= i & (-i);
+            res++;
+        }
+        return res;
+    }
+}
