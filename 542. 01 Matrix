@@ -1,0 +1,50 @@
+class Solution {
+    public int[][] updateMatrix(int[][] matrix) {
+        // time complexity: O(M*N)
+        // space complexity: O(M*N)
+        // algorithm: breadth-first search
+        int row = matrix.length;
+        int col = matrix[0].length;
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        Set<Integer> set = new HashSet<Integer>();
+        int[][] res = new int[row][col];
+        int cnt = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 0) {
+                    bfs.offer(i*col+j);
+                    set.add(i*col+j);
+                    cnt++;
+                }
+            }
+        }
+        int[] dx = new int[]{1,-1,0,0};
+        int[] dy = new int[]{0,0,1,-1};
+        int distance = 0;
+        while (!bfs.isEmpty()) {
+            int j = 0;
+            int next_cnt = 0;
+            while (j < cnt) {
+                int ind = bfs.poll();
+                int x = ind / col;
+                int y = ind % col;
+                //System.out.println("x= "+x+" y= "+y+" distance "+distance);
+                res[x][y] = distance;
+                for(int k = 0; k < 4; k++) {
+                    int x_next = x + dx[k];
+                    int y_next = y + dy[k];
+                    int pos = x_next * col + y_next;
+                    if (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && !set.contains(pos)) {
+                        set.add(pos);
+                        bfs.offer(pos);
+                        next_cnt++;
+                    }
+                }
+                j++;
+            }
+            cnt = next_cnt;
+            distance++;
+        }
+        return res;
+    }
+}
