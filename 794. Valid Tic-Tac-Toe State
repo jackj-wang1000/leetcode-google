@@ -1,0 +1,73 @@
+class Solution {
+    public boolean validTicTacToe(String[] board) {
+        // time complexity: O(1)
+        // space complexity: O(1)
+        // algorithm: brute force
+        int cnt_x = 0;
+        int cnt_o = 0;
+        for(int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i].charAt(j) == 'X') cnt_x++;
+                else if (board[i].charAt(j) == 'O') cnt_o++;
+            }
+        }
+        if (cnt_o > cnt_x || cnt_x > cnt_o+1) return false;
+        boolean st_x = isWin( board, 'X');
+        boolean st_o = isWin( board, 'O');
+        /*
+        boolean st_x = false;
+        boolean st_o = false;
+        for (int i = 0; i < 3; i++) {
+            if (board[i].charAt(0) == 'X' && board[i].charAt(1) == 'X' && board[i].charAt(2) == 'X') {
+                if (!st_x) st_x = true;
+                //else return false;
+            }
+            if (board[i].charAt(0) == 'O' && board[i].charAt(1) == 'O' && board[i].charAt(2) == 'O') {
+                if (!st_o) st_o = true;
+                //else return false;
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            if (board[0].charAt(i) == 'X' && board[1].charAt(i) == 'X' && board[2].charAt(i) == 'X') {
+                if (!st_x) st_x = true;
+                //else return false;
+            }
+            if (board[0].charAt(i) == 'O' && board[1].charAt(i) == 'O' && board[2].charAt(i) == 'O') {
+                if (!st_o) st_o = true;
+                //else return false;
+            }
+        }
+        if (board[0].charAt(0) == 'X' && board[1].charAt(1) == 'X' && board[2].charAt(2) == 'X') {
+                if (!st_x) st_x = true;
+                //else return false;
+        }
+        if (board[0].charAt(2) == 'X' && board[1].charAt(1) == 'X' && board[2].charAt(0) == 'X') {
+                if (!st_x) st_x = true;
+                //else return false;
+        }
+        if (board[0].charAt(0) == 'O' && board[1].charAt(1) == 'O' && board[2].charAt(2) == 'O') {
+                if (!st_o) st_o = true;
+                //else return false;
+        }
+        if (board[0].charAt(2) == 'O' && board[1].charAt(1) == 'O' && board[2].charAt(0) == 'O') {
+                if (!st_o) st_o = true;
+                //else return false;
+        }
+        */
+
+        if ((st_x && cnt_o == cnt_x) || (st_o  && cnt_x > cnt_o) || (st_o && st_x)) return false;  // 1. corner case
+        return true;
+    }
+    
+    private boolean isWin(String[] board, char c) {
+        for (int i = 0; i < 3; i++) {
+            if (board[i].charAt(0) == c && board[i].charAt(1) == c && board[i].charAt(2) == c) return true;
+        }
+        for (int i = 0; i < 3; i++) {
+            if (board[0].charAt(i) == c && board[1].charAt(i) == c && board[2].charAt(i) == c) return true;
+        }
+        if (board[0].charAt(0) == c && board[1].charAt(1) == c && board[2].charAt(2) == c) return true;
+        if (board[0].charAt(2) == c && board[1].charAt(1) == c && board[2].charAt(0) == c) return true;
+        return false;
+    }
+}
