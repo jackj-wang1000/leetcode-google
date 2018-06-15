@@ -1,0 +1,143 @@
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        // time complexity: O(K*N^2)
+        // space complexity: O(n)
+        // algorithm: dynamic programming
+        int[][] dp = new int[2][n];
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        ArrayList<Integer>[] w     = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<Integer>();
+            w[i] = new ArrayList<Integer>();
+        }
+        int l = flights.length;
+        for (int i = 0; i < l; i++) {
+            int sr = flights[i][0];
+            int ds = flights[i][1];
+            int price = flights[i][2];
+            graph[sr].add(ds);
+            w[sr].add(price);
+        }
+        for (int i = 0; i < n; i++){
+            dp[0][i] = -1;
+            dp[1][i] = -1;
+        }
+        dp[1][src] = 0;
+        int k = 0;
+        while (k <= K) {
+            for (int i = 0; i < n; i++) {
+                dp[k%2][i] = dp[(k+1)%2][i];  // 1.must initialize current minimum price by last step,  to keep price less than k stop.
+            }
+            for (int i = 0; i < n; i++) {
+                if (dp[(k+1)%2][i] >= 0) {
+                    int sz = graph[i].size();
+                    for (int j = 0; j < sz; j++) {
+                        int nxt = graph[i].get(j);
+                        int price = dp[(k+1)%2][i] + w[i].get(j);
+                        dp[k%2][nxt] = dp[k%2][nxt] >= 0 ? Math.min(price,dp[k%2][nxt]) : price;
+                    }
+                }
+            }
+            k++;
+        }
+        return dp[(k-1)%2][dst];
+    }
+}
+
+/*
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        // time complexity: O(K*N^2)
+        // space(K*N)
+        // algorithm: dynamic programming
+        int[][] dp = new int[K+2][n];
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        ArrayList<Integer>[] w     = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<Integer>();
+            w[i] = new ArrayList<Integer>();
+        }
+        int l = flights.length;
+        for (int i = 0; i < l; i++) {
+            int sr = flights[i][0];
+            int ds = flights[i][1];
+            int price = flights[i][2];
+            graph[sr].add(ds);
+            w[sr].add(price);
+        }
+        for (int i = 0; i <= K+1; i++){
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        dp[0][src] = 0;
+        int k = 1;
+        while (k <= K+1) {
+            for (int i = 0; i < n; i++) {
+                dp[k][i] = dp[k-1][i]; // 1.must initialize current minimum price by last step,  to keep price less than k stop.
+            }
+            for (int i = 0; i < n; i++) {
+                if (dp[k-1][i] >= 0) {
+                    int sz = graph[i].size();
+                    for (int j = 0; j < sz; j++) {
+                        int nxt = graph[i].get(j);
+                        int price = dp[k-1][i] + w[i].get(j);
+                        dp[k][nxt] = dp[k][nxt] >= 0 ? Math.min(price,dp[k][nxt]) : price;
+                    }
+                }
+            }
+            k++;
+        }
+        return dp[K+1][dst];
+    }
+}
+*/
+    
+    
+    
+/*
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        
+        
+        //algorithm : depth-first search, brute force
+        ArrayList<Integer>[]  graph = new ArrayList[n];
+        ArrayList<Integer>[]  w     = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<Integer>();
+            w[i] = new ArrayList<Integer>();
+        }
+        
+        int l = flights.length;
+        for (int i = 0; i < l; i++) {
+            int sr = flights[i][0];
+            int ds = flights[i][1];
+            int price = flights[i][2];
+            graph[sr].add(ds);
+            w[sr].add(price);
+        }
+        boolean[] isVisited = new boolean[n];
+        return helper(graph,w,src,dst,K+1,0,isVisited);
+    }
+    
+    
+    private int helper(ArrayList<Integer>[]  graph, ArrayList<Integer>[]  w, int src, int dst, int K, int v, boolean[] isVisited) {
+        if (src == dst) return v;
+        if (K == 0) {
+            return src == dst ? v : -1;
+        }
+        int res = -1;
+        int sz = graph[src].size();
+        isVisited[src] = true;
+        for (int i = 0; i < sz; i++) {
+            int nxt = graph[src].get(i);
+            if (!isVisited[nxt])  {
+                int price = helper(graph,w,nxt,dst,K-1,v+w[src].get(i),isVisited);
+                if (price > 0)  res = price > 0 ? (res > 0 ? Math.min(res,price) : price) : res;
+            }
+        }
+        isVisited[src] = false;
+        return res;
+    }
+}
+*/
