@@ -1,0 +1,11 @@
+class Solution {
+    public boolean isIdealPermutation(int[] A) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        int n = A.length;
+        for (int i = 0; i < n; i++) {
+            if (Math.abs(A[i]-i) > 1) return false;
+        }
+        return true;
+    }
+}
