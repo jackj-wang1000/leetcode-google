@@ -1,5 +1,45 @@
 class Solution {
     public boolean isIdealPermutation(int[] A) {
+        // time complexity: O(NlogN)
+        // space complexity: O(N)
+        // algorithm: Binary Indexed Tree,  scan array A back to front, BIT[i] save # of numbers less than i, update BIT[j], j > i
+        int n = A.length;
+        int[] BIT = new int[n+1];
+        int global_inversion = 0; 
+        for (int i = n-1; i >= 0; i--) {
+            global_inversion += count(BIT,A[i]+1);
+            update(BIT,A[i]+1);
+        }
+        int local_inversion = 0;
+        for (int i = 1; i < n; i++) {
+            if (A[i] < A[i-1]) local_inversion++;
+        }
+        return global_inversion == local_inversion;
+    }
+    
+    private int count(int[] BIT, int k) {
+        int res = 0;
+        while (k > 0) {
+            res += BIT[k];
+            k -= k & -k;
+        }
+        return res;
+    }
+    
+    private void update(int[] BIT, int k) {
+        int n = BIT.length;
+        while (k < n) {
+            BIT[k]++;    // 1. must update from index k.
+            k += k & -k;
+        }
+    }
+}
+
+
+
+/*
+class Solution {
+    public boolean isIdealPermutation(int[] A) {
         // time complexity: O(N)
         // space complexity: O(1)
         int n = A.length;
@@ -9,3 +49,4 @@ class Solution {
         return true;
     }
 }
+*/
