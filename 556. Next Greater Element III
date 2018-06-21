@@ -1,0 +1,53 @@
+class Solution {
+    public int nextGreaterElement(int n) {
+        // time complexity: O(1)
+        // space complexity: O(1)
+        // algorithm: search first decreasing number
+        int[] num = new int[10];
+        int i = 0;
+        while(n > 0) {
+            num[i] = n % 10;
+            n = n/10;
+            i++;
+        }
+        if (i <= 1) return -1;
+        // find first decrease
+        int j = 0;
+        while (j+1 < i) {
+            if (num[j+1] < num[j]) break;
+            j++;
+        }
+        if (j+1 == i) return -1;
+        int k = 0;
+        while (k < j) {                 
+            if (num[k] > num[j+1]) break;
+            k++;
+        }
+        swap(num,k,j+1);
+        reverse(num,0,j);
+        int res = 0;
+        k = 0;
+        int d = 1;
+        while (k < i) {
+            if (k == 9 && (num[k] > 2 || (num[k] ==2 && res > 147483647))) return -1;    // 1. corner case. in case of res > 2^31 -1
+            res = res + d * num[k];
+            d = d * 10;
+            k++;
+        }
+        return res;
+    }
+    
+    private void reverse(int[] num, int i, int j) {
+        while (i < j) {
+            swap(num,i,j);
+            i++;
+            j--;
+        }
+    }
+    
+    private void swap(int[] num, int i, int j) {
+        int tmp = num[i];
+        num[i] = num[j];
+        num[j] = tmp;
+    }
+}
