@@ -6,13 +6,13 @@ class Solution {
         
         int n = A.length;
         if (n < 3) return 0;
-        boolean st = false; // up 
+        boolean isDown = false; // state represent up/down mountain
         int res = 0;
         int start = 0;
         for (int i = 1; i < n; i++) {
-            if(!st) {                   // up mountain stage
+            if(!isDown) {                   // up mountain stage
                 if(A[i] < A[i-1]) {
-                    if (i - start >= 2) st = true;
+                    if (i - start >= 2) isDown = true;
                     else start = i;
                 }
                 else if(A[i] == A[i-1]) {
@@ -22,17 +22,17 @@ class Solution {
             else {                    // down mountain stage
                 if (A[i] > A[i-1]) {
                     res = Math.max(res,i-start);
-                    st = false;
+                    isDown = false;
                     start = i-1;
                 }
                 else if (A[i] == A[i-1]){
                     res = Math.max(res,i-start);
-                    st = false;
+                    isDown = false;
                     start = i;
                 }
             }
         }
-        if (st) res = Math.max(res,n-start);
+        if (isDown) res = Math.max(res,n-start);
         return res;
         
     }
