@@ -1,0 +1,31 @@
+class Solution {
+    public boolean isNStraightHand(int[] hand, int W) {
+        // time complexity: O(NlogN), sorting,
+        // space complexity: O(N/W),  only maintain header and next of each sequence (average at most N/W sequences)
+        // algorithm: HashMap + Heap
+        if (W == 1) return true;   // 1. corner case
+        int n = hand.length;
+        Arrays.sort(hand);
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(); // saved next needed element;
+        Map<Integer,Integer> start = new HashMap<Integer,Integer>(); // save start element of a sequence
+        for (int i = 0; i < n; i++) {
+            int head = hand[i] - W + 1;
+            int next = hand[i] + 1;
+            if (pq.isEmpty() || hand[i] < pq.peek()) {
+                pq.offer(next);
+                if (!start.containsKey(hand[i])) start.put(hand[i],1);
+                else start.put(hand[i],start.get(hand[i])+1);
+            }
+            else if (hand[i] == pq.peek()){
+                pq.poll();
+                if (start.containsKey(head) && start.get(head) > 0)  start.put(head,start.get(head)-1);
+                else pq.offer(next);
+            }
+            else {
+                return false;
+            }
+        }
+        return pq.isEmpty();
+        
+    }
+}
