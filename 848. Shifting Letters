@@ -1,0 +1,22 @@
+class Solution {
+    public String shiftingLetters(String S, int[] shifts) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: lookup_table
+        char[] table = new char[]{'a','b','c','d','e','f','g','h','i','j','k','l','m','n',
+                                  'o','p','q','r','s','t','u','v','w','x','y','z'};
+        int n = shifts.length;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += shifts[i] % 26;    // 1. shifts is too large
+            sum = sum % 26;
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            res.append(table[(S.charAt(i)-'a'+sum)%26]);
+            sum -= shifts[i] % 26;
+            if (sum < 0) sum += 26;
+        }
+        return res.toString();
+    }
+}
