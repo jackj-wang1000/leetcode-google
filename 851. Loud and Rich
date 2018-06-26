@@ -1,0 +1,42 @@
+class Solution {
+    public int[] loudAndRich(int[][] richer, int[] quiet) {
+        // time complexity: O(2*E+V), each edge are visited twice 
+        // space complexity: O(E+V)
+        // algorithm: topological sort + bfs
+        int l = richer.length;
+        int n = quiet.length;
+        int[] res = new int[n];
+        int[] outDegree = new int[n];
+        ArrayList<Integer>[] graph = new ArrayList[n];   //2. should not be defined as ArrayList[] graph
+        ArrayList<Integer>[] graph_p = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<Integer>();
+            graph_p[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < l; i++) {
+            int u = richer[i][0];
+            int v = richer[i][1];
+            graph[v].add(u);
+            graph_p[u].add(v);
+            outDegree[v]++;
+        }
+        
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        for (int i = 0; i < n; i++) {
+            res[i] = i;
+            if (outDegree[i] == 0) bfs.offer(i);
+        }
+        while (!bfs.isEmpty()) {
+            int curr = bfs.poll();
+            for(int i : graph[curr]) {
+                res[curr] = quiet[res[curr]] > quiet[res[i]] ? res[i] : res[curr];   // 1. must compare res[curr] with res[i]
+            }
+            for(int i : graph_p[curr]) {
+                outDegree[i]--;
+                if (outDegree[i] == 0) bfs.offer(i);
+            }
+        }
+        return res;
+        
+    }
+}
