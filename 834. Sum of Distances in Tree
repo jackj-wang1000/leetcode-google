@@ -1,0 +1,47 @@
+class Solution {
+    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+        // time compleixty: O(N)
+        // space complexity: O(N)
+        // algorithm:  dynamic programming + depth first search
+        int[] children = new int[N]; // # of children, include self
+        int[] dp = new int[N];  // distance sum from its children;
+        int[] res = new int[N];
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for (int i = 0; i < N; i++) {
+            graph[i] = new ArrayList<Integer>();
+        }
+        for (int i = 0; i < N-1; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            graph[u].add(v);
+            graph[v].add(u);
+        }
+        helper(graph,0,-1,children,dp);
+        res[0] = dp[0];
+        helper1(graph, 0,-1,children,res);
+        return res;
+    }
+
+    private void helper1(ArrayList<Integer>[] graph, int curr, int pre, int[] children, int[] res) {
+        int N = res.length;
+        for (int i : graph[curr]) {
+            if (i != pre) {
+                res[i] = res[curr] - children[i] + N - children[i];
+                helper1(graph,i,curr,children,res);
+            }
+        }
+    }
+    
+    private void helper(ArrayList<Integer>[] graph, int curr, int pre, int[] children, int[] dp) {
+        for (int i : graph[curr]) {
+            if (i != pre) {
+                helper(graph,i,curr,children,dp);
+                children[curr] += children[i];
+                dp[curr] += dp[i] + children[i];
+            }
+        }
+        children[curr]++;
+    }
+}
+    
+
