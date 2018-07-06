@@ -1,0 +1,58 @@
+class Solution {
+    public int numDecodings(String s) {
+        // time complexity: O(N)
+        // space complexity: O(N) => O(1)
+        // algorithm :  dynamic programming
+        int MOD = 1000000007;
+        int n = s.length();
+        int[] dp = new int[n+1];
+        char c = s.charAt(0);
+        dp[0] = 1;
+        if (c == '*') {
+            dp[1] = 9;
+        }
+        else if (c == '0') {
+            return 0;
+        }
+        else {
+            dp[1] = 1;
+        }
+        char pre = c;
+        int cnt = 0;
+        for (int i = 1; i < n; i++) {
+            c = s.charAt(i);
+            if (c == '*') {
+                for (int j = 0; j < 9; j++) {
+                    dp[i+1] = (dp[i+1] + dp[i]) % MOD;
+                }
+                if (pre == '*') cnt = 15;
+                else if (pre == '1') cnt = 9;
+                else if (pre == '2') cnt = 6;
+                else cnt = 0;
+                for (int j = 0; j < cnt; j++) {
+                    dp[i+1] = (dp[i+1] + dp[i-1]) % MOD;
+                }
+            }
+            else if (c == '0') {
+                if (pre == '*') cnt = 2;
+                else if (pre == '1' || pre == '2') cnt = 1;
+                else cnt = 0;
+                dp[i+1] = (dp[i-1] * cnt) % MOD;
+            }
+            else if (c <= '6') {
+                dp[i+1] = dp[i];
+                if (pre == '*') cnt = 2;
+                else if (pre == '1' || pre == '2') cnt = 1;
+                else cnt = 0;
+                dp[i+1] = (((dp[i-1] * cnt) % MOD) + dp[i+1]) % MOD; 
+            }
+            else {
+                dp[i+1] = dp[i];
+                if (pre == '*' || pre == '1') dp[i+1] = (dp[i+1] + dp[i-1]) % MOD; 
+            }
+            pre = c;
+        }
+        return dp[n];
+        
+    }
+}
