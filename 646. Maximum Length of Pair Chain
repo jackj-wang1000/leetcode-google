@@ -1,5 +1,39 @@
 class Solution {
     public int findLongestChain(int[][] pairs) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: greedy algorithm
+        int n = pairs.length;
+        Arrays.sort(pairs,new Comparator<int[]>(){
+            public int compare(int[] x, int[] y) {
+                return x[0] == y[0] ? x[1] - y[1] : x[0] - y[0];
+            }
+        });
+        if (n == 1) return 1;
+        int res = 1;
+        int curr = 0;
+        for (int i = 1; i < n; i++) {
+            if (pairs[curr][1] < pairs[i][0]) {
+                res++;
+                curr = i;
+            }
+            else if (pairs[curr][1] > pairs[i][1]) {
+                curr = i;
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
+
+
+
+
+class Solution {
+    public int findLongestChain(int[][] pairs) {
         // time complexity: O(NlogN)
         // space complexity: O(N)
         //algorithm: binary indexed tree, (update from current index when update, evaluate from current index when evaluate)
