@@ -1,0 +1,44 @@
+class Solution {
+    public List<Integer> postorder(Node root) {
+        // time complexity: O(N)
+        // space complexity: O(logN)
+        // algorithm: stack +  preorder(root-right-left) + reverse
+        
+        Stack<Node> st = new Stack<Node>();
+        Stack<Integer> index = new Stack<Integer>();
+        List<Integer> res = new ArrayList<Integer>();
+        Node curr = root;
+        while (curr != null) {
+            res.add(curr.val);
+            st.push(curr);
+            index.push(2);
+            List<Node> child = curr.children;
+            int n = child.size();
+            if (child == null || child.size() == 0) break;
+            else curr = child.get(n-1);
+        }
+        
+        while (!st.isEmpty()) {
+            curr = st.peek();
+            int top_index = index.pop();
+            int n = curr.children.size();
+            if (curr.children == null || n - top_index  < 0) {
+                st.pop();
+            }
+            else {
+                index.push(top_index+1);
+                curr = curr.children.get(n - top_index);
+                while (curr != null) {
+                    res.add(curr.val);
+                    st.push(curr);
+                    index.push(2);
+                    List<Node> child = curr.children;
+                    if (child == null || child.size() == 0) break;
+                    else curr = child.get(child.size()-1);
+                }
+            }
+        }
+        Collections.reverse(res);
+        return res;
+    }
+}
