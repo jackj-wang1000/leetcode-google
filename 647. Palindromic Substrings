@@ -1,0 +1,65 @@
+class Solution {
+    public int countSubstrings(String s) {
+        // time complexity: O(N)
+        // space complexity: O(N)
+        // algorithm:  manacher's programming
+        int n = s.length();
+        if (n == 0) return 0;
+        char[] s_arr = new char[2*n+3];
+        s_arr[0] = '$';
+        s_arr[1] = '|';
+        for (int i = 1; i <= n; i++) {
+            s_arr[2*i ] = s.charAt(i-1);
+            s_arr[2*i +1] = '|';
+        }
+        s_arr[2*n+2] = '^';
+        int[] LPS = new int[2*n + 2];
+        int C = 0;
+        int R = 0;
+        int res = 0;
+        for (int i = 1; i < 2*n+2; i++) {
+            int i_Mirror = 2*C - i;
+            LPS[i] = i < R ? Math.min(R-i, LPS[i_Mirror]) : 0;
+            while (s_arr[i+LPS[i]+1] == s_arr[i-LPS[i]-1] ) LPS[i]++;
+            if (i+LPS[i] > R) {
+                R = i + LPS[i];
+                C = i;
+            }
+            res += (LPS[i]+1)/2;
+        }    
+        return res;
+        
+    }
+}
+
+
+
+class Solution {
+    public int countSubstrings(String s) {
+        // time complexity: O(N^2)
+        // space complexity: O(N)
+        // algorithm:  dynamic programming
+        int res = 0;
+        int n = s.length();
+        if (n == 0) return 0;
+        int[] dp = new int[n];
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
+            int l = 0;
+            for (int j = 0; j < cnt; j++) {
+                if (dp[j]-1 >= 0 && s.charAt(dp[j]-1) == s.charAt(i)) {
+                    dp[l] = dp[j]-1;
+                    l++;
+                    res++;
+                }
+            }
+            if (i > 0 && s.charAt(i) == s.charAt(i-1))  {dp[l] = i-1; l++; res++; }  // corner case;
+            res++;
+            dp[l] = i;
+            cnt = l+1;
+        }
+        
+        return res;
+        
+    }
+}
