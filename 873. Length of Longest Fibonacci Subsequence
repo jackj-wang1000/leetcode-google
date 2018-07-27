@@ -1,0 +1,36 @@
+class Solution {
+    public int lenLongestFibSubseq(int[] A) {
+        // time complexity: O(N^2)
+        // space complexity: O(N)
+        // algorithm: 
+        Set<Integer> set = new HashSet<Integer>();
+        int n = A.length;
+        for (int i = 0; i < n; i++) {
+            set.add(A[i]);
+        }
+        int res = 0;
+        int a1,a2;
+        a1 = a2 = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                a1 = A[i];
+                a2 = A[j];
+                if (!(set.contains(A[j]-A[i]) && A[j] < 2 * A[i]) && set.contains(A[i] + A[j])){
+                    // must add condition A[j] < 2 * A[i]; 
+                    int cnt = 2;
+                    int tmp = a1 + a2;
+                    a1 = a2;
+                    a2 = tmp;
+                    while (set.contains(a2)) {
+                        cnt++;
+                        tmp = a1 + a2;
+                        a1 = a2;
+                        a2 = tmp;
+                    }
+                    if (cnt > 2) res = Math.max(res,cnt);
+                }
+            }
+        }
+        return res;
+    }
+}
