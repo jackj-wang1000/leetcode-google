@@ -1,0 +1,36 @@
+class Solution {
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        // time complexity: O(N!)
+        // space complexity: O(N), depth of recursion
+        // algorithm: depth first search, brute force
+        int n = nums.length;
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum = sum + nums[i];
+        }
+        if (sum % k != 0) return false;
+        sum = sum / k;
+        Arrays.sort(nums);
+        return helper(nums,1,k,nums[n-1],sum);
+    }
+    
+    
+    private boolean helper(int[] nums, int st, int K, int curr, int sum) {
+        int n = nums.length;
+        if (K == 1) return true;  // (k == 1) case must be outside of  sum==curr condition, in case of K==1;
+        else if (sum == curr) {
+            K--;
+            curr = 0;
+        }
+        for (int j = n-1; j >= 0; j--) {
+            int bit = 1 << (n-1-j);
+            if ((st & bit) == 0 && curr + nums[j] <= sum) {
+                st = st | bit;
+                boolean res = helper(nums,st,K,curr+nums[j],sum);
+                if (res) return true;
+                st = st ^ bit;
+            }
+        }
+        return false;
+    }
+}
