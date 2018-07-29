@@ -34,7 +34,7 @@ class Solution {
     public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
         // time complexity: O(N)
         // space complexity: O(logN)
-        // algorithm: depth first search
+        // algorithm: depth first search, post-order traverse
         List<Integer> res = new ArrayList<Integer>();
         helper(root,target.val,K,res);
         return res;
