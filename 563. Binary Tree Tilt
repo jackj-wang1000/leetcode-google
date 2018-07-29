@@ -1,0 +1,19 @@
+class Solution {
+    private int res;
+    public int findTilt(TreeNode root) {
+        // time complexity: O(N)
+        // space complexity: O(logN)
+        // algorithm: recursion
+        this.res = 0;
+        helper(root);
+        return res;
+    }
+    
+    private int helper(TreeNode root) {
+        if (root == null) return 0;
+        int s1 = helper(root.left);
+        int s2 = helper(root.right);
+        res += Math.abs(s1-s2);
+        return s1+s2 + root.val;
+    }
+}
