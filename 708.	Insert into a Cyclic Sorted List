@@ -17,7 +17,9 @@ class Solution {
             ListNode pre = node;
             ListNode curr = node.next;
             while(curr != node) {
-                if ((curr.val >= x || curr.val < pre.val) && pre.val < x) break;
+                // x might be less than minimum of list or (list value is the same and x is equal to list value)
+                //if ((curr.val >= x || curr.val < pre.val) && pre.val < x) break;
+                if ((pre.val <= x && x <= curr.val) || (pre.val < curr.val && (x >= pre.val || x <= curr.val))) break;
                 pre = curr;
                 curr = curr.next;
             }
