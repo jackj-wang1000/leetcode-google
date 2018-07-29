@@ -1,0 +1,27 @@
+class Solution {
+    private TreeNode res;
+    private int max_depth;
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        // time complexity: O(N)
+        // space complexity: O(logN)
+        // algorithm: depth first search, post-order traverse
+        res = root;
+        max_depth = -1;
+        helper(root,0);
+        return res;
+    }
+    
+    private int helper(TreeNode root, int curr_depth) {
+        if (root == null) return curr_depth-1;
+        if (curr_depth > max_depth) {
+            max_depth = curr_depth;
+        }
+        int d1 = helper(root.left, curr_depth+1);
+        int d2 = helper(root.right, curr_depth+1);
+        if(d1 == d2 && d1 == max_depth) {
+            res = root; 
+            //System.out.println("res:" + res.val);
+        }
+        return Math.max(d1,d2);
+    }
+}
