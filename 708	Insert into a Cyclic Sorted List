@@ -1,0 +1,26 @@
+class Solution {
+    public ListNode insert(ListNode node, int x) {
+        ListNode res = new ListNode(x);
+        if (node == null) {
+            res.next = res;
+            return res;
+        }
+        else if (node.next == node) {
+            node.next = res;
+            res.next = node;
+            return res;
+        }
+        else {
+            ListNode pre = node;
+            ListNode curr = node.next;
+            while(curr != node) {
+                if ((curr.val >= x || curr.val < pre.val) && pre.val < x) break;
+                pre = curr;
+                curr = curr.next;
+            }
+            pre.next = res;
+            res.next = curr;
+            return res;
+        }
+    }
+}
