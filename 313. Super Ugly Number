@@ -1,0 +1,27 @@
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        // time complexity: O(L*N)
+        // space complexity: O(L+N)
+        // algorithm: multiple pointer
+        int L = primes.length;
+        int[] indx = new int[L];  //move indx to next index for specific primes;
+        int[] tmp = new int[L];
+        int[] res = new int[n];
+        res[0] = 1;
+        for (int i = 0; i+1 < n; i++) {
+            for (int j = 0; j < L; j++) {
+                tmp[j] = res[indx[j]]*primes[j];
+            }
+            int min_r = Integer.MAX_VALUE;
+            for (int j = 0; j < L; j++) {
+                min_r = Math.min(min_r,tmp[j]);
+            }
+            for (int j = 0; j < L; j++) {
+                if (tmp[j] == min_r) indx[j]++;
+            }
+            res[i+1] = min_r;
+            
+        }
+        return res[n-1];
+    }
+}
