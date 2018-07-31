@@ -1,0 +1,23 @@
+public class Solution {
+    private int res;
+    public int longestConsecutive(TreeNode root) {
+        // time complexity: O(N)
+        // space complexity: O(logN)
+        // algorithm: recursion
+        this.res = 0;
+        if (root == null) return 0;
+        else {
+            helper(root.left, root.val,1);
+            helper(root.right, root.val,1);
+            return res;
+        }
+    }
+    
+    private void helper(TreeNode root, int p, int l) {
+        res = Math.max(l,res);      // save path length ending in parents;
+        if (root == null) return;
+        int next = root.val == p+1 ? l+1 : 1;
+        helper(root.left,root.val,next);
+        helper(root.right,root.val,next);
+    }
+}
