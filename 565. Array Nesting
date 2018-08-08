@@ -1,0 +1,23 @@
+class Solution {
+    public int arrayNesting(int[] nums) {
+        // time complexity: O(N)
+        // space complexity: O(N)
+        // algorithm: find loop
+        int n = nums.length;
+        int res = 1;
+        boolean[] st = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            int cnt = 1;
+            if (!st[i]) {
+                int next = nums[i];
+                while (next != i) {
+                    st[next] = true;
+                    next = nums[next];
+                    cnt++;
+                }
+                res = Math.max(res,cnt);
+            }
+        }
+        return res;
+     }
+}
