@@ -1,0 +1,19 @@
+class Solution {
+    public int leastBricks(List<List<Integer>> wall) {
+        // time complexity: O(N), N: total # of bricks
+        // space complexity: O(N)
+        // algorithm: HashMap
+        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+        int max_edge = 0;
+        for (List<Integer> list : wall) {
+            int sum = 0;
+            for (int i = 0; i < list.size()-1; i++) {
+                sum += list.get(i);
+                if (!map.containsKey(sum)) map.put(sum,1);
+                else map.put(sum, map.get(sum)+1);
+                max_edge = Math.max(max_edge,map.get(sum));
+            }
+        }
+        return wall.size()-max_edge;
+    }
+}
