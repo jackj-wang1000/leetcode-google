@@ -1,3 +1,4 @@
+
 class Solution {
     public int leastBricks(List<List<Integer>> wall) {
         // time complexity: O(N), N: total # of bricks
@@ -17,3 +18,126 @@ class Solution {
         return wall.size()-max_edge;
     }
 }
+
+
+/*
+class Solution {
+    public int leastBricks(List<List<Integer>> wall) {
+        int row = wall.size();
+        int[] width = new int[row];    // each row's total width till index by ptr
+        int[] ptr = new int[row];  // each row's next index
+        int res = row;
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(row,new Comparator<Integer>(){
+            public int compare(Integer x, Integer y) {
+                return width[x] - width[y];
+            }
+        });
+        for (int i = 0; i < row; i++) {
+            width[i] = wall.get(i).get(0);
+            pq.offer(i);
+            ptr[i] = 1;
+        }
+        int curr_width = 0;
+        int curr_ind = pq.peek();
+        while (true) {
+            if (ptr[curr_ind] == wall.get(curr_ind).size()) break;
+            curr_width = width[curr_ind];
+            int cnt = 0;
+            while (width[curr_ind] == curr_width) {
+                pq.poll();
+                cnt++;
+                width[curr_ind] += wall.get(curr_ind).get(ptr[curr_ind]);
+                ptr[curr_ind]++;
+                pq.offer(curr_ind);
+                curr_ind = pq.peek();
+            }
+            res = Math.min(res,row-cnt);
+        }
+        return res;
+    }
+}
+*/
+/*
+class Solution {
+    public int leastBricks(List<List<Integer>> wall) {
+        // time complexity: O(N*logM), M total # of wall's row , N total # of bricks
+        // space complexity: O(M)
+        // algorithm: min-Heap
+        int row = wall.size();
+        int[] width = new int[row];    // each row's total width till index by ptr
+        int[] ptr = new int[row];  // each row's next index
+        int res = row;
+        MyHeap pq = new MyHeap(row,width);
+        for (int i = 0; i < row; i++) {
+            width[i] = wall.get(i).get(0);
+            pq.buildHeap(i);
+            ptr[i] = 1;
+        }
+        int curr_width = 0;
+        int curr_ind = pq.peek();
+        while (true) {
+            if (ptr[curr_ind] == wall.get(curr_ind).size()) break;
+            curr_width = width[curr_ind];
+            int cnt = 0;
+            while (width[curr_ind] == curr_width) {
+                cnt++;
+                width[curr_ind] += wall.get(curr_ind).get(ptr[curr_ind]);
+                ptr[curr_ind]++;
+                pq.update();
+                curr_ind = pq.peek();
+            }
+            res = Math.min(res,row-cnt);
+        }
+        return res;
+    }
+    
+    class MyHeap {
+        int size;
+        int[] heapArr;
+        int[] width;
+        public MyHeap(int n, int[] w) {
+            heapArr = new int[n];
+            width = w;
+            size = 0;
+        }
+        
+        public void buildHeap(int i) {
+            int curr = size;
+            heapArr[size] = i;
+            size++;
+            while(curr > 0) {
+                int p = (curr-1)/2;
+                if (width[heapArr[p]] <= width[heapArr[curr]]) break;
+                else {
+                    int tmp = heapArr[p];
+                    heapArr[p] = heapArr[curr];
+                    heapArr[curr] = tmp;
+                    curr = p;
+                }
+            }
+        }
+        
+        public int peek() {
+            return heapArr[0];
+        }
+        
+        public void update() {
+            int curr = 0;
+            while (2*curr+1 < size)  {
+                int left = 2*curr + 1;
+                int right = 2*curr + 2;
+                int min_ind = left;
+                if (right < size && width[heapArr[right]] < width[heapArr[left]]) min_ind = right;
+                if (width[heapArr[curr]] <= width[heapArr[min_ind]]) break;
+                else {
+                    int tmp = heapArr[curr];
+                    heapArr[curr] = heapArr[min_ind];
+                    heapArr[min_ind] = tmp;
+                    curr = min_ind;
+                }
+            }
+        }
+        
+    }
+}
+*/
