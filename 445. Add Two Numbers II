@@ -1,0 +1,67 @@
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // time complexity: O(n1+n2)
+        // space complexity: O(Max(n1,n2))
+        // algorithm: list reverse + count
+        int n1 = listLen(l1);
+        int n2 = listLen(l2);
+        if (n1 == n2 && n1 == 0) return new ListNode(0);
+        if (n1 >= n2) {
+            return addTwoList(l1,l2,n1-n2);
+        }
+        else return addTwoList(l2,l1,n2-n1);
+    }
+    
+    private ListNode addTwoList(ListNode l1, ListNode l2, int diff) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr_l1 = l1;
+        ListNode curr_l2 = l2;
+        while (diff > 0) {
+            ListNode node = new ListNode(curr_l1.val);
+            node.next = dummy.next;
+            dummy.next = node;
+            curr_l1 = curr_l1.next;
+            diff--;
+        }
+        while (curr_l1 != null) {
+            ListNode node = new ListNode(curr_l1.val + curr_l2.val);
+            node.next = dummy.next;
+            dummy.next = node;
+            curr_l1 = curr_l1.next;
+            curr_l2 = curr_l2.next;
+        }
+        ListNode pre = dummy;
+        ListNode curr = dummy.next;
+        int carry = 0;
+        while (curr != null) {
+            int next_carr = (curr.val + carry) / 10;
+            curr.val = (curr.val + carry) % 10;
+            pre = curr;
+            curr = curr.next;
+            carry = next_carr;
+        }
+        if (carry != 0) pre.next = new ListNode(carry);
+        return reverseList(dummy);
+    }
+    
+    private ListNode reverseList(ListNode dummy) {
+        ListNode pre = dummy.next;
+        ListNode curr = pre.next;
+        while (curr != null) {
+            pre.next = curr.next;
+            curr.next = dummy.next;
+            dummy.next = curr;
+            curr = pre.next;
+        }
+        return dummy.next;
+    }
+    
+    private int listLen(ListNode l1) {
+        int n = 0;
+        while (l1 != null) {
+            n++;
+            l1 = l1.next;
+        }
+        return n;
+    }
+}
