@@ -1,0 +1,18 @@
+class Solution extends SolBase {
+    public int rand10() {
+        // time complexity: O(49/40)
+        // space complexity: O(1)
+        // algorithm: combination
+        int first = rand7();
+        int second = rand7();
+        int sum = (first-1)*7 + second;
+        while (sum > 40) {
+            first = rand7();
+            second = rand7();
+            sum = (first-1)*7 + second;
+        }
+        if (sum % 4 == 0) return sum/4;
+        else return sum/4 + 1;
+        
+    }
+}
