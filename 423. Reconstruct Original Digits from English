@@ -1,0 +1,91 @@
+class Solution {
+    public String originalDigits(String s) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm : observation
+        String[] words = new String[]{"zero","two","four","six","eight","one","three","five","seven","nine"};
+        int[] num = new int[]{0,2,4,6,8,1,3,5,7,9};
+        char[] c = new char[]{'z','w','u','x','g','o','h','f','s','i'};
+        int n = s.length();
+        int[] cnt = new int[26];
+        for (int i = 0; i < n; i++) {
+            cnt[s.charAt(i)-'a']++;
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int counts = cnt[c[i]-'a'];
+            for(int j = 0; j < words[i].length(); j++) {
+                int ind = words[i].charAt(j) - 'a';
+                cnt[ind] -= counts;
+            }
+            while (counts > 0) {
+                res.append((char) (num[i]+'0'));
+                counts--;
+            }
+        }
+        char[] arr = res.toString().toCharArray();
+        Arrays.sort(arr);
+        return new String(arr);
+        
+    }
+}
+
+/*
+class Solution {
+public:
+    string originalDigits(string s) {
+        string res = "";
+        vector<string> words{"zero", "two", "four", "six", "eight", "one", "three", "five", "seven", "nine"};
+        vector<int> nums{0, 2, 4, 6, 8, 1, 3, 5, 7, 9}, counts(26, 0);
+        vector<char> chars{'z', 'w', 'u', 'x', 'g', 'o', 'h', 'f', 's', 'i'};
+        for (char c : s) ++counts[c - 'a'];
+        for (int i = 0; i < 10; ++i) {
+            int cnt = counts[chars[i] - 'a'];
+            for (int j = 0; j < words[i].size(); ++j) {
+                counts[words[i][j] - 'a'] -= cnt;
+            }
+            while (cnt--) res += (nums[i] + '0');
+        }
+        sort(res.begin(), res.end());
+        return res;
+    }
+};
+
+
+/*
+class Solution {
+    public String originalDigits(String s) {
+        String[] digital = new String[]{"zero","one","two","three","four","five","six","seven","eight","nine","ten"};
+        int n = s.length();
+        int[] cnt = new int[26];
+        for (int i = 0; i < n; i++) {
+            cnt[s.charAt(i) - 'a']++;
+        }
+        
+        return helper(digital,new StringBuilder(),cnt,n);
+    }
+    
+    private String helper(String[] digital, StringBuilder strb, int[] cnt,  int total) {
+        if(total == 0) return strb.toString();
+        for (int i = 0; i < 10; i++) {
+            int L = digital[i].length();
+            int[] d = new int[26];
+            boolean st = true;
+            for (int j = 0; j < L; j++) {
+                int ind = digital[i].charAt(j)-'a';
+                d[ind]++;
+                if (d[ind] > cnt[ind]) {st = false; break;}
+            }
+            if (st) {
+                for (int j = 0; j < 26; j++) {cnt[j] -= d[j];}
+                strb.append(Integer.toString(i));
+                String res = helper(digital,strb,cnt,total-L);
+                if (res.length() > 0) return res;
+                for (int j = 0; j < 26; j++) {cnt[j] += d[j];}
+                strb.deleteCharAt(strb.length()-1);
+            }
+        }
+        return "";
+    }
+}
+*/
