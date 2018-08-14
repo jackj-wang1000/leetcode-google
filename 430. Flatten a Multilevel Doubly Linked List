@@ -1,0 +1,34 @@
+class Solution {
+    public Node flatten(Node head) {
+        // time complexity: O(N), total # of node
+        //space complexity: O(d), depth of child
+        //algorithm: recursion
+        if (head != null) helper(head);
+        return head;
+    }
+    
+    private Node helper(Node head) {  // return tail node of the Multilevel Doubly Linked List
+        if (head.next == null) {
+            if (head.child == null) return head;
+            else {
+                head.next = head.child;
+                head.child.prev = head;
+                Node res = helper(head.child);
+                head.child = null;   // set to null
+                return res;
+            }
+        }
+        else {
+            if (head.child != null) {
+                Node res = helper(head.child);
+                res.next = head.next;
+                head.next.prev = res;
+                head.next = head.child;
+                head.child.prev = head;
+                head.child = null; // set to null
+            }
+            return helper(head.next);
+        }
+    }
+    
+}
