@@ -1,0 +1,57 @@
+class Solution {
+    public int minMutation(String start, String end, String[] bank) {
+        // time complexity: O(E+V)
+        // space complexity: O(V+E), V for map, E for set
+        //algorithm: breadth first search
+        Map<String,List<String>> map = new HashMap<String,List<String>>();
+        int n = bank.length;
+        for (int i = 0; i < n; i++) {
+            map.put(bank[i], new ArrayList<String>());
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = i+1; j < n; j++) {
+                int cnt = 0;
+                for (int k = 0; k < 8; k++) {
+                    if (bank[i].charAt(k) != bank[j].charAt(k)) cnt++;
+                }
+                if (cnt == 1) {
+                    map.get(bank[i]).add(bank[j]);
+                    map.get(bank[j]).add(bank[i]);
+                }
+            }
+        }
+        if (!map.containsKey(end)) return -1;
+        Queue<String> bfs = new LinkedList<String>();
+        Set<String> set = new HashSet<String>();
+        int L = 0;
+        for (int i = 0; i < n; i++) {
+            int cnt = 0;
+            for (int j = 0; j < 8; j++) {
+                if (start.charAt(j) != bank[i].charAt(j)) cnt++;
+            }
+            if (cnt == 1) {
+                bfs.offer(bank[i]);
+                set.add(bank[i]);
+                L++;
+            }
+        }
+        int d = 1;
+        while (!bfs.isEmpty()) {
+            for (int i = 0; i < L; i++) {
+                String curr = bfs.poll();
+                if (curr.equals(end)) return d;
+                for (String str : map.get(curr)) {
+                    if (!set.contains(str)) {
+                        bfs.offer(str);
+                        set.add(str);
+                    }
+                }
+            }
+            d++;
+            L = bfs.size();
+        }
+        return -1;
+        
+    }
+
+}
