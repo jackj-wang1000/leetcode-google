@@ -1,0 +1,65 @@
+class Solution {
+    public int[] maxNumber(int[] nums1, int[] nums2, int k) {
+        // time complexity: O(k^3 + k*(N1+N2))
+        // space complexity: O(k)
+        // algorithm: combine
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        int[] res = new int[0];
+        for (int i = Math.max(0,k-n2); i <= Math.min(k,n1); i++) { // O(k)
+            int[] s1 = maxSeq(nums1,i);     // O(N1)
+            int[] s2 = maxSeq(nums2,k-i);   // O(N2)
+            int[] s = combine(s1,s2);       // O(k^2), worst case
+            res = compareArr(res,0,s,0);    // O(k)
+        }
+        return res;
+    }
+    
+    private int[] maxSeq(int[] nums, int k) {
+        int curr = 0;
+        int[] res = new int[k];
+        int drop = nums.length - k;
+        for (int i = 0; i < nums.length; i++) {
+            while (curr > 0 && drop > 0 && res[curr-1] < nums[i]) {
+                curr--;
+                drop--;
+            }
+            if (curr < k) {
+                res[curr] = nums[i];
+                curr++;
+            }
+            else {
+               drop--;  // must count drop here; in case of [4,0,9,9,0,5,5,4,7], k = 4; will get [9,9,7,5]
+            }
+        }
+        return res;
+    }
+
+    private int[] combine(int[] nums1, int[] nums2) {
+        int k = nums1.length + nums2.length;
+        int[] res = new int[k];
+        int s1, s2;
+        s1 = s2 = 0;
+        for(int i = 0; i < k; i++) {
+            if (compareArr(nums1,s1,nums2,s2) == nums1) {
+                res[i] = nums1[s1];
+                s1++;
+            }
+            else {
+                res[i] = nums2[s2];
+                s2++;
+            }
+        }
+        return res;
+    }
+    
+    private int[] compareArr(int[] nums1, int s1, int[] nums2, int s2) {
+        for (int i = s1; i < nums1.length; i++) {
+            int j = i - s1 + s2;
+            if (j >= nums2.length) return nums1;
+            if (nums1[i] > nums2[j]) return nums1;
+            if (nums1[i] < nums2[j]) return nums2;
+        }
+        return nums2;
+    }
+}
