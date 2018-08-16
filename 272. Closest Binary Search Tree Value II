@@ -1,1 +1,29 @@
 
+public class Solution {
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        // time complexity: O(N + k)
+        // space complexity: O(k + logN)
+        // algorithm:  inOrder traverse + Queue
+        Queue<Integer> fifo = new LinkedList<Integer>();
+        inOrder(root,fifo,k, target);
+        List<Integer> res = new ArrayList<Integer>();
+        while (!fifo.isEmpty()) {
+            res.add(fifo.poll());
+        }
+        return res;
+    }
+    
+    private void inOrder(TreeNode root, Queue<Integer> fifo, int k, int target) {
+        if (root == null) return;
+        inOrder(root.left, fifo, k, target);
+        if (fifo.size() < k) {
+            fifo.offer(root.val);
+        }
+        else if (Math.abs(fifo.peek() - target) > Math.abs(root.val - target)) {
+            fifo.poll();
+            fifo.offer(root.val);
+        } 
+        else return;   // root has larger distance to target, so all its successor.
+        inOrder(root.right, fifo, k, target);
+    }
+}
