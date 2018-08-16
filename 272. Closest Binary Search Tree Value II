@@ -27,3 +27,55 @@ public class Solution {
         inOrder(root.right, fifo, k, target);
     }
 }
+
+
+
+public class Solution {
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        // time complexity: O(logN + k)
+        // space complexity: O(logN)
+        // algorithm: two stack
+        Stack<TreeNode> pred = new Stack<TreeNode>();
+        Stack<TreeNode> succ = new Stack<TreeNode>();
+        while (root != null) {
+            if (target >= root.val) {
+                pred.push(root);
+                root = root.right
+            }
+            else {
+                succ.push(root);
+                root = root.left;
+            }
+        }
+        List<Integer> res = new ArrayList<Integer>();
+        while (k > 0) {
+            if (succ.isEmpty() || (!pred.isEmpty() && target - pred.peek() < succ.peek() - target)) {
+                res.add(pred.peek());
+                getNextPredecessor(pred);
+            }
+            else {
+                res.add(succ.peek());
+                getNextSuccessor(succ);
+            }
+            k--;
+        }
+        return res;
+    }
+    
+    private void getNextPredecessor(Stack<TreeNode> st) {
+        TreeNode curr = st.pop();
+        if (curr.left != null) {
+            curr = curr.left;
+            while (curr != null) st.push(curr);
+        }
+    }
+    
+    private void getNextSuccessor(Stack<TreeNode> st) {
+        TreeNode curr = st.pop();
+        if (curr.right != null) {
+            curr = curr.right;
+            while (curr != null) st.push(curr);
+        }
+    }
+    
+}
