@@ -1,0 +1,15 @@
+public class Solution {
+    public List<String> generatePossibleNextMoves(String s) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: scan
+        int n = s.length();
+        List<String> res = new ArrayList<String>();
+        for (int i = 1; i < n; i++) {
+            if (s.charAt(i) == '+' && s.charAt(i-1) == '+') {
+                res.add(s.substring(0,i-1) + "--" + s.substring(i+1));
+            }
+        }
+        return res;
+    }
+}
