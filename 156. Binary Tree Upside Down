@@ -1,0 +1,17 @@
+public class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        // time complexity: O(N)
+        // space complexity: O(N), depth of tree
+        // algorithm: recursion
+        return helper(root,null,null);
+    }
+    
+    
+    private TreeNode helper(TreeNode root, TreeNode p, TreeNode l) {
+        if (root == null) return p;
+        TreeNode next = root.left;
+        root.left = l;
+        root.right =  p;
+        return helper(next,root,root.right);
+    }
+}
