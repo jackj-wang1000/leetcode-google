@@ -1,0 +1,46 @@
+public class Solution {
+    public String alienOrder(String[] words) {
+        // time complexity: O(V+E)
+        // space complexity: O(V+E)
+        // aglorithm: breadth first search
+        int n = words.length;
+        int[] inDegree = new int[256];  // char set is 2^8
+        Set<Character> set = new HashSet<Character>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < words[i].length(); j++) {
+                set.add(words[i].charAt(j));
+            }
+        }
+        Map<Character, List<Character>> graph = new HashMap<Character, List<Character>>();
+        for (int i = 1; i < n; i++) {
+            int L = Math.min(words[i-1].length(),words[i].length());
+            int j = 0;
+            for (;j < L; j++) {
+                if (words[i-1].charAt(j) != words[i].charAt(j)) {
+                    if (!graph.containsKey(words[i-1].charAt(j))) graph.put(words[i-1].charAt(j), new ArrayList<Character>());
+                    graph.get(words[i-1].charAt(j)).add(words[i].charAt(j));
+                    inDegree[words[i].charAt(j)]++;
+                    break;
+                }
+            }
+            if (j == L && words[i-1].length() > words[i].length()) return "";  // corner case;
+        }
+        
+        Queue<Character> bfs = new LinkedList<Character>();
+        for (char c : set) {
+            if (inDegree[c] == 0) bfs.offer(c);
+        }
+        
+        StringBuilder res = new StringBuilder();
+        while (!bfs.isEmpty()) {
+            char c = bfs.poll();
+            res.append(c);
+            for (char ch: graph.get(c)) {
+                inDegree[ch]--;
+                if (inDegree[ch] == 0) bfs.offer(ch);
+            }
+        }
+        return res.length() == set.size() ? res.toString() : "";
+        
+    }
+}
