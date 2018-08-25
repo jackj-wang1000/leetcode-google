@@ -1,0 +1,18 @@
+public class Solution {
+    public boolean canPermutePalindrome(String s) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: HashMap 
+        int n = s.length();
+        int[] cnt = new int[256];
+        for (int i = 0; i < n; i++) {
+            cnt[s.charAt(i)]++;
+        }
+        int cnt_odd = 0;
+        for (int i = 0; i < 256; i++) {
+            if (cnt[i] % 2 == 1) cnt_odd++;
+            if (cnt_odd > 1) return false;
+        }
+        return true;
+    }
+}
