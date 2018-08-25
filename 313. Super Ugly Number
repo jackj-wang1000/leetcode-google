@@ -25,3 +25,38 @@ class Solution {
         return res[n-1];
     }
 }
+
+
+
+class Solution {
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        // time complexity: O(n*logL) L: size of primes array
+        // space complexity: O(L+n)
+        // algorithm: Heap
+        int L = primes.length;
+        int[] indx = new int[L];
+        int[] res = new int[n];
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(L, new Comparator<Integer>(){
+            public int compare(Integer x, Integer y) {
+                return res[indx[x]]*primes[x] - res[indx[y]]*primes[y];
+            }
+        });
+        res[0] = 1;
+        for (int i = 0; i < L; i++) {
+            pq.offer(i);
+        }
+        for (int i = 1; i < n; i++) {
+            int top = pq.poll();
+            int v = res[indx[top]] * primes[top];
+            res[i] = v;      // res[i] must be assigned here, as res[i] will be used for next round where top is inserted to pq
+            indx[top]++;
+            pq.offer(top);
+            while (res[indx[pq.peek()]] * primes[pq.peek()] == v) {
+                top = pq.poll();
+                indx[top]++;
+                pq.offer(top);
+            }
+        }
+        return res[n-1];
+    }
+}
