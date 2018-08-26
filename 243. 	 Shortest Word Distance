@@ -1,0 +1,18 @@
+class Solution {
+    public int shortestDistance(String[] words, String word1, String word2) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm : scan
+        int word1_indx = -1;
+        int word2_indx = -1;
+        int n = words.length;
+        int res = n+1;
+        for (int i = 0; i < n; i++) {
+            if (words[i].equals(word1)) word1_indx = i;
+            if (word2_indx >= 0)  res = Math.min(res,word1_indx - word2_indx);
+            if (words[i].equals(word2)) word2_indx = i;
+            if (word1_indx >= 0) res = Math.min(res,word2_indx - word1_indx);
+        }
+        return res;
+    }
+}
