@@ -1,0 +1,19 @@
+public class Solution {
+    public int shortestWordDistance(String[] words, String word1, String word2) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: double pointer
+        int idx1 = -1;
+        int idx2 = -1;
+        int n = words.length;
+        int res = n;
+        boolean st = word1.equals(word2);
+        for (int i = 0; i < n; i++) {
+            if (words[i].equals(word1)) idx1 = st ? idx2 : i;
+            if (words[i].equals(word2)) idx2 = i;
+            if (idx1 >=0 && idx2 >= 0) res = Math.min(res, Math.abs(idx1-idx2));
+        }
+
+        return res;
+    }
+}
