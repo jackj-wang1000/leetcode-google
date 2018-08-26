@@ -1,1 +1,122 @@
+public class Solution {
+    public List<String> generatePalindromes(String s) {
+        
+        // first check if s can form palindromes
+        int n = s.length();
+        int[] cnt = new int[256];
+        for (int i = 0; i < n; i++) {
+            cnt[s.charAt(i)]++;
+        }
+        char[] arr = new int[n/2];
+        int c = -1;
+        int cnt_odd = 0;
+        int total = 0;
+        for (int i = 0; i < 256; i++) {
+            if (cnt[i]%2 == 1) {
+                cnt_odd++;
+                c = i;
+            }
+            updateArr(arr,total,(char) i, cnt[i]/2);
+            total = total + cnt[i]/2;
+            if (cnt_odd > 1) return new ArrayList<String>();
+        }
+    }
+    
+    
+    private void updateArr(char[] arr, int indx, char c, int cnt) {
+        for (int i = 0; i < cnt; i++) {
+            arr[indx+i] = c;
+        }
+    }
 
+    
+    private void helper(char[] arr, int curr, int c, List<String> res) {
+        int n = arr.length;
+        if (curr == n-1) {
+            String str = new String(arr);
+            if (c > 0) str +=  (char) c;
+            for (int i = n-1; i >= 0; i--) {
+                str = str + arr[i];
+            }
+            res.add(str);
+            return;
+        }
+        
+        helper(arr,curr+1,c,res);    // case1: no swap with any element;
+        for (int i = curr+1; i < n; i++)  {  // case2: swap with one of them, must get rid of duplicate
+            int k = i-1;
+            while (k >= curr) {
+                if (arr[k] == arr[i]) break;
+                k--;
+            }
+            if (k < curr) {
+                swap(arr,curr,i);
+                helper(arr,curr+1,res);
+                swap(arr,curr,i);
+            }
+        } 
+        
+    }
+    
+    private void swap(char[] arr, int i, int j) {
+        char c = arr[i];
+        arr[i] = arr[j];
+        arr[j] = c;
+    }
+}
+
+
+
+// *********************************************************************
+
+public class Solution {
+    public List<String> generatePalindromes(String s) {
+        
+        // first check if s can form palindromes
+        int n = s.length();
+        int[] cnt = new int[256];
+        for (int i = 0; i < n; i++) {
+            cnt[s.charAt(i)]++;
+        }
+        int cnt_odd = 0;
+        int indx = -1;
+        for (int i = 0; i < 256; i++) {
+            if (cnt[i] % 2 == 1) {
+                cnt_odd++;
+                indx = i;
+            }
+            cnt[i] = cnt[i] / 2;
+            if (cnt_odd > 1) return new ArrayList<String>();
+        }
+        int total = n / 2;
+        List<String> res = new ArrayList<String>();
+        StringBuilder strb = new StringBuilder();
+        String t = indx >= 0 ? Integer.toString(indx) : "";
+        helper(cnt,total,res,strb,t);
+        return res;
+    }
+    
+    
+    private void helper(int[] cnt, int total, List<String> res, StringBuilder strb, String t) {
+        if (total == 0) {
+            String str = strb.toString() + c;
+            for (int i = strb.length()-1; i >= 0; i--) {
+                str = str + strb.charAt(i);
+            }
+            res.add(str);
+            return;
+        }
+        for (int i = 0; i < 256; i++) {
+            if (cnt[i] != 0) {
+                char c = (char) i;
+                int L = strb.length();
+                strb.append(c);
+                cnt[i]--;
+                helper(cnt,total-1,res,strb, t);
+                strb.deleteCharAt(L);
+                cnt[i]++;
+            }
+        }
+    }
+    
+}
