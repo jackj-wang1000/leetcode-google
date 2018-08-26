@@ -1,6 +1,6 @@
 class Solution {
     public boolean reachingPoints(int sx, int sy, int tx, int ty) {
-        // time complexity: O(log(min(tx,ty)))
+        // time complexity: O(log(min(tx,ty))),  http://mathworld.wolfram.com/EuclideanAlgorithm.html
         // space complexity: O(1)
         // algorithm: iteratation
         while (tx > sx && ty > sy) {
