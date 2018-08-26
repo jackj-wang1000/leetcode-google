@@ -1,0 +1,30 @@
+class Solution {
+    public int racecar(int target) {
+        // time complexity: O(N*logN) 
+        // space complexity: O(N), N= target
+        // aglorithm: recursive with memorization
+        Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+        return helper(target,map);
+    }
+    
+    private int helper(int target, Map<Integer,Integer> map) {
+        if (map.containsKey(target)) return map.get(target);
+        int i = 0;
+        while (target > (1<<i)-1) {
+            i++;
+        }
+        if (target == (1<<i)-1) {
+            map.put(target,i);
+            return i;
+        }
+        int right = (1<<i) - 1 - target;
+        int res = helper((1<<i) - 1 - target,map)+1+i;   // first reach 2^(i), turn back;
+        int left = target - ((1<<(i-1))-1);
+        for (int j = 0; j < i-1; j++) {
+            res = Math.min(res,helper(left+(1<<j)-1,map)+i+1+j);   // first reach 2^(i-1), turn back j steps, then turn back again;
+        }
+        map.put(target,res);
+        return res;
+    }
+}
+        
