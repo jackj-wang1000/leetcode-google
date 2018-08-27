@@ -20,6 +20,8 @@ public class Solution {
             total = total + cnt[i]/2;
             if (cnt_odd > 1) return new ArrayList<String>();
         }
+        helper(arr,0,c,res);
+        return res;
     }
     
     
