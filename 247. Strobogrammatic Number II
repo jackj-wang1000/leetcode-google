@@ -1,0 +1,79 @@
+public class Solution {
+    public List<String> findStrobogrammatic(int n) {
+        // time complexity:  5^(n/2)
+        // space complexity: depth of recursion n/2
+        // algorithm: recursion
+        return helper(n,n);
+    }
+    
+    private List<String> helper(int m, int n) {
+        List<String> res = new ArrayList<String>();
+        if (m == 0) return {res.add(""); return res;}
+        else if (m == 1) {
+            res.add("0");
+            res.add("1");
+            res.add("8");
+            return res;
+        }
+        
+        List<String> tmp = helper(m-2,n);
+        for (String str : tmp) {
+            if (m != n) res.add('0'+str+'0');
+            res.add('1'+str+'1');
+            res.add('8'+str+'8');
+            res.add('6'+str+'9');
+            res.add('9'+str+'6');
+        }
+        return res;
+    }
+}
+
+
+
+// *******************************************************************************************
+public class Solution {
+    public List<String> findStrobogrammatic(int n) {
+        // time complexity: O((n/2)*5^(n/2))
+        // space complexity: O(n), depth of recursion
+        // algorithm: recursive
+        List<String> res = new ArrayList<String>();
+        helper(0, res, new StringBuilder(), n);
+        return res;
+    }
+    
+    private void helper(int curr,  List<String> res, StringBuilder strb, int n) {
+        char[] candidate = new char[]{'0', '1', '8', '6', '9'};
+        if (curr == n/2) {
+            if (n % 2 == 1) {
+                for (int j = 0; j < 3; j++) {
+                    StringBuilder strg = new StringBuilder(strb);
+                    strg.append(candidate[i]);
+                    for (int i = strb.length() - 1; i >= 0; i--) {
+                        if (strb.charAt(i) == '6')  strg.append('9');
+                        else if (strb.charAt(i) == '9')  strg.append('6');
+                        else strg.append(strb.charAt(i));
+                    }
+                    res.add(strg.toString());
+                }
+            }
+            else {
+                for (int i = strb.length() - 1; i >= 0; i--) {
+                        if (strb.charAt(i) == '6')  strg.append('9');
+                        else if (strb.charAt(i) == '9')  strg.append('6');
+                        else strg.append(strb.charAt(i));
+                }
+                res.add(strg.toString());
+            }
+        }
+        for (int i = 0; i < candidate.length; i++) {
+            if (curr != 0 || (curr == 0 && candidate[i] != '0')) {
+                strb.append(candidate[i]);
+                int len = strb.length();
+                helper(curr+1,res,strb, n);
+                strb.deleteCharAt(len-1);
+            } 
+        }
+        
+        
+    }
+}
