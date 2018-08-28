@@ -1,1 +1,29 @@
-
+public class Solution {
+    private int res;
+    public int strobogrammaticInRange(String low, String high) {
+        res = 0;
+        int l1 = low.length();
+        int l2 = high.length();
+        helper(low,high,"",l1,l2);
+        helper(low,high,"0",l1,l2);
+        helper(low,high,"1",l1,l2);
+        helper(low,high,"8",l1,l2);
+        return res;
+    }
+    
+    private void helper(String low, String high, String curr, int l1, int l2) {
+        int L = curr.length();
+        if (L >= l1 && L <= l2) {
+            if (L > l1 && L < l2) {if(curr.charAt(0) != '0') res++;}
+            else if ((L == l1 && curr.compareTo(low) >= 0) || (curr.charAt(0) != '0' && L == l2 && curr.compareTo(high) <= 0))
+                res++;
+        }
+        else if (L > l2) return;
+            
+        helper(low, high, '0' + curr + '0', l1,l2);
+        helper(low, high, '1' + curr + '1', l1,l2);
+        helper(low, high, '8' + curr + '8', l1,l2);
+        helper(low, high, '6' + curr + '9', l1,l2);
+        helper(low, high, '9' + curr + '6', l1,l2);
+    }
+}
