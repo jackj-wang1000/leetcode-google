@@ -1,0 +1,26 @@
+public class Solution {
+    public List<List<String>> groupStrings(String[] strings) {
+        // time complexity: O(N*M), total characters
+        // space complexity: O(N)
+        // algorithm: HashMap
+        Arrays.sort(strings);
+        Map<String,List<String>> map = new HashMap<String,List<String>>();
+        List<List<String>> res = new ArrayList<List<String>>();
+        int n = strings.length;
+        for (int i = 0; i < n; i++) {
+            int L = strings[i].length();
+            StringBuilder strb = new StringBuilder();
+            for (int j = 0; j < L; j++) {
+                char c = strings[i].charAt(j);
+                strb.append(String.valueOf((c-strings[i].charAt(0) + 26) % 26) + ',');
+            }
+            String str = strb.toString();
+            if (!map.containsKey(str)) map.put(str,new ArrayList<String>());
+            map.get(str).add(strings[i]);
+        }
+        for (String str : map.keySet()) {
+            res.add(map.get(str));
+        }
+        return res;
+    }
+}
