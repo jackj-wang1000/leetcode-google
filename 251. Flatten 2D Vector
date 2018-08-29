@@ -11,3 +11,36 @@ public class Vector2D {
 
     }
 }
+
+
+
+// ********************************************************************
+public class Vector2D {
+    private Iterator<List<Integer>> iter_out;
+    private Iterator<Integer> iter_inner;
+    private boolean st;
+        
+    public Vector2D(List<List<Integer>> vec2d) {
+        iter_out = vec2d.iterator();
+        if (iter_out.hasNext()) {
+            iter_inner = iter_out.next().iterator();
+            st = true;
+        }
+        else st = false;
+    }
+ 
+    public int next() {
+        int res = iter_inner.next();
+        if (!iter_inner.hasNext()) {
+            if (iter_out.hasNext()) {
+                iter_inner = iter_out.next().iterator();
+            }
+            else st = false;
+        }
+        return res;
+    }
+ 
+    public boolean hasNext() {
+        return st && iter_inner.hasNext();
+    }
+}
