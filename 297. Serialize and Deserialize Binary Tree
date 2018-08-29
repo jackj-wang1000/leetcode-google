@@ -1,0 +1,52 @@
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        // algorithm: breadth first search
+        TreeNode curr = root;
+        Queue<TreeNode> bfs = new LinkedList<TreeNode>();
+        bfs.offer(root);
+        StringBuilder res = new StringBuilder();
+        while (!bfs.isEmpty()) {
+            curr = bfs.poll();
+            if (curr != null) {
+                res.append(Integer.toString(curr.val)).append(",");
+                bfs.offer(curr.left);
+                bfs.offer(curr.right);
+            }
+            else {
+                res.append("#,");
+            }
+        }
+        res.deleteCharAt(res.length()-1);
+        return res.toString();
+    }
+    
+    
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.charAt(0) == '#') return null;
+        String[] str = data.split(",");
+        int p = 1;
+        TreeNode root = new TreeNode(Integer.parseInt(str[0]));
+        Queue<TreeNode> bfs = new LinkedList<TreeNode>();
+        bfs.offer(root);
+        TreeNode curr = root;
+        while (!bfs.isEmpty()) {
+            curr = bfs.poll();
+            if (str[p].charAt(0) != '#') {
+                TreeNode l = new TreeNode(Integer.parseInt(str[p]));
+                curr.left = l;
+                bfs.offer(l);
+            }
+            if (str[p+1].charAt(0) != '#') {
+                TreeNode r = new TreeNode(Integer.parseInt(str[p+1]));
+                curr.right = r;
+                bfs.offer(r);
+            }
+            p = p + 2;
+        }
+        return root;
+    }
+    
+}
