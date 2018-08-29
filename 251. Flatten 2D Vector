@@ -22,25 +22,16 @@ public class Vector2D {
         
     public Vector2D(List<List<Integer>> vec2d) {
         iter_out = vec2d.iterator();
-        if (iter_out.hasNext()) {
-            iter_inner = iter_out.next().iterator();
-            st = true;
-        }
-        else st = false;
     }
  
     public int next() {
-        int res = iter_inner.next();
-        if (!iter_inner.hasNext()) {
-            if (iter_out.hasNext()) {
-                iter_inner = iter_out.next().iterator();
-            }
-            else st = false;
-        }
-        return res;
+        return iter_inner.next();
     }
  
     public boolean hasNext() {
-        return st && iter_inner.hasNext();
+        while ((iter_inner == null || !iter_inner.hasNext()) && iter_out.hasNext()) {
+            iter_inner = iter_out.next().iterator();
+        }
+        return iter_inner != null && iter_inner.hasNext();
     }
 }
