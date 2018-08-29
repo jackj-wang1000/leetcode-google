@@ -1,0 +1,29 @@
+public class Solution {
+    public boolean canAttendMeetings(Interval[] intervals) {
+        // time complexity: O(N*logN)
+        // space complexity: O(1)
+        // algorithm: Sort
+        Arrays.sort(intervals,new Comparator<Interval>(){
+            public int compare(Interval x, Interval y) {
+                return x.start - y.start;
+            }
+        });
+        
+        int n = intervals.length;
+        for (int i = 1; i  < n; i++) {
+            if (intervals[i].start < intervals[i-1].end) return false;
+        }
+        return true;
+    }
+    
+    
+    
+    class Interval {
+        public int start;
+        public int end;
+        public Interval(int s, int e) {
+            start = s;
+            end = e;
+        }
+    }
+}
