@@ -9,8 +9,10 @@ public class Solution {
         while (start <= end) {
             char c1 = num.charAt(start);
             char c2 = num.charAt(end);
-            if (start == end) return c1 == '0' || c1 == '1' || c1 == '8';
-            if (c1 != c2) {
+            if (c1 == c2) {
+                if (!(c1 == '0' || c1 == '1' || c1 == '8')) return false;
+            }
+            else  {
                 if (!(c1 == '6' && c2 == '9') &&  !(c1 == '9' && c2 == '6')) return false;
             }
             start++;
