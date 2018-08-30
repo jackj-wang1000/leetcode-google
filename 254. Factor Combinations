@@ -34,3 +34,36 @@ public class Solution {
         return res;
     }
 }
+
+
+
+
+
+
+
+
+
+
+// *********************************************
+public class Solution {
+    public List<List<Integer>> getFactors(int n) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        List<Integer> lst = new ArrayList<Integer>();
+        helper(n,res,lst,2);
+        return res;
+    }
+    
+    private void helper(int n, List<List<Integer>> res, List<Integer> lst, int start) {
+        for (int i = start; i * i <= n; i++) {
+            if (n % i == 0) {
+                int L= lst.size();
+                lst.add(i);
+                List<Integer> tmp = new ArrayList<Integer>(lst);
+                tmp.add(n/i);
+                res.add(tmp);
+                helper(n/i,res,lst,i);
+                lst.remove(L);
+            }
+        }
+    }
+}
