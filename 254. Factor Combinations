@@ -1,0 +1,36 @@
+public class Solution {
+    public List<List<Integer>> getFactors(int n) {
+        // time complexity: O()
+        // space complexity: O()
+        // algorithm: recursion
+        List<List<Integer>> res = helper(n, 2);
+        for (List<Integer> ls : res) {
+            Collections.reverse(ls);
+        }
+        return res;
+    }
+    
+    
+    private List<List<Integer>> helper(int n, int start) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        /*
+        if (start*start > n) {
+            return res;
+        }
+        */
+        for (int i = start; i * i <= n; i++) {
+            if (n % i == 0) {
+                List<List<Integer>> tmp  = helper(n/i,i);
+                for (List<Integer> ls : tmp) {
+                    ls.add(i);
+                    res.add(ls);
+                }
+                List<Integer> lst = new ArrayList<Integer>();
+                lst.add(n/i);
+                lst.add(i);
+                res.add(lst);
+            }
+        }
+        return res;
+    }
+}
