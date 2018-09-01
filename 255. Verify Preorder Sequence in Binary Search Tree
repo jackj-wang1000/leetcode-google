@@ -1,0 +1,26 @@
+public class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        // time complexity: O(N)
+        // space complexity: O(logN)
+        // algorithm: stack
+        int n = preorder.length;
+        Stack<Integer> st = new Stack<Integer>();
+        int low_bound = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (st.isEmpty() || preorder[i] < st.peek()) {
+                if (preorder[i] <= low_bound) return false;
+                else st.push(preorder[i]);
+            }
+            else {
+                while (!st.isEmpty()) {
+                    if (preorder[i] > st.peek()) {
+                        low_bound = st.pop();    // low bound will be updated into preorder[i]'s parent
+                    }
+                    else break;
+                }
+                st.push(preorder[i]);  // must be pushed into stack
+            }
+        }
+        return true;
+    }
+}
