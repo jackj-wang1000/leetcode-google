@@ -60,3 +60,26 @@ public class Solution {
         return true;
     }
 }
+
+
+// **********************************************************************************
+public class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        //algorithm: use the array as stack
+        int n = preorder.length;
+        int j = -1;
+        int low_bound = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (preorder[i] <= low_bound) return false;
+            while (j >= 0 && preorder[i] > preorder[j]) {
+                low_bound = preorder[j];
+                j--;
+            }
+            j++;
+            preorder[j] = preorder[i];
+        }
+        return true;
+    }
+}
