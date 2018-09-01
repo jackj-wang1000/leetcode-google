@@ -24,3 +24,39 @@ public class Solution {
         return true;
     }
 }
+
+// **************************************************************************************************
+public class Solution {
+    public boolean verifyPreorder(int[] preorder) {
+        // time complexity: O(N^2), worst case
+        // space complexity: O(1)
+        // algorithm: pointer
+        int n = preorder.length;
+        int pre = 0;
+        int low_bound = Integer.MIN_VALUE;
+        // preorder array contains elements with each one increase(decrease) compared to previous element. 
+        // decrease means: go to left child of previous elment;
+        // increase means: current element might be the right child of (previous elment or previous elment's parent or grandparent ....)
+        //                 need update low_bound to be current element's parent;
+        // case 1: decrease:  must compare to low_bound, if less than or equal to low_bound, return false;
+        // case 2: increase:  update low_bound. (As increase  will always be valid)
+        
+        for (int i = 1; i < n; i++) {            
+            if (preorder[i] > preorder[i-1]) { // find current node's parent, update it as new low_bound;
+                int j = i-1;
+                while (j >= pre) {
+                    if (preorder[i] > preorder[j]) {
+                        low_bound = Math.max(low_bound,preorder[j]);
+                    }
+                    else break;
+                    j--;
+                }
+                if (j < pre) pre = i;
+            }
+            else if (preorder[i] <= low_bound){
+                return false;
+            }
+        }
+        return true;
+    }
+}
