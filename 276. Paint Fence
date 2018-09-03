@@ -11,7 +11,6 @@ public class Solution {
     public int numWays(int n, int k) {
         // paint n fence with k color which only allow different neighbor color:   k * (k-1)^(n-1)
         // two neighbor has same color: (n-1) * k * (k-1)^(n-2); just the case of painting n-1 fence with one duplicate(n-1 position)
-        //return k*myPow(k-1,n-1) + (k-1) * k * myPow(k-1,n-2);
         if (n == 0) return 0;
         else if (n == 1) return k*myPow(k-1,n-1);
         else return k*myPow(k-1,n-1) + (n-1) * k * myPow(k-1,n-2);
