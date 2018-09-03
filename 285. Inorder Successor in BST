@@ -1,7 +1,7 @@
 public class Solution {
     
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
-        // time complexity: O(N)
+        // time complexity: O(logN)
         // space complexity:O(logN)
         // algorithm: stack
         Stack<TreeNode> st = new Stack<TreeNode>();
@@ -23,6 +23,30 @@ public class Solution {
             }
             return st.isEmpty() ? null : st.peek();
         }
+    }
+    
+}
+
+
+
+// *************************************************
+public class Solution {
+    
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        // time complexity: O(logN)
+        // space complexity:O(1)
+        // algorithm: stack
+        TreeNode res = null;
+        while (root != null) {
+            if (root.val > p.val) {
+                res = root;
+                root = root.left;
+            }
+            else {
+                root = root.right;
+            }
+        }
+        return res;
     }
     
 }
