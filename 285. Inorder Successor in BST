@@ -1,0 +1,28 @@
+public class Solution {
+    
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        // time complexity: O(N)
+        // space complexity:O(logN)
+        // algorithm: stack
+        Stack<TreeNode> st = new Stack<TreeNode>();
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.val == p.val) break;
+            else if (curr.val > p.val) {st.push(curr); curr = curr.left;}
+            else {st.push(curr); curr = curr.right;}
+        }
+        TreeNode res = curr.right;
+        if (curr.right != null) {
+            res = curr.right;
+            while (res.left != null) res = res.left;
+            return res;
+        }
+        else {
+            while (!st.isEmpty() && p.val > st.peek().val) {
+                st.pop();
+            }
+            return st.isEmpty() ? null : st.peek();
+        }
+    }
+    
+}
