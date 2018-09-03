@@ -1,0 +1,27 @@
+public class Codec {
+
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        StringBuilder res = new StringBuilder();
+        for (String str : strs) {
+            int L = str.length();
+            res.append(Integer.toString(L) + "#" + str);
+        }
+        return res.toString();
+    }
+    
+    
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+        int n = s.length();
+        List<String> res = new ArrayList<String>();
+        int start = 0;
+        while (start < n) {
+            int idx = s.indexOf('#',start);
+            int L = Integer.parseInt(s.substring(start,idx));
+            res.add(s.substring(idx + 1, idx + 1 + L));
+            start = idx + 1 + L;
+        }
+        return res;
+    }
+}
