@@ -1,0 +1,34 @@
+public class Solution {
+    public int minCostII(int[][] costs) {
+        // time complexity: O(N*K)
+        // space complexity: O(N*K)  => O(K)
+        // algorithm: dynamic programming
+        int n = costs.length;
+        int k = costs[0].length;
+        int[][] dp = new int[n][k];
+        int min1_idx = -1;
+        int min2_idx = -1;
+        for (int j = 0; j < k; j++) {
+            dp[0][j] = costs[0][j];
+            if (min1_idx < 0 || dp[0][min1_idx] > dp[0][j]) {min2_idx = min1_idx;  min1_idx = j;}
+            else if (min2_idx < 0 || dp[0][min2_idx] > dp[0][j]) min2_idx = j;
+        }
+        
+        for (int i = 1; i < n; i++) {
+            int tmp_min1 = -1;
+            int tmp_min2 = -1;
+            for (int j = 0; j < k; j++) {
+                dp[i][j] = j == min1_idx ? dp[i-1][min2_idx]+costs[i][j] : dp[i-1][min1_idx] + costs[i][j];
+                if (tmp_min1 < 0 || dp[i][tmp_min1] > dp[i][j]) {tmp_min2 = tmp_min1;  tmp_min1 = j;}
+                else if (tmp_min2 < 0 || dp[i][tmp_min2] > dp[i][j]) tmp_min2 = j;
+            }
+            min1_idx = tmp_min1;
+            min2_idx = tmp_min2;
+        }
+        int res = dp[n-1][0];
+        for (int j = 1; j < k; j++) {
+            res = Math.min(res,dp[n-1][j]);
+        }
+        return res;
+    }
+}
