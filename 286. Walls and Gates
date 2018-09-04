@@ -1,0 +1,51 @@
+public class Solution {
+    public void wallsAndGates(int[][] rooms) {
+        // time complexity: O(M*N*r), r denote # of gates;
+        // space complexity: O(M*N)
+        // algorithm: breadth first search
+        int row = rooms.length;
+        int col = rooms[0].length;
+        for (int i = 0; i  < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (rooms[i][j] == 0) {
+                    bfs(rooms,i*col+j);
+                }
+            }
+        }
+        
+    }
+    
+    private void bfs(int[][] rooms, int curr) {
+        int row = rooms.length;
+        int col = rooms[0].length;
+        int[] dx = new int[]{1,-1,0,0};
+        int[] dy = new int[]{0,0,1,-1};
+        Queue<Integer> q = new LinkedList<Integer>();
+        Set<Integer> set = new HashSet<Integer>();
+        q.offer(curr);
+        set.add(curr);
+        int d = 0;
+        int x,y;
+        while (!q.isEmpty()) {
+            int L = q.size();
+            for (int i = 0; i < L; i++) {
+                int pos = q.poll();
+                x = pos / col;
+                y = pos % col;
+                rooms[x][y] = Math.min(rooms[x][y],d);
+                for (int j = 0; j < 4; j++) {
+                    int x_next = x + dx[j];
+                    int y_next = y + dy[j];
+                    int pos_next = x_next * col + y_next;
+                    if (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && !set.contains(pos_next)
+                       && rooms[x_next][y_next] > 0)  {
+                        q.offer(pos_next);
+                        set.add(pos_next);
+                    }
+                }
+            }
+            d++;
+        }
+    }
+    
+}
