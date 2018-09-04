@@ -1,5 +1,46 @@
 public class Solution {
     public void wallsAndGates(int[][] rooms) {
+        // time complexity: O(M*N)
+        // space complexity: O(M*N)
+        // algorithm: breath first search
+        int row = rooms.length;
+        int col = rooms[0].length;
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j< col; j++) {
+                if (rooms[i][j] == 0) {
+                    q.offer(i*col+j);
+                }
+            }
+        }
+        int[] dx = new int[]{0,0,1,-1};
+        int[] dy = new int[]{1,-1,0,0};
+        while (!q.isEmpty()) {
+            int L = q.size();
+            int pos = q.poll();
+            int x = pos / col;
+            int y = pos % col;
+            for (int j = 0; j < 4; j++) {
+                int x_next = x + dx[j];
+                int y_next = y + dy[j];
+                if (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col 
+                       && rooms[x_next][y_next] > rooms[x][y] + 1) {
+                    q.offer(x_next*col + y_next);
+                    rooms[x_next][y_next] = rooms[x][y] + 1;
+                }
+                    
+            }
+
+        }
+        
+    }
+}
+
+
+// ***********************************************************************************
+
+public class Solution {
+    public void wallsAndGates(int[][] rooms) {
         // time complexity: O(M*N*r), r denote # of gates;
         // space complexity: O(M*N)
         // algorithm: breadth first search
