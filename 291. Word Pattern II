@@ -3,3 +3,39 @@ public class Solution {
         
     }
 }
+
+
+
+public class Solution {
+    private Map<Character,String> map1;
+    private Map<String,Character> map2;
+    public boolean wordPatternMatch(String pattern, String str) {
+        
+        int n = pattern.length();
+        map1 = new HashMap<Character,String>();
+        map2 = new HashMap<String,Character>();
+        return helper(0,pattern,str);
+    }
+    
+    private boolean helper(int curr, String pattern, String str) {
+        int L = str.length();
+        int n = pattern.length();
+        if (curr == n) return  L == 0;
+        char c = pattern.charAt(curr);
+        for (int i = 1; i <= L-(n-curr) + 1 ; i++) {
+            String str1 = str.substring(0,i);
+            if ((map1.containsKey(c) && !map1.get(c).equals(str1)) || (map2.containsKey(str1) && map2.get(str1) != c )) continue;
+            if (map1.containsKey(c)) {
+                if (helper(curr+1,pattern,str.substring(i))) return true;
+            }
+            else {
+                map1.put(c,str1);
+                map2.put(str1,c);
+                if (helper(curr+1,pattern,str.substring(i))) return true;
+                map1.remove(c);
+                map2.remove(str1);
+            }
+        }
+        return false;
+    }
+}
