@@ -3,6 +3,18 @@
 
 public class Solution extends Relation {
     public int findCelebrity(int n) {
-        
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm : search
+        int start = 0;
+        int end = n-1;
+        while (start < end) {
+            if (knows(start,end)) start++;
+            else end--;
+        }
+        for (int i = 0; i < n; i++) {
+            if (i != start && (!knows(i,start) || know(start,i))) return -1;
+        }
+        return start;
     }
 }
