@@ -1,0 +1,38 @@
+    public int minArea(char[][] image, int x, int y) {
+        // time complexity: O()
+        // space complexity: O(M*N)
+        // algorithm: depth first search
+        int row = image.length;
+        int col = image[0].length;
+        int min_x = x;
+        int min_y = y;
+        int max_x = x;
+        int max_y = y;
+        Set<Integer> set = new HashSet<Integer>();
+        helper(image,x,y,set);
+        for (Integer i : set) {
+            min_x = Math.min(min_x,i / col);
+            max_x = Math.max(max_x,i / col);
+            min_y = Math.min(min_y,i % col);
+            max_y = Math.max(max_y,i % col);
+        }
+        return (max_y - min_y + 1) * (max_x - min_x + 1);
+    }
+    
+    private void helper(char[][] image, int x, int y, Set<Integer> set){
+        int row = image.length;
+        int col = image[0].length;
+        set.add(x*col+y);
+        int[] dx = new int[]{0,0,1,-1};
+        int[] dy = new int[]{1,-1,0,0};
+        for (int i = 0; i < 4; i++) {
+            int x_next = x + dx[i];
+            int y_next = y + dy[i];
+            int pos = x_next*col + y_next;
+            if (x_next >= 0  &&  x_next < row && y_next >= 0 && y_next< col 
+                && image[x_next][y_next] == '1' && !set.contains(pos)) {
+                helper(image,x_next,y_next,set);
+            }
+        }
+        
+    }
