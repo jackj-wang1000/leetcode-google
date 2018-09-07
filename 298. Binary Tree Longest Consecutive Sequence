@@ -1,4 +1,31 @@
 public class Solution {
+    private int maxLen;
+    public int longestConsecutive(TreeNode root) {
+        // time complexity: O(N)
+        // space complexity: O(logN)
+        // algorithm: recursion
+        maxLen = 0;
+        helper(root);
+        return maxLen;
+    }
+    
+    private int helper(TreeNode root) {
+        if (root == null) return 0;
+        int left = helper(root.left);
+        left = left > 0 && root.val == root.left.val - 1 ? left+1 : 1; 
+        int right = helper(root.right);
+        right = right > 0 && root.val == root.right.val - 1? right+1 : 1;
+        int res = Math.max(left,right);
+        maxLen = Math.max(maxLen,res);
+        return res;
+    }
+}
+
+
+
+// *****************************************************************************************
+
+public class Solution {
     private int res;
     public int longestConsecutive(TreeNode root) {
         // time complexity: O(N)
@@ -21,3 +48,5 @@ public class Solution {
         helper(root.right,root.val,next);
     }
 }
+
+
