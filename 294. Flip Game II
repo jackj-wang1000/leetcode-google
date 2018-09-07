@@ -1,1 +1,25 @@
-
+public class Solution {
+    public boolean canWin(String s) {
+        // time complexity: O(N!)  =>   T(N) = (N-1)*T(N-2) + O(1)     => T(N) = N!
+        // space complexity: O(N)
+        // algorithm : Memorized  depth first search 
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
+        int L = s.length();
+        return helper(s,L,map);
+    }
+    
+    private boolean helper(String str, int L, Map<String,Boolean> map) {
+        if (map.containsKey(str)) return map.get(str);
+        for (int i = 1; i < L; i++) {
+            if (str.charAt(i) == '+' && str.charAt(i-1) == '+') {
+                if (!helper(str.substring(0,i-1) + "--" + str.substring(i+1), L, map)) {
+                    map.put(str,true);
+                    return true;
+                }
+            }
+        }
+        map.put(str,false);
+        return false;
+    }
+    
+}
