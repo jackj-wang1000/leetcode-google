@@ -1,0 +1,31 @@
+public class Solution {
+    public int minTotalDistance(int[][] grid) {
+        // time complexity : O(M*N)
+        // space complexity: O(M*N)
+        // algorithm:  meeting point must be at middle position, like between  c and d
+        //    _ _ _ _a_ _ _ _ b _ _ _ _ _ _c_ _ _ _ _ _ _ _ _ _ _ _ _ _d_ _ _ _e_ _f_
+        int row = grid.length;
+        int col = grid[0].length;
+        List<Integer> rowIndex = new ArrayList<Integer>();
+        List<Integer> colIndex = new ArrayList<Integer>();
+        int res = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) {
+                    rowIndex.add(i);
+                    colIndex.add(j);
+                }
+            }
+        }
+        
+        Collections.sort(colIndex);
+        int high = colIndex.size()-1;
+        int low = 0;
+        while (low <= high) {
+            res += rowIndex.get(high) - rowIndex.get(low) + colIndex.get(high) - colIndex.get(low);
+            high--;
+            low++;
+        }
+        return res;
+    }
+}
