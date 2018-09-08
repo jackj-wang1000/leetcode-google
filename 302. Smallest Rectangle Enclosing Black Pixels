@@ -1,3 +1,38 @@
+public class Solution {
+    public int minArea(char[][] image, int x, int y) {
+        // time complexity: O(M*logN + N*logM)
+        // space complexity: O(1)
+        // algorithm: binary search
+        int row = image.length;
+        int col = image[0].length;
+        int min_x = findBoundary(image,0,x,0,col,true,true);
+        int max_x = findBoundary(image,x+1,row,0,col,true,false);  // find first row without black pixel(upper bound)
+        int min_y = findBoundary(image,0,y,min_x,max_x,false,true);
+        int max_y = findBoundary(image,y+1,col,min_x,max_x,false,false); // find first col without balck pixel(upper bound)
+        return (max_x - min_x) * (max_y - min_y);
+    }
+    
+    private int findBoundary(char[][] image, int i, int j, int low, int high, boolean isRow, boolean isLowBound ) {
+        
+        int mid = 0;
+        while (i < j) {
+            mid = i + (j - i) / 2;
+            int k = low;
+            while (k < high && (isRow ? image[mid][k] : image[k][mid]) == '0') k++;
+            if ((k >= high) == isLowBound) {
+                i = mid + 1;
+            }
+            else {
+                j = mid;
+            }
+        }
+        return i;
+    }
+}
+
+// *********************************************************************************************************
+
+public class Solution {
     public int minArea(char[][] image, int x, int y) {
         // time complexity: O()
         // space complexity: O(M*N)
@@ -36,3 +71,5 @@
         }
         
     }
+}
+
