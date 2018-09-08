@@ -1,0 +1,45 @@
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        // time complexity: O(L*log(m*n)) L: positions array size
+        // space complexity: O(m*n)
+        // algorithm : Union-find
+        List<Integer> res = new ArrayList<Integer>();
+        int[] root = new int[m*n];
+        int size = 0;
+        for (int i = 0; i < m*n; i++) {
+            root[i] = i;
+        }
+        int L = positions.length;
+        int[] dx = new int[]{0,0,1,-1};
+        int[] dy = new int[]{1,-1,0,0};
+        Set<Integer> set = new HashSet<Integer>();
+        for (int i = 0; i < L; i++) {
+            int x = positions[i][0];
+            int y = positions[i][1];
+            int r = findRoot(root,x*n+y);
+            set.add(x*n+y);
+            size++;
+            for (int j = 0; j < 4; j++) {
+                int x_next = x + dx[j];
+                int y_next = y + dy[j];
+                int pos = x_next * n+ y_next;
+                if (x_next >= 0 && x_next < m && y_next >= 0 && y_next < n && set.contains(pos)) {
+                    int r1 = findRoot(root,pos);
+                    if (r1 != r) {
+                        root[r1] = r;
+                        size--;
+                    }
+                }
+            }
+            res.add(size);
+        }
+        return res;
+    }
+    
+    private int findRoot(int[] root, int i) {
+        while (root[i] != i) {
+            int p = root[i];
+            root[i] = root[p];
+            i = root[i];
+        }
+        return i;
+    }
