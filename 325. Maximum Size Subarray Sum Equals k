@@ -1,0 +1,22 @@
+public class Solution {
+    public int maxSubArrayLen(int[] nums, int k) {
+        // time complexity: O(N)
+        // space complexity: O(N)
+        // algorithm: HashMap
+        int res = 0;
+        int n = nums.length;
+        int[] sum = new int[n+1];
+        Map<Integer,Integer> map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < n; i++) {
+            sum[i+1] = sum[i] + nums[i];
+        }
+        map.put(0,0);  // put base sum
+        for (int i = 1; i < n+1; i++) {
+            if (map.containsKey(sum[i]-k)) res = Math.max(res,i-map.get(sum[i]-k));
+            if (!map.containsKey(sum[i])) {
+                map.put(sum[i],i);
+            }
+        }
+        return res;
+    }
+}
