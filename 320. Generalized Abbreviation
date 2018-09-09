@@ -39,3 +39,39 @@ public class Solution {
         return res;
     }
 }
+
+
+
+
+
+//**********************************************************************************
+public class Solution {
+    public List<String> generateAbbreviations(String word) {
+        // time complexity: O(2^N)
+        // space complexity: O(2^N)
+        // algorithm: depth first search  with back tracking
+        List<String> res = new ArrayList<String>();
+        helper(word,res,new StringBuilder(), 0);
+        return res;
+    }
+    
+
+    private void helper(String word, List<String> res, StringBuilder strb, int curr) {
+        int n = word.length();
+        if (curr >= n) {
+            res.add(strb.toString());
+            return;
+        }
+        int L = strb.length();
+        strb.append(word.charAt(curr));
+        helper(word,res,strb,curr+1);
+        strb.deleteCharAt(L);
+        for (int i = 1; i <= n-curr; i++) {
+            strb.append(Integer.toString(i));
+            if (curr+i < n) strb.append(word.charAt(curr+i));
+            helper(word,res,strb,curr+i+1);
+            strb.delete(L,strb.length());
+        }
+        
+    }
+}
