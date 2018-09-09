@@ -3,3 +3,39 @@ public class Solution {
         
     }
 }
+
+// *******************************************************************************
+public class Solution {
+    public List<String> generateAbbreviations(String word) {
+        // time complexity: O(2^N)
+        // space complexity: O(2^N)
+        // algorithm: memorized depth first search 
+        return helper(word,new HashMap<String, List<String>>());
+    }
+    
+
+    private List<String> helper(String word, Map<String,List<String>> map) {
+        int n = word.length();
+        List<String> res = new ArrayList<String>();
+        if (n == 0) {res.add(""); return res;}
+        else if (map.containsKey(word)) return map.get(word);
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j+i <= n; j++) {
+                String prefix = word.substring(0,j) + Integer.toString(i);
+                if (i+j < n) prefix = prefix + word.charAt(i+j);
+                if (i+j+1 >= n) {
+                    res.add(prefix);
+                }
+                else {
+                    List<String> tmp = helper(word.substring(i+j+1),map);
+                    for (String str : tmp) {
+                        res.add(prefix+str);
+                    }
+                }
+            }
+        }
+        res.add(word);   // 
+        map.put(word,res);
+        return res;
+    }
+}
