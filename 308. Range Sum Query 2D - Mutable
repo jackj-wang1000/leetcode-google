@@ -12,3 +12,62 @@ public class NumMatrix {
         
     }
 }
+
+// *****************************************************************************************************
+
+public class NumMatrix {
+    // time complexity: O(logM*logN), each update + sum operation
+    // space complexity: O(M*N)
+    // algorithm: Binary Indexed tree
+    private int[][] BIT;
+    private int[][] m;
+    private int row, col;
+    public NumMatrix(int[][] matrix) {
+        m = matrix;
+        row = matrix.length + 1;
+        col = matrix[0].length + 1;
+        BIT = new int[row][col];
+        for (int i = 0; i < row-1; i++) {
+            for (int j = 0; j < col-1; j++) {
+                updateDelta(i+1,j+1,m[i][j]);
+            }
+        }
+        
+    }
+    
+    private void updateDelta(int r, int c, int v) {
+        while (r < row) {
+            int curr_col = c;
+            while (curr_col < col) {
+                BIT[r][curr_col] += v;
+                curr_col += curr_col & -curr_col;
+            }
+            r += r & -r;
+        }
+    }
+    
+    private int sum(int r, int c) {
+        int res = 0;
+        while (r > 0) {
+            int curr_col = c;
+            while (curr_col > 0) {
+                res += BIT[r][curr_col];
+                curr_col -= curr_col & -curr_col;
+            }
+            r -= r & -r;
+        }
+        return res;
+    }
+    
+    public void update(int row, int col, int val) {
+        int d = val-m[row][col];
+        m[row][col] = val;
+        updateDelta(row+1,col+1,d);
+    }
+    
+    
+    public int sumRegion(int row1, int col1, int row2, int col2) {
+        return sum(row2+1,col2+1) + sum(row1,col1) - sum(row1,col2+1) - sum(row2+1,col1);
+    }
+}
+
