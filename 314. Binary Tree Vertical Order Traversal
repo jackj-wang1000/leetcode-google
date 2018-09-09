@@ -6,10 +6,10 @@ public class Solution {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
         if (root == null) return res;
         class Node {
-            public int d;
+            public int idx;
             public TreeNode tn;
             public Node(int l, TreeNode root) {
-                d = l;
+                idx = l;
                 tn = root;
             }
         }
@@ -20,7 +20,7 @@ public class Solution {
         int r = 0;
         while (!q.isEmpty()) {
             Node curr = q.poll();
-            int L= curr.d;
+            int L= curr.idx;
             if (!map.containsKey(L)) map.put(L,new ArrayList<Integer>());
             map.get(L).add(curr.tn.val);
             l = Math.min(l,L);
