@@ -1,0 +1,44 @@
+class Solution {
+    public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
+        // time complexity: O(V+E) for each traverse
+        // space complexity:
+        // algorithm: depth first search
+        graph = new HashMap<String,Map<String,Double>>();
+        int n = equations.length;
+        for (int i = 0; i < n; i++) {
+            String u = equations[i][0];
+            String v = equations[i][1];
+            if (!graph.containsKey(u)) graph.put(u,new HashMap<String,Double>());
+            graph.get(u).put(v,values[i]);
+            if (!graph.containsKey(v)) graph.put(v,new HashMap<String,Double>());
+            graph.get(v).put(u,1.0/values[i]);
+        }
+        int L = queries.length;
+        double[] res = new double[L];
+        for (int i = 0; i < L; i++) {
+            String u = queries[i][0];
+            String v = queries[i][1];
+            visited = new HashSet<String>();
+            if (!graph.containsKey(u) || !graph.containsKey(v)) res[i] = -1;
+            else res[i] = helper(u,v, 1.0, "");
+        }
+        return res;
+    }
+    
+    private Map<String,Map<String,Double>> graph;
+    private Set<String> visited;
+    private double helper(String src, String dst, double val, String pre) {
+        if (src.equals(dst)) return val;
+        double res = -1;
+        Map<String,Double> map = graph.get(src);
+        for (String next : map.keySet()){
+            if (!visited.contains(next) && !next.equals(pre)) {
+                res = helper(next,dst,val*map.get(next),src);
+                if (res >= 0) return res;
+            }
+        }
+        visited.add(src);
+        return -1;
+    }
+    
+}
