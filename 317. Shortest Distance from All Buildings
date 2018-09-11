@@ -4,3 +4,68 @@ public class Solution {
     }
 }
 
+
+
+public class Solution {
+    public int shortestDistance(int[][] grid) {
+        // time complexity: O(M*N)
+        //space complexity: O(M*N)
+        // algorithm: breadth first search
+        int row = grid.length;
+        int col = grid[0].length;
+        
+        int[] dx = new int[]{0,0,1,-1};
+        int[] dy = new int[]{1,-1,0,0};
+        int[] d = new int[row*col];
+        int[] visited = new int[row*col];
+        int cnt = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) {
+                    bfs(grid,d,visited,i*col+j);
+                    cnt++;
+                }
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < row*col; i++) {
+            if (visited[i] == cnt) res = Math.min(res,d[i]);
+        }
+        return res < Integer.MAX_VALUE ? res : -1;
+    }
+    
+    private void bfs(int[][] grid, int[] d, int[] visited, int pos) {
+        int row = grid.length;
+        int col = grid[0].length;
+        
+        int[] dx = new int[]{0,0,1,-1};
+        int[] dy = new int[]{1,-1,0,0};
+        Set<Integer> set = new HashSet<Integer>();
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.offer(pos);
+        int distance = 0;
+        while (!q.isEmpty()) {
+            for (int j = 0; j < q.size(); j++) {
+                pos = q.poll();
+                int x = pos/col;
+                int y = pos % col;
+                d[pos] += distance;
+                visited[pos]++;
+                for (int i = 0; i < 4; i++) {
+                    int x_next = x + dx[i];
+                    int y_next = y + dy[i];
+                    int pos_next = x_next * col + y_next;
+                    if (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col 
+                        && grid[x_next][y_next] == 0 && !set.contains(pos_next)) {
+                        set.add(pos_next);
+                        q.offer(pos_next);
+                    }
+                }
+            }
+            distance++;
+            
+        }
+        
+        
+    }
+}
