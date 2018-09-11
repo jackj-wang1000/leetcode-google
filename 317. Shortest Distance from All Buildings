@@ -5,7 +5,7 @@ public class Solution {
 }
 
 
-
+// ************************************************************************
 public class Solution {
     public int shortestDistance(int[][] grid) {
         // time complexity: O(M*N)
@@ -13,9 +13,7 @@ public class Solution {
         // algorithm: breadth first search
         int row = grid.length;
         int col = grid[0].length;
-        
-        int[] dx = new int[]{0,0,1,-1};
-        int[] dy = new int[]{1,-1,0,0};
+
         int[] d = new int[row*col];
         int[] visited = new int[row*col];
         int cnt = 0;
@@ -45,7 +43,8 @@ public class Solution {
         q.offer(pos);
         int distance = 0;
         while (!q.isEmpty()) {
-            for (int j = 0; j < q.size(); j++) {
+            int sz = q.size();
+            for (int j = 0; j < sz; j++) {
                 pos = q.poll();
                 int x = pos/col;
                 int y = pos % col;
@@ -63,9 +62,7 @@ public class Solution {
                 }
             }
             distance++;
-            
         }
-        
-        
     }
+    
 }
