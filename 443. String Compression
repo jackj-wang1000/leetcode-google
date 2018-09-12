@@ -1,0 +1,39 @@
+class Solution {
+    public int compress(char[] chars) {
+        // algorithm : double pointer
+        int n = chars.length;
+        int cnt = 1;
+        int res = 1;
+        for (int i = 1; i < n; i++) {
+            if (chars[i] != chars[i-1]) {
+                if (cnt > 1) {
+                    int s = 1;
+                    while (cnt >= s*10) s = s * 10;
+                    while (s > 0) {
+                        chars[res] =(char) ((cnt /s) % 10 + '0');
+                        s = s / 10;
+                        res++;
+                    }
+                }
+                chars[res] = chars[i];
+                res++;
+                cnt = 1;
+            }
+            else {
+                cnt++;
+            }
+        }
+        if (cnt > 1)  {
+            int s = 1;
+            while (cnt >= s*10) s = s * 10;
+            while (s > 0) {
+                chars[res] = (char) ((cnt/s) % 10 + '0');
+                s = s / 10;
+                res++;
+            }
+        }
+
+        return res;
+    }
+    
+}
