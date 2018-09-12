@@ -1,0 +1,45 @@
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        // time complexity: O(n1)
+        // space complexity: O(n2) n2: string p's length
+        // algorithm: double pointer
+        List<Integer> res = new ArrayList<Integer>();
+        int n1 = s.length();
+        int n2 = p.length();
+        int[] tb = new int[26];
+        Set<Character> set = new HashSet<Character>();
+        for (int i = 0; i < n2; i++) {
+            tb[p.charAt(i)-'a']++;
+            set.add(p.charAt(i));
+        }
+        int pre = 0;
+        for (int i = 0; i < n1; i++) {
+            char c = s.charAt(i);
+            if (tb[c-'a'] > 0) {
+                tb[c-'a']--;
+                if (i-pre+1 == n2) {
+                    res.add(pre);
+                    tb[s.charAt(pre)-'a']++;
+                    pre++;
+                }
+            }
+            else if (set.contains(c)){
+                while (s.charAt(pre) != c) {
+                    tb[s.charAt(pre)-'a']++;
+                    pre++;
+                }
+                pre++;
+            }
+            else {
+                while (pre < i) {
+                    tb[s.charAt(pre)-'a']++;
+                    pre++;
+                }
+                pre = i + 1;
+            }
+        }
+        
+        return res;
+        
+    }
+}
