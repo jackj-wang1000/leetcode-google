@@ -1,6 +1,67 @@
 class Solution {
     public int maxKilledEnemies(char[][] grid) {
+        // time complexity: O(M*N)
+        // space complexity: O(M*N)
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] v1 = new int[row][col];
+        int[][] v2 = new int[row][col];
+        int[][] v3 = new int[row][col];
+        int[][] v4 = new int[row][col];
         
+        for (int i = 0; i < row; i++) {
+            v1[i][0] = grid[i][0] == 'E' ? 1 : 0;
+            for (int j = 1; j < col; j++) {
+                if (grid[i][j] == 'W') {
+                    v1[i][j] = 0;
+                }
+                else {
+                    v1[i][j] = grid[i][j] == 'E' ? v1[i][j-1] + 1 : v1[i][j-1];
+                } 
+            }
+            v2[i][col-1] = grid[i][col-1] == 'E' ? 1 : 0;
+            for (int j = col-2; j >= 0; j--) {
+                if (grid[i][j] == 'W') {
+                    v2[i][j] = 0;
+                }
+                else {
+                    v2[i][j] = grid[i][j] == 'E' ? v2[i][j+1] + 1 : v2[i][j+1];
+                }
+            }
+        }
+
         
-    }   
+        for (int j = 0; j < col; j++) {
+            v3[0][j] = grid[0][j] == 'E' ? 1 : 0;
+            for (int i = 1; i < row; i++) {
+                if (grid[i][j] == 'W') {
+                    v3[i][j] = 0;
+                }
+                else {
+                    v3[i][j] = grid[i][j] == 'E' ? v3[i-1][j] + 1: v3[i-1][j];
+                }
+            }
+            
+            v4[row-1][j] = grid[row-1][j] == 'E' ?  1 : 0;
+            for (int i = row-2; i >= 0; i--) {
+                if (grid[i][j] == 'W') {
+                    v4[i][j] = 0;
+                }
+                else {
+                    v4[i][j] = grid[i][j] == 'E' ? v4[i+1][j] + 1 : v4[i+1][j];
+                }
+            }
+        }
+        int res = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == '0') {
+                    res = Math.max(res, v1[i][j]+v2[i][j]+v3[i][j]+v4[i][j]);
+                }
+            }
+        }
+
+        return res;
+    }
+    
 }
