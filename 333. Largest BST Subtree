@@ -8,7 +8,35 @@
  * }
  */
 public class Solution {
+    class Node {
+        int min_v;
+        int max_v;
+        int size;
+        boolean isBST;
+        public Node(int min, int max, int s, boolean iBST) {
+            min_v = min;
+            max_v = max;
+            size = s;
+            isBST = iBST;
+        }
+    }
     public int largestBSTSubtree(TreeNode root) {
-        
+        return root == null ? 0 : helper(root).size;
+    }
+    
+    public Node helper(TreeNode root) {
+        if (root == null)  return null;
+        Node left = helper(root.left);
+        Node right = helper(root.right);
+        boolean isBST = true;
+        if (left != null && (!left.isBST || root.val < left.max_v)) isBST = false;
+        if (right != null && (!right.isBST || root.val > right.min_v)) isBST = false;
+        int min_v = left == null ? root.val : left.min_v;
+        int max_v = right == null ? root.val : right.max_v;
+        int left_size = left==null ? 0 : left.size;
+        int right_size = right==null? 0 : right.size;
+        int size = isBST ? 1 + left_size + right_size : Math.max(left_size,right_size);
+        if (!isBST) return new Node(0,0,size,false);
+        else return new Node(min_v,max_v,size,true);
     }
 }
