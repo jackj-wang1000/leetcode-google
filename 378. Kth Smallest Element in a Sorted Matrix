@@ -1,0 +1,35 @@
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        // time complexity: O(N*logM), N: size of matrix, M: matrix[n-1][n-1];
+        // space complexity: O(1)
+        // algorithm: binary search
+        int n = matrix.length;
+        int low = matrix[0][0];
+        int high = matrix[n-1][n-1];
+        int mid = 0;
+        while(low < high) {
+            mid = low + (high-low)/2;
+            int num = findLE(matrix,mid); 
+            if (num < k) low = mid + 1;
+            else high = mid;
+        }
+        return high;
+    }
+    
+    
+    private int findLE(int[][] matrix, int v) {  // find # of elements less than or equal to v in matrix
+        int i = 0;
+        int j = matrix[0].length-1;
+        int res = 0;
+        while (i < matrix.length && j >= 0 ) {
+            if (matrix[i][j] <= v) {
+                i++;
+                res += j+1;
+            }
+            else {
+                j--;
+            }
+        }
+        return res;
+    }
+}
