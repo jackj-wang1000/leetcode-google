@@ -1,0 +1,45 @@
+class Solution {
+    public int islandPerimeter(int[][] grid) {
+        // time complexity: O(M*N)
+        // space complexity: O(M*N)
+        // algorithm: breath first search
+        int row = grid.length;
+        int col = grid[0].length;
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < row * col; i++) {
+            x = i / col;
+            y = i % col;
+            if (grid[x][y] == 1) break;
+        }
+        
+        int[] dx = new int[]{0,0,1,-1};
+        int[] dy = new int[]{1,-1,0,0};
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        Set<Integer> set = new HashSet<Integer>();
+        int pos = x * col + y;
+        bfs.offer(pos);
+        set.add(pos);
+        int res = 0;
+        while (!bfs.isEmpty()) {
+            pos = bfs.poll();
+            x = pos / col;
+            y = pos % col;
+            res += 4;
+            for (int i = 0; i < 4; i++) {
+                int x_next = x + dx[i];
+                int y_next = y + dy[i];
+                int pos_next = x_next * col + y_next;
+                if (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col 
+                   && grid[x_next][y_next] == 1) {
+                    res--;
+                    if (!set.contains(pos_next)) {
+                        set.add(pos_next);
+                        bfs.offer(pos_next);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
