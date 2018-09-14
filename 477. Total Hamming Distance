@@ -1,0 +1,18 @@
+class Solution {
+    public int totalHammingDistance(int[] nums) {
+        // time complexity: O(N)
+        // space complexity: O(1)
+        // algorithm: bit operation
+        int n = nums.length;
+        int res = 0;
+        for (int i = 0; i < 32; i++) {
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                if ((nums[j] & (1 << i)) != 0) cnt++;
+            }
+            res += cnt*(n-cnt);
+        }
+        return res;
+    }
+    
+}
