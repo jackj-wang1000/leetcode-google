@@ -1,0 +1,19 @@
+class Solution {
+    public int countBattleships(char[][] board) {
+        // time complexity: O(M*N)
+        // space complexity: O(1)
+        // algorithm: one pass 
+        int row = board.length;
+        int col = board[0].length;
+        int res = 0;
+        //int res = board[0][0] == 'X' ? 1 : 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (board[i][j] == 'X') {
+                    if (!(j > 0 && board[i][j-1] == 'X') && !(i > 0 && board[i-1][j] == 'X')) res++;
+                }
+            }
+        }
+        return res;
+    }
+}
