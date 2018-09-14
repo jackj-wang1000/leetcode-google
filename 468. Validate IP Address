@@ -1,0 +1,46 @@
+class Solution {
+    public String validIPAddress(String IP) {
+        
+        int n = IP.length();
+        int i = 0;
+        for (i = 0; i < n; i++) {
+            if (IP.charAt(i) == '.' || IP.charAt(i) == ':') break;
+        }
+        if (i >= n) return "Neither";
+        if (IP.charAt(i) == '.') return matchIPv4(IP);
+        else return matchIPv6(IP);
+    }
+    
+    private String matchIPv4(String IP) {
+        int n = IP.length();
+        for (int i = 0; i < n; i++) {
+            char c = IP.charAt(i);
+            if (!((c >= '0' && c <= '9') || c == '.')) return "Neither";
+        }
+        
+        String[] strs = IP.split("\\.");    //  match "." regex
+        if (strs.length != 4 || IP.charAt(n-1) == '.') return "Neither";   // corner case
+        for (int i = 0; i < 4; i++) {
+            int L = strs[i].length();
+            if (L == 0 || (strs[i].charAt(0) == '0' && strs[i].length() != 1) || L > 3
+               || Integer.parseInt(strs[i]) > 255) return "Neither";
+        }
+        return "IPv4";
+    }
+    
+    private String matchIPv6(String IP) {
+        int n = IP.length();
+        for (int i = 0; i < n; i++) {
+            char c = IP.charAt(i);
+            if (!((c >= '0' && c <= '9') || c == ':' || (c >= 'a' && c <= 'f')
+                 || (c >= 'A' && c <= 'F'))) return "Neither";
+        }
+        String[] strs = IP.split(":");
+        if (strs.length != 8 || IP.charAt(n-1) == ':') return "Neither";
+        for (int i = 0; i < 8; i++) {
+            int L = strs[i].length();
+            if (L== 0 || L > 4) return "Neither";
+        }
+        return "IPv6";
+    }
+}
