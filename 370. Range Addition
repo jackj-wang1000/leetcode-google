@@ -37,9 +37,9 @@ public class Solution {
         Iterator<Integer> iter = tm.keySet().iterator();
         int idx = iter.next();
         for (int i = 0; i < length; i++) {
-            if (i == idx && iter.hasNext()) {
+            if (i == idx) {
                 acc += tm.get(idx);
-                idx = iter.next();
+                if (iter.hasNext()) idx = iter.next();
             }
             res[i] = acc;
         }
