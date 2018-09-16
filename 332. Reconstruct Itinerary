@@ -1,0 +1,39 @@
+class Solution {
+    public List<String> findItinerary(String[][] tickets) {
+        
+        
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        int n = tickets.length;
+        for (int i = 0; i < n; i++) {
+            if (!map.containsKey(tickets[i][0])) map.put(tickets[i][0],new ArrayList<String>());
+            map.get(tickets[i][0]).add(tickets[i][1]+"#"+Integer.toString(i));
+        }
+        for (String str : map.keySet()) {
+            Collections.sort(map.get(str));
+        }
+        List<String> res = new ArrayList<String>();
+        res.add("JFK");
+        helper(map,n,res,"JFK", new HashSet<Integer>());
+        return res;
+        
+    }
+    
+    private boolean helper(Map<String, List<String>> map, int n, List<String> res, String curr, Set<Integer> set) {
+        if (n == 0) return true;
+        if (map.containsKey(curr))    // must first check if curr exit
+        for(String str : map.get(curr)) {
+            String[] dst = str.split("#");
+            int num = Integer.parseInt(dst[1]);
+            if (!set.contains(num)) {
+                res.add(dst[0]);
+                set.add(num);
+                if (helper(map,n-1,res,dst[0],set)) return true;
+                res.remove(res.size()-1);
+                set.remove(num);
+            }
+            
+        }
+        return false;
+        
+    }
+}
