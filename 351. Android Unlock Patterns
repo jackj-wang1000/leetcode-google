@@ -1,0 +1,60 @@
+
+class Solution {
+    public int numberOfPatterns(int m, int n) {
+        
+        // algorithm: depth first search
+        List<Set<Integer>> skip = new ArrayList<Set<Integer>>();
+        for (int i = 0; i < 9; i++) {
+            skip.add(new HashSet<Integer>());
+        }
+        skip.get(0).add(3);
+        skip.get(0).add(7);
+        skip.get(0).add(9);
+        skip.get(1).add(8);
+        skip.get(2).add(1);
+        skip.get(2).add(7);
+        skip.get(2).add(9);
+        skip.get(3).add(6);
+
+        skip.get(5).add(4);
+        skip.get(6).add(1);
+        skip.get(6).add(3);
+        skip.get(6).add(9);
+        skip.get(7).add(2);
+        skip.get(8).add(1);
+        skip.get(8).add(3);
+        skip.get(8).add(7);
+
+        //Set<Integer> set = new HashSet<Integer>();
+        boolean[] visited = new boolean[9];
+        int res = 0;
+        visited[0] = true;
+        res += helper(skip,visited,1,m,n,1)*4;
+        visited[0] = false;
+        visited[1] = true;
+        res += helper(skip,visited,1,m,n,2)*4;
+        visited[1] = false;
+        visited[4] = true;
+        res += helper(skip,visited,1,m,n,5);
+        return res;
+        
+    }
+    
+    private int helper(List<Set<Integer>> skip, boolean[] visited, int L, int m , int n, int pre) {
+        if (L > n) return 0;
+        int res = 0;
+        if (L >= m) res++;
+        for (int i = 1; i <= 9; i++) {
+            if(!visited[i-1]) {
+                int mid = (pre + i) / 2;
+                if (skip.get(pre-1).contains(i) && !visited[mid-1]) continue;
+                visited[i-1] = true;
+                res += helper(skip,visited,L+1,m,n,i);
+                visited[i-1] = false;
+            }
+        }
+        return res;
+    }
+}
+
+
