@@ -1,4 +1,25 @@
+public class Solution {
+    public int[] sortTransformedArray(int[] nums, int a, int b, int c) {
+        
+        int n = nums.length;
+        int[] res = new int[n];
+        int left = 0; 
+        int right = n-1;
+        int idx = a > 0 ? n-1 : 0;
+        while (left <= right) {
+            if (a > 0) res[idx--] = fx(a,b,c,nums[left]) > fx(a,b,c,nums[right]) ? fx(a,b,c,nums[left++]) : fx(a,b,c,nums[right--]);
+            else res[idx++] = fx(a,b,c,nums[left]) < fx(a,b,c,nums[right]) ? fx(a,b,c,nums[left++]) : fx(a,b,c,nums[right--]);
+        }
+        return res;
+    }
+    
+    private int fx(a,b,c,x){
+        return return a*x*x + b*x + c;
+    }
+}
 
+
+//  ************************************************************************************************
 public class Solution {
     public int[] sortTransformedArray(int[] nums, int a, int b, int c) {
         
