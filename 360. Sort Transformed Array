@@ -1,0 +1,57 @@
+
+public class Solution {
+    public int[] sortTransformedArray(int[] nums, int a, int b, int c) {
+        
+        int n = nums.length;
+        int[] res = new int[n];
+        if (a == 0) {
+            for (int i = 0; i < n; i++) {
+                res[i] = b > 0 ? fx(a,b,c,nums[i]) : fx(a,b,c,nums[n-1-i]); 
+            }
+        }
+        else if (a < 0) {
+            int p1 = 0;
+            int p2 = n-1;
+            int i = 0;
+            while (p1 <= p2) {
+                int y1 = fx(a,b,c,nums[p1]);
+                int y2 = fx(a,b,c,nums[p2]);
+                if(y1 < y2) {
+                    res[i++] = y1;
+                    p1++;
+                }
+                else {
+                    res[i++] = y2;
+                    p2--;
+                }
+            }
+        }
+        else {
+            double mid = -b/(2 * (double)a);
+            int left = 0;
+            int right = n;
+            while (left < right) {
+                int m = left + (right - left)/2;
+                if (nums[m] < mid) left = m+1;
+                else right = m;
+            }
+            int p1 = left - 1;
+            int p2 = left;
+            for (int i = 0; i < n; i++) {
+                if (p1 < 0) res[i] = fx(a,b,c,nums[p2--]);
+                else if (p2 > n-1) res[i] = fx(a,b,c,nums[p1++]);
+                else {
+                    int y1 = fx(a,b,c,nums[p1]);
+                    int y2 = fx(a,b,c,nums[p2]);
+                    if (y1 < y2) {res[i] = y1; p1--;}
+                    else {res[i] = y2; p2++;}
+                }
+            }
+        }
+        return res;
+    }
+    
+    private int fx(int a, int b, int c, int x) {
+        return a*x*x + b*x + c;
+    }
+}
