@@ -1,0 +1,46 @@
+class Solution {
+    public int numSimilarGroups(String[] A) {
+        // time complexity: O() ??/
+        // space complexity: O(N)
+        // algorithm: union-find
+        int n = A.length;
+        if (n == 0) return 0;
+        int L = A[0].length();
+        int[] root = new int[n];
+        int group = n;
+        for (int i = 0; i < n; i++) {
+            root[i] = i;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = i+1; j < n; j++) {
+                int root_i = findRoot(root, i);
+                int root_j = findRoot(root, j);
+                if (root_i != root_j && isSimilar(A[i],A[j])) {
+                    if (root_i > root_j) root[root_i] = root_j;
+                    else root[root_j] = root_i;
+                    group--;
+                }
+            }
+        }
+        return group;
+    }
+    
+    private int findRoot(int[] root, int i) {
+        while (root[i] != i) {
+            int p = root[i];
+            root[i] = root[p];
+            i = root[i];
+        }
+        return i;
+    } 
+    
+    private boolean isSimilar(String x, String y) {
+        int res = 0;
+        int L = x.length();
+        for (int i = 0; i < L; i++) {
+            if (x.charAt(i) != y.charAt(i)) res++;
+            if (res > 2) return false;
+        }
+        return true;
+    }
+}
