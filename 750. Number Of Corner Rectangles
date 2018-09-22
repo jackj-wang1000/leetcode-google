@@ -1,0 +1,37 @@
+class Solution {
+    public int countCornerRectangles(int[][] grid) {
+        // time complexity: O(N*N*M) => O(M*M*N)
+        // space complexity: O(M*N)
+        // algorithm :  double pointer
+        int row = grid.length;
+        int col = grid[0].length;
+        List<List<Integer>> list = new ArrayList<List<Integer>>();
+        int res = 0;
+        for (int i = 0; i < row; i++) {
+            List<Integer> lst = new ArrayList<Integer>();
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) lst.add(j);
+            }
+            list.add(lst);
+            for (int k = 0; k < i; k++) {
+                int s = intersection(lst,list.get(k));
+                res += s*(s-1)/2;
+            }
+        }
+        return res;
+    }
+    
+    private int intersection(List<Integer> x, List<Integer> y) {
+        int sx = x.size();
+        int sy = y.size();
+        int p1 = 0;
+        int p2 = 0;
+        int res = 0;
+        while (p1 < sx && p2 < sy) {
+            if (x.get(p1) == y.get(p2)) {p1++; p2++; res++;}
+            else if (x.get(p1) > y.get(p2)) p2++;
+            else p1++;
+        }
+        return res;
+    }
+}
