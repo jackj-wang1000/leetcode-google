@@ -5,6 +5,41 @@ class Solution {
         // algorithm :  double pointer
         int row = grid.length;
         int col = grid[0].length;
+        int res = 0;
+        for (int i = 0; i < row; i++) {
+            List<Integer> lst = new ArrayList<Integer>();
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 1) lst.add(j);
+            }
+            int L = lst.size();
+            for (int j = i+1; j < row; j++) {
+                int cnt = 0;
+                for (int k = 0; k < L; k++) {
+                    if (grid[j][lst.get(k)] == 1) cnt++;
+                }
+                res += cnt*(cnt-1)/2;
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
+
+
+
+
+
+// *********************************************************************************
+class Solution {
+    public int countCornerRectangles(int[][] grid) {
+        // time complexity: O(N*N*M) => O(M*M*N)
+        // space complexity: O(M*N)
+        // algorithm :  double pointer
+        int row = grid.length;
+        int col = grid[0].length;
         List<List<Integer>> list = new ArrayList<List<Integer>>();
         int res = 0;
         for (int i = 0; i < row; i++) {
