@@ -1,5 +1,21 @@
 class Solution {
     public double minmaxGasDist(int[] stations, int K) {
-        
+        // time complexity: O(N*log10 * 14)
+        // space complexity: O(1)
+        // algorithm : binary search (tricky)
+        // assume stations position is sorted;
+        double left = 0;
+        double right = 1e8;
+        double mid = 0;
+        while (right - left > 1e-6) {
+            mid = left + (right - left)/2;
+            int cnt = 0;
+            for (int i = 1; i < stations.length; i++) {
+                cnt += (stations[i] - stations[i-1]) / mid;
+            }
+            if (cnt > K) left = mid;
+            else right = mid;
+        }
+        return left;
     }
 }
