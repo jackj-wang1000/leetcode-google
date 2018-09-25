@@ -1,0 +1,36 @@
+class Solution {
+    public int shortestPathLength(int[][] graph) {
+        // space complexity: O(N*2^N)
+        // time complexity: O(N*2^N),  # of state
+        // algorithm: Breadth first search
+        int n = graph.length;
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        Set<Integer> set = new HashSet<Integer>();   // save state, which composed of  current node + visited node 
+        for (int i = 0; i < n; i++) {
+            int key = (i << 16) | (1 << i); 
+            set.add(key);
+            bfs.offer(key);
+        }
+        int step = 0;
+        while (!bfs.isEmpty()) {
+            int sz = bfs.size();
+            for (int i = 0; i < sz; i++) {
+                int curr = bfs.poll();
+                int node = curr >> 16;
+                int st = curr & ((1<< 16) - 1);
+                if (st == (1<< n) -1) return step;   // reach final state,  all nodes are visited;
+                for (int j : graph[node]) {
+                    int key = (j << 16) | (st | (1<<j));
+                    if (!set.contains(key)) {
+                        bfs.offer(key);
+                        set.add(key);
+                    }
+                }
+            }
+            step++;
+            
+        }
+        return -1;
+
+    }
+}
