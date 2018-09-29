@@ -8,6 +8,7 @@ class Solution {
         for (int i = 0; i < n; i++) {
             idx[i] = i;
         }
+        // sort idx array by wage/quality
         Arrays.sort(idx, new Comparator<Integer>(){
             public int compare(Integer x, Integer y) {
                 return wage[x]*quality[y] - wage[y]*quality[x];
