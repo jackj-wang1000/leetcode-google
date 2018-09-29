@@ -1,0 +1,41 @@
+class Solution {
+    public double mincostToHireWorkers(int[] quality, int[] wage, int K) {
+        // time complexity: O(N*logN)
+        // space complexity: O(N)
+        //algorithm: max heap
+        int n = quality.length;
+        Integer[] idx = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            idx[i] = i;
+        }
+        Arrays.sort(idx, new Comparator<Integer>(){
+            public int compare(Integer x, Integer y) {
+                return wage[x]*quality[y] - wage[y]*quality[x];
+            }
+        });
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(K, new Comparator<Integer>(){
+            public int compare(Integer x, Integer y) {
+                return y - x;
+            }
+        });
+        int i = 0;
+        double sum = 0;
+        int curr = 0;
+        for (; i < K-1; i++) {
+            curr = idx[i];
+            sum += quality[curr];
+            pq.offer(quality[curr]);
+        }
+        double res = wage[idx[i]]*(sum + quality[idx[i]])/(double) quality[idx[i]];
+        while (i < n-1) {
+            curr = idx[i];
+            sum += quality[curr];
+            pq.offer(quality[curr]);
+            sum -= pq.poll();
+            curr = idx[i+1];
+            res = Math.min(res, wage[curr]*(sum + quality[curr])/(double) quality[curr]);
+            i++;
+        }
+        return res;
+    }
+}
