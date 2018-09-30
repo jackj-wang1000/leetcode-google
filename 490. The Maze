@@ -1,6 +1,9 @@
 class Solution {
     private int col,row;
     public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        // time complexity: O(row*col)
+        // space complexity: O(row + col)
+        // algorithm: depth first search
         col = maze[0].length;
         row = maze.length;
         Set<Integer> visited = new HashSet<Integer>();
@@ -13,7 +16,6 @@ class Solution {
         if (curr == dst) return true;
         int x = curr / col;
         int y = curr % col;
-        int t = x;
         int up,down,left,right;
         up = down = x;
         left = right = y;
