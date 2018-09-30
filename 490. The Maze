@@ -1,42 +1,6 @@
 class Solution {
     private int col,row;
-    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
-        // time complexity: O(row*col)
-        // space complexity: O(row + col)
-        // algorithm: depth first search
-        col = maze[0].length;
-        row = maze.length;
-        Set<Integer> visited = new HashSet<Integer>();
-        int curr = start[0]*col + start[1];
-        visited.add(curr);
-        return helper(maze,curr, destination[0] * col + destination[1], visited);
-    }
-    
-    private boolean helper(int[][] maze, int curr, int dst, Set<Integer> visited) {
-        if (curr == dst) return true;
-        int x = curr / col;
-        int y = curr % col;
-        int up,down,left,right;
-        up = down = x;
-        left = right = y;
-        int[] next = new int[4];
-        while (up-1 >= 0 && maze[up-1][y] == 0) {up--; next[0] = up *col + y;}
-        while (down+1 < row  && maze[down+1][y] == 0) {down++; next[1] = down * col + y;}
-        while (left-1 >= 0 && maze[x][left-1] == 0) {left--; next[2] = x * col + left;}
-        while (right+1 < col && maze[x][right+1] == 0) {right++; next[3] = x * col + right;}
-        for (int i = 0; i < 4; i++) {
-            if (!visited.contains(next[i])) {
-                visited.add(next[i]);
-                if (helper(maze,next[i],dst,visited)) return true;
-            }
-        }
-        return false;
-    }
-}
-
-
-class Solution {
-    private int col,row;
+    private static final int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};  
     public boolean hasPath(int[][] maze, int[] start, int[] destination) {
         // time complexity: O(M*N)
         // space complexity: O(M*N)
@@ -54,19 +18,60 @@ class Solution {
             if (curr == dst) return true;
             int x = curr / col;
             int y = curr % col;
-            int up,down,left,right;
-            up = down = x;
-            left = right = y;
-            int[] next = new int[4];
-            while (up-1 >= 0 && maze[up-1][y] == 0) {up--; next[0] = up *col + y;}
-            while (down+1 < row  && maze[down+1][y] == 0) {down++; next[1] = down * col + y;}
-            while (left-1 >= 0 && maze[x][left-1] == 0) {left--; next[2] = x * col + left;}
-            while (right+1 < col && maze[x][right+1] == 0) {right++; next[3] = x * col + right;}
             for (int i = 0; i < 4; i++) {
-                if (!visited.contains(next[i])) {
-                    visited.add(next[i]);
-                    bfs.offer(next[i]);
+                int x_next = x;
+                int y_next = y;
+                while (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && maze[x_next][y_next] == 0) {
+                    x_next += direction[i][0];
+                    y_next += direction[i][1];
                 }
+                x_next -= direction[i][0];
+                y_next -= direction[i][1];
+                int next = x_next * col + y_next;
+                if (!visited.contains(next)) {
+                    visited.add(next);
+                    bfs.offer(next);
+                }
+            }
+        }
+        return false;
+    }
+    
+}
+
+
+class Solution {
+    private int col,row;
+    private static final int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};  
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        // time complexity: O(row*col)
+        // space complexity: O(row + col)
+        // algorithm: depth first search
+        col = maze[0].length;
+        row = maze.length;
+        Set<Integer> visited = new HashSet<Integer>();
+        int curr = start[0]*col + start[1];
+        visited.add(curr);
+        return helper(maze,curr, destination[0] * col + destination[1], visited);
+    }
+    
+    private boolean helper(int[][] maze, int curr, int dst, Set<Integer> visited) {
+        if (curr == dst) return true;
+        int x = curr / col;
+        int y = curr % col;
+        for (int i = 0; i < 4; i++) {
+            int x_next = x;
+            int y_next = y;
+            while (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && maze[x_next][y_next] == 0){
+                x_next += direction[i][0];
+                y_next += direction[i][1];
+            }
+            x_next -= direction[i][0];
+            y_next -= direction[i][1];
+            int next = x_next * col + y_next;
+            if (!visited.contains(next)) {
+                visited.add(next);
+                if (helper(maze,next,dst,visited)) return true;
             }
         }
         return false;
