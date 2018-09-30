@@ -1,0 +1,64 @@
+/*
+class Solution {
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        // time complexity: O(col*col*row*log_row)
+        // space complexity: O(row)
+        // algorithm: double pointer + array
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int res = Integer.MIN_VALUE;
+        for(int j = 0; j < col; j++) {
+            int[] sum = new int[row];  // sum add from jth colum to kth colum
+            for (int m = j; m < col; m++) {
+                for (int i = 0; i < row; i++) {
+                    sum[i] += matrix[i][m];
+                }
+                TreeSet<Integer> set = new TreeSet<Integer>();
+                set.add(0);
+                int t = 0;
+                int currMax = Integer.MIN_VALUE;
+                for (int l = 0; l < row; l++) {
+                    t += sum[l];
+                    Integer leftSum = set.ceiling(t-k);
+                    if (leftSum != null) currMax = Math.max(currMax, t-leftSum);
+                    set.add(t);
+                    if (currMax == k) return k;
+                }
+                res = Math.max(res, currMax);
+            }
+        }
+        return res;
+        
+    }
+}
+*/
+
+class Solution {
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        // time : O(row*row*col*col)
+        // space : O(row*col)
+        // algorithm: brute force
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] sum = new int[row][col];
+        int res = Integer.MIN_VALUE;
+        for (int i = 0; i < row; i++) {
+            int t = 0;
+            for (int j = 0; j < col; j++) {
+                t += matrix[i][j];
+                sum[i][j] = i > 0 ? sum[i-1][j] + t : t;
+                for (int m = 0; m <= i; m++) {
+                    for (int n = 0; n <= j; n++) {
+                        int currMax = sum[i][j];
+                        if (m > 0) currMax -= sum[m-1][j];
+                        if (n > 0) currMax -= sum[i][n-1];
+                        if (m > 0 && n > 0) currMax += sum[m-1][n-1];
+                        if (currMax <= k)  res = Math.max(res, currMax);
+                    }
+                }
+                
+            }
+        }
+        return res;
+    }
+}
