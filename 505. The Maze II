@@ -1,0 +1,46 @@
+public class Solution {
+    private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
+    private row, col;
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        // time complexity: O(row *col)
+        // space complexity: O(row * col)
+        // algorithm: Memorized depth first search 
+        row = maze.length;
+        col = maze[0].length;
+        int curr = start[0] * col + start[1];
+        Set<Integer> visited = new HashSet<Integer>();  // to detect circle
+        int[] dp = new int[row*col];  // for memorization
+        for (int i = 0; i < row*col; i++) dp[i] = -2;
+        return helper(maze,curr,destination[0]*col+destination[1], dp, visited);
+    }
+    
+    private int helper(int[][] maze, int curr, int dst, int[] dp, Set<Integer> visited) {
+        if (curr == dst) return 0;
+        else if (dp[curr] > -2) return dp[curr];
+        int x = curr / col;
+        int y = curr % col;
+        int res = -1;
+        for (int i = 0; i < 4; i++) {
+            int x_next = x;
+            int y_next = y;
+            while (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && maze[x_next][y_next] == 0) {
+                x_next += directions[i][0];
+                y_next += directions[i][1];
+            }
+            x_next -= directions[i][0];
+            y_next -= directions[i][1];
+            int next = x_next * col + y_next;
+            int step = Math.abs(x_next -x) + Math.abs(y_next - y);
+            
+            if (!visited.contains(next)) { //???
+                visited.add(next);
+                int d = helper(maze,next,dst,dp,visited);
+                if (d >= 0) res = res > 0 ? Math.min(res,d + step) : d + step;
+            }
+            
+        }
+        visited.remove(curr);
+        dp[curr] = res;
+        return res;
+    }
+}
