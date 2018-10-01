@@ -1,0 +1,63 @@
+class Solution {
+    private int row,col;
+    private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
+    private static final char[] dir = {'r','l','d','u'};
+    private String res;
+    public String findShortestWay(int[][] maze, int[] ball, int[] hole) {
+        //algorithm: depth fisrt search + backtracking
+        row = maze.length;
+        col = maze[0].length;
+        int[] dists = new int[row*col];
+        for (int i = 0; i < row*col; i++) dists[i] = Integer.MAX_VALUE;
+        res = "";
+        int curr = ball[0] * col + ball[1];
+        int dst = hole[0] *col + hole[1];
+        dists[curr] = 0;
+        helper(maze,curr,dst,dists,new StringBuilder());
+        return dists[dst] == Integer.MAX_VALUE ? "impossible" : res;
+    }
+    
+    private void helper(int[][] maze, int curr, int dst, int[] dists, StringBuilder strb) {
+        if  (curr == dst) { 
+            String str = strb.toString();
+            res = res.length() == 0 || res.compareTo(str) > 0 ? str : res;
+            return;
+        }
+        
+        int x_curr = curr / col;
+        int y_curr = curr % col;
+        for (int i = 0; i < 4; i++) {
+            int x = x_curr;
+            int y = y_curr;
+            int dist = dists[curr];
+            boolean found = false;
+            while (x >= 0 && x < row && y >= 0 && y < col && maze[x][y] == 0) {
+                x += directions[i][0];
+                y += directions[i][1];
+                dist++;
+                if (x == dst/col && y == dst % col) {found = true; break;}
+            }
+            if (found) {
+                String str = strb.toString() + dir[i];
+                if (dists[dst] > dist) { res = str; dists[dst] = dist;}
+                else if (dists[dst] == dist)
+                res = res.length() == 0 || res.compareTo(str) > 0 ? str : res;
+                continue;
+            }
+            x -= directions[i][0];
+            y -= directions[i][1];
+            dist--;
+            int next = x * col + y;
+            if (dists[next] >= dist && curr != next) {   // must add curr != next 
+                dists[next] = dist;
+                int L = strb.length();
+                strb.append(dir[i]);
+                helper(maze,next,dst,dists,strb);
+                strb.deleteCharAt(L);
+            }
+        }
+        
+    }
+    
+    
+}
