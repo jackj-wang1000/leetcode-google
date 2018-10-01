@@ -2,6 +2,63 @@ class Solution {
     private int row,col;
     private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
     private static final char[] dir = {'r','l','d','u'};
+    public String findShortestWay(int[][] maze, int[] ball, int[] hole) {
+        // algorithm: breadth first search
+        row = maze.length;
+        col = maze[0].length;
+        int[] dists = new int[row*col];
+        String[] path = new String[row*col];
+        int curr = ball[0] * col + ball[1];
+        int dst = hole[0] *col + hole[1];
+        for (int i = 0; i < row*col; i++) dists[i] = Integer.MAX_VALUE;
+        dists[curr] = 0;
+        path[curr] = "";
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        bfs.offer(curr);
+        while (!bfs.isEmpty()) {
+            curr = bfs.poll();
+            int x_curr = curr / col;
+            int y_curr = curr % col;
+            for (int i = 0; i < 4; i++) {
+                int x = x_curr;
+                int y = y_curr;
+                boolean found = false;
+                int dist = dists[curr];
+                while (x >= 0 && x < row && y >= 0 && y < col && maze[x][y] == 0) {
+                    x += directions[i][0];
+                    y += directions[i][1];
+                    dist++;
+                    if (x == dst/col && y == dst % col) {found = true; break;}
+                }
+                String p = path[curr] + dir[i];
+                if (!found) {
+                    x -= directions[i][0];
+                    y -= directions[i][1];
+                    dist--;
+                }
+                int next = x * col + y;
+                if (dists[next] > dist || (dists[next] == dist && path[next].compareTo(p) > 0)) {
+                    path[next] = p;
+                    dists[next] = dist;
+                    if (next != dst) bfs.offer(next);
+                }
+            }
+        }
+        return dists[dst] == Integer.MAX_VALUE ? "impossible" : path[dst];
+    }
+}
+
+
+
+
+
+
+
+
+class Solution {
+    private int row,col;
+    private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
+    private static final char[] dir = {'r','l','d','u'};
     private String res;
     public String findShortestWay(int[][] maze, int[] ball, int[] hole) {
         //algorithm: depth fisrt search + backtracking
