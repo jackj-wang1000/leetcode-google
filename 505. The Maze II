@@ -2,6 +2,98 @@ public class Solution {
     private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
     private row, col;
     public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        // algorithm : breadth first search
+        row = maze.length;
+        col = maze[0].length;
+        Queue<Integer> bfs = new LinkedList<Integer>();
+        int[] dis = new int[row*col];
+        for (int i = 0; i < row*col; i++) dis[i] = Integer.MAX_VALUE;
+        int curr = start[0] * col + start[1];
+        int dst = destination[0] * col + destination[1];
+        bfs.offer(curr);
+        dis[curr] = 0;
+        while(!bfs.isEmpty()) {
+            curr = bfs.poll();
+            int x = curr / col;
+            int y = curr % col;
+            for (int i = 0; i < 4; i++) {
+                int x_next = x;
+                int y_next = y;
+                int d = dis[curr];
+                while (x_next >= 0 && x_next < row && y_next >= 0 && y_next < col && maze[x_next][y_next] == 0) {
+                    x_next += directions[i][0];
+                    y_next += directions[i][1];
+                    d++;
+                }
+                x_next -= directions[i][0];
+                y_next -= directions[i][1];
+                d--;
+                int next = x_next * col + y_next;
+                if (d < dis[next]) {  // not visited before, or have shorter path from start.
+                    dis[next] = d;
+                    if (next != dst) bfs.offer(next); // can stop here
+                }
+                
+            }
+            
+        }
+        return dis[dst] == Integer.MAX_VALUE ? -1 : dis[dst];
+    }
+}
+    
+public class Solution {
+    private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
+    private row, col;
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        // algorithm : depth first search
+        row = maze.length;
+        col = maze[0].length;
+        
+        int[] dists = new int[row*col];
+        for (int i = 0; i < row*col; i++) dists[i] = Integer.MAX_VALUE;
+        int curr = start[0] * col + start[1];
+        int dst = destination[0] * col + destination[1];
+        dists[curr] = 0;
+        helper(maze, dists, curr, dst);
+        return dists[dst] == Integer.MAX_VALUE ? -1 : dists[dst];
+    }
+    
+    
+    private void helper(int[][] maze, int[] dists, int curr, int dst) {
+        if (curr == dst) return;
+        int x_curr = curr / col;
+        int y_curr = curr % col;
+        for (int i = 0; i < 4; i++) {
+            int x = x_curr;
+            int y = y_curr;
+            int dist = dists[curr];
+            while (x >= 0 && x < row && y >= 0 && y < col && maze[x][y] == 0) {
+                x += directions[i][0];
+                y += directions[i][1];
+                dist++;
+            }
+            x -= directions[i][0];
+            y -= directions[i][1];
+            dist--;
+            int next = x * col + y;
+            if (dists[next] > dist) {
+                dists[next] = dist;
+                helper(maze,dists,next,dst);
+            }
+        }
+    }
+}
+
+
+
+
+
+
+// ********************** need to detect circle ***************************
+public class Solution {
+    private static final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};    
+    private row, col;
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
         // time complexity: O(row *col)
         // space complexity: O(row * col)
         // algorithm: Memorized depth first search 
