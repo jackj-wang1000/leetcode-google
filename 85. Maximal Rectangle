@@ -1,0 +1,34 @@
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        // time complexity: O(M*N)
+        // space complexity: O(N)
+        // algorithm: stack + dynamic programming
+        int m = matrix.length;
+        if (m == 0) return 0;
+        int n = matrix[0].length;
+        int[] height = new int[n+1];
+        height[0] = -1; // push one lowest level into stack.
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            Stack<Integer> st = new Stack<Integer>();
+            st.push(0);
+            for (int j = 0; j < n; j++) {
+                height[j+1] = matrix[i][j] == '0' ? 0 : height[j+1]+1;
+                while (!st.isEmpty()) {
+                    if (height[j+1] >= height[st.peek()]) break;   // push into stack increasingly.
+                    else {
+                        int idx = st.pop();
+                        res = Math.max(res, (j-st.peek())*height[idx]);   // right bound index: j+1; low bound index: st.peek()+1;
+                    }
+                }
+                st.push(j+1);
+            }
+            while (st.size() > 1) {
+                int idx = st.pop();
+                res = Math.max(res, (n-st.peek())*height[idx]);
+            }
+
+        }
+        return res;
+    }
+}
