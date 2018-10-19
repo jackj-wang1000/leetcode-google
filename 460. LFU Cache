@@ -1,0 +1,222 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ==========================================================================
+
+public class LFUCache {
+    
+    public Map<Integer,unit> map;
+    public int size;
+    public unit head,tail;
+
+    public LFUCache(int capacity) {
+        map = new HashMap<Integer,unit>();
+        size = capacity;
+        head = new unit(-1);
+        tail = new unit(-1);
+        head.next = tail;
+        tail.pre = head;
+    }
+    
+    public int get(int key) {
+        if (map.containsKey(key)) {
+            unit curr = map.get(key);
+            listNode currNode = curr.listMap.get(key);
+            int value = currNode.value;
+            if (curr.next.freq == curr.freq+1) {
+                curr.listMap.remove(key);          // remove from previous bucket
+                listNode tmp = currNode.next;
+                tmp.pre = currNode.pre;
+                currNode.pre.next = tmp;
+                
+                curr.next.listMap.put(key,currNode); // insert into new bucket
+                map.put(key,curr.next);
+                      tmp = curr.next.tail;   // tail in the new bucket
+                currNode.pre = tmp.pre;
+                currNode.next = tmp ;
+                tmp.pre.next = currNode;
+                tmp.pre = currNode;
+            }
+            else if (curr.listMap.size() == 1) curr.freq++;
+            else {
+                curr.listMap.remove(key);   // remove from previous bucket
+                listNode tmp = currNode.pre;
+                tmp.next = currNode.next;
+                currNode.next.pre = tmp;
+                
+                
+                unit node = new unit(curr.freq+1);
+                map.put(key,node);
+                node.listMap.put(key,currNode);  // insert into list of new bucket
+                    tmp = node.tail;
+                currNode.pre = tmp.pre;
+                currNode.next = tmp;
+                tmp.pre.next = currNode;
+                tmp.pre = currNode;
+                
+                node.next = curr.next;   // insert new unit
+                node.pre = curr;
+                node.next.pre = node;
+                curr.next = node;
+            }
+            if (curr.listMap.isEmpty()) {   // remove empty unit
+                unit tmp = curr.pre;
+                tmp.next = curr.next;
+                curr.next.pre = tmp;
+            }
+            return value;
+        }
+        else {
+            return -1;
+        }
+    }
+    
+    public void put(int key, int value) {
+        if (size > 0) {
+        if (map.containsKey(key)) {
+            update(key,value);
+        }
+        else {
+            if (map.size() == size) evict(); 
+            insert(key,value);
+        }
+        }
+    }
+    
+    
+    private void update(int key, int value) {
+        unit curr = map.get(key);
+        listNode currNode = curr.listMap.get(key);
+        currNode.value = value;
+        if (curr.next.freq == curr.freq+1) {
+            map.put(key,curr.next);
+            curr.next.listMap.put(key,currNode);
+            curr.listMap.remove(key);
+            
+            listNode tmp = currNode.pre; // remove from previous bucket
+            tmp.next = currNode.next;
+            currNode.next.pre = tmp;
+            
+                tmp = curr.next.tail.pre; // insert into new bucket
+            currNode.next = curr.next.tail;
+            currNode.pre = tmp;
+            currNode.next.pre = currNode;
+            tmp.next = currNode;
+        }
+        else if (curr.listMap.size() == 1) curr.freq++;
+        else {
+            listNode tmp = currNode.pre;
+            tmp.next = currNode.next;
+            currNode.next.pre = tmp;
+            curr.listMap.remove(key);
+            
+            unit node = new unit(curr.freq+1);  // create a new bucket
+            map.put(key,node);
+            node.listMap.put(key,currNode);
+                tmp = node.tail.pre;
+            currNode.next = node.tail;
+            currNode.pre = tmp;
+            tmp.next = currNode;
+            node.tail.pre = currNode;
+            
+            node.next = curr.next;
+            node.pre = curr;
+            node.next.pre = node;
+            curr.next = node;
+        }
+        if (curr.listMap.isEmpty()) {
+            unit tmp = curr.pre;
+            tmp.next = curr.next;
+            curr.next.pre = tmp;
+        }
+    }
+    
+    private void evict() {
+        unit curr = head.next;
+        listNode listHead = curr.head;
+        listNode currNode = listHead.next;
+        int key = currNode.key;
+        map.remove(key);
+        curr.listMap.remove(key);
+        listHead.next = currNode.next;
+        currNode.next.pre = listHead;
+
+        if (curr.listMap.isEmpty()) {
+            head.next = curr.next;
+            curr.next.pre = head;
+        }
+    }
+    
+    private void insert(int key, int value) {
+        if (head.next.freq == 1) {
+            unit curr = head.next;
+            listNode currNode = new listNode(key,value);
+            curr.listMap.put(key,currNode);
+            map.put(key,curr);
+            
+            listNode listTail = curr.tail;  // insert to the tail 
+            currNode.pre = listTail.pre;
+            currNode.next = listTail;
+            listTail.pre.next = currNode;
+            listTail.pre = currNode;
+        }
+        else {
+            unit curr = new unit(1);
+            listNode currNode = new listNode(key,value);
+            curr.listMap.put(key,currNode);
+            map.put(key,curr);
+            listNode listHead = curr.head;
+            currNode.next = listHead.next;
+            currNode.pre = listHead;
+            listHead.next.pre = currNode;
+            listHead.next = currNode;
+            
+            curr.next = head.next;   // insert new unit into bucket
+            curr.pre = head;
+            curr.next.pre = curr;
+            head.next = curr;
+        }
+    }
+     
+    
+}
+
+
+class unit{
+    public unit pre,next;
+    public int freq;
+    public listNode head,tail;
+    public Map<Integer,listNode> listMap;
+    public unit(int f) {
+        freq = f;
+        head = new listNode(Integer.MAX_VALUE,Integer.MAX_VALUE);
+        tail = new listNode(Integer.MAX_VALUE,Integer.MAX_VALUE);
+        listMap = new HashMap<Integer,listNode>();
+        head.next = tail;
+        tail.pre = head;
+        pre = null;
+        next = null;
+    }
+}
+
+class listNode{
+    public int key, value;
+    public listNode pre,next;
+    public listNode(int key, int value) {
+        this.key = key;
+        this.value = value;
+        pre = null;
+        next = null;
+    }
+}
