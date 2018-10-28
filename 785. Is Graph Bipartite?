@@ -1,0 +1,32 @@
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        // time complexity: O(V+E)
+        // space complexity: O(N)
+        // algorithm: breadth first search
+        int n = graph.length;
+        int[] color = new int[n];
+        for (int i = 0; i < n; i++) {
+            color[i] = -1;
+        }
+        
+        Queue<Integer> q = new LinkedList<Integer>();
+        for (int k = 0; k < n; k++) {
+            if (color[k] == -1) {
+                q.offer(k);
+                color[k] = 0;
+                while (!q.isEmpty()) {
+                    int curr = q.poll();
+                    for (int i = 0; i < graph[curr].length; i++) {
+                        int j = graph[curr][i];
+                        if (color[j] == -1) {
+                            color[j] = 1 - color[curr];
+                            q.offer(j);
+                        }
+                        else if (color[j] == color[curr]) return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
