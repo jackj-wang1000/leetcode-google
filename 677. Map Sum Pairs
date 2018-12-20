@@ -1,0 +1,60 @@
+class MapSum {
+
+    /** Initialize your data structure here. */
+    // algorithm: Trie + HashMap
+    // time complexity: O(M), M is length of key
+    // space complexity: O(N), N is total of keys
+    private TrieNode root;
+    private Map<String, Integer> map;
+    public MapSum() {
+        this.root = new TrieNode();
+        this.map = new HashMap<String, Integer>();
+    }
+    
+    public void insert(String key, int val) {
+        if (!map.containsKey(key)) update(key);
+        map.put(key,val);
+    }
+    
+    public int sum(String prefix) {
+        int sum = 0;
+        for (String str : getKeys(prefix)) {
+            sum += map.get(str);
+        }
+        return sum;
+    }
+    
+    
+    class TrieNode {
+        public List<String> keys;
+        public TrieNode[] children;
+        public TrieNode() {
+            this.children = new TrieNode[26];
+            this.keys = new ArrayList<String>();
+        }
+    }
+    
+    
+    private void update(String str) {
+        TrieNode curr = this.root;
+        int n = str.length();
+        for (int i = 0; i < n; i++) {
+            int idx = str.charAt(i) - 'a';
+            if (curr.children[idx] == null) curr.children[idx] = new TrieNode();
+            curr = curr.children[idx];
+            curr.keys.add(str);
+        }
+    }
+    
+    private List<String> getKeys(String prefix) {
+        int n = prefix.length();
+        TrieNode curr = this.root;
+        for (int i = 0; i < n; i++) {
+            int idx = prefix.charAt(i) - 'a';
+            if (curr.children[idx] == null) return new ArrayList<String>();
+            else curr = curr.children[idx];
+        }
+        return curr.keys;
+    } 
+    
+}
